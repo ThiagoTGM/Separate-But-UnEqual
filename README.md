@@ -1,5 +1,4 @@
 # Separate-But-UnEqual
-# Author: Thiago Marback
-#########################
+Author: Thiago Marback
 
 Project
