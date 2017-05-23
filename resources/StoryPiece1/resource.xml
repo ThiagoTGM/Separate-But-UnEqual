@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="Test">
+
+    <scene>
+        <filename>Test.txt</filename>
+        <options>
+        
+            <option>
+                <text>Do option 1</text>
+                <target>Next1</target>
+            </option>
+            <option>
+                <text>Do option 2</text>
+                <target>Next2</target>
+            </option>
+        
+        </options>
+    </scene>
+
+</resource>
