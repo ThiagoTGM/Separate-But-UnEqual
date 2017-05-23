@@ -28,7 +28,7 @@ public abstract class Resource {
      *
      * @param id ID of the resource.
      */
-    public Resource( String id ) {
+    protected Resource( String id ) {
         
         this.id = id;
         

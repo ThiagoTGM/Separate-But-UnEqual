@@ -9,10 +9,17 @@ package com.github.thiagotgm.separate_but_unequal.resource;
  */
 public class SceneFactory extends ResourceFactory {
 
-    SceneFactory() {
-        // TODO Auto-generated constructor stub
+    /**
+     * Creates a new Scene factory with a given Resource ID.
+     * 
+     * @param id ID of the Scene resource to be constructed.
+     */
+    protected SceneFactory( String id ) {
+        
+        super( id );
+        
     }
-
+    
     @Override
     public void withElement( String element, Object value ) throws IllegalArgumentException {
 
@@ -23,7 +30,9 @@ public class SceneFactory extends ResourceFactory {
     @Override
     public Resource build() throws IllegalStateException {
 
-        // TODO Auto-generated method stub
+        if ( id == null ) {
+            throw new IllegalStateException( "The Resource ID is required for Resource construction but wasn't specified!" );
+        }
         return null;
     }
 
