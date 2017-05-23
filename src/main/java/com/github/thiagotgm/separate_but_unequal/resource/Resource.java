@@ -24,12 +24,17 @@ public abstract class Resource {
     private final String id;
     
     /**
-     * Creates a new Resource object with a given ID.
+     * Creates a new Resource object with a given ID.<p>
+     * The ID cannot be null.
      *
      * @param id ID of the resource.
+     * @throws NullPointerException if the ID received is null.
      */
     protected Resource( String id ) {
         
+        if ( id == null ) {
+            throw new NullPointerException( "Resource ID cannot be null." );
+        }
         this.id = id;
         
     }
