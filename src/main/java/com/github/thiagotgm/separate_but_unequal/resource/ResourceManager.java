@@ -1,9 +1,6 @@
 package com.github.thiagotgm.separate_but_unequal.resource;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
@@ -16,7 +13,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Stream;
 
 import javax.xml.stream.XMLStreamException;
@@ -58,7 +54,7 @@ public class ResourceManager {
             
             Scene sc = null;
             try {
-                sc = (Scene) ResourceReader.readResource( file.getInputStream() );
+                sc = (Scene) ResourceReader.readResource( file.getInputStream(), file.inJar() );
             } catch ( XMLStreamException e ) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -130,67 +126,6 @@ public class ResourceManager {
         }
         
         return found;
-        
-    }
-    
-    /**
-     * Class that encapsulates a path to a resource (resource.xml) and whether that path is in a jar or the regular
-     * filesystem.
-     *
-     * @version 1.0
-     * @author Thiago Marback
-     * @since 2017-05-23
-     */
-    private static class ResourcePath {
-        
-        private final Path path;
-        private final boolean inJar;
-        
-        /**
-         * Creates a new ResourcePath with given path.
-         * 
-         * @param path Path of the resource.
-         * @param inJar Whether the resource is in a jar (true) or in the normal filesystem (false).
-         */
-        public ResourcePath( Path path, boolean inJar ) {
-            
-            this.path = path;
-            this.inJar = inJar;
-            
-        }
-        
-        /**
-         * Retrieves the path of this resource.
-         * 
-         * @return The path to the resource file.
-         */
-        public Path getPath() {
-            
-            return path;
-            
-        }
-        
-        /**
-         * Retrieves the resource file (resource.xml) as an input string.<br>
-         * Takes into account where the file is stored (jar or filesystem).
-         * 
-         * @return The resource file as an InputStream.
-         * @throws FileNotFoundException if the file described by the path was not found.
-         */
-        public InputStream getInputStream() {
-            
-            if ( inJar ) {
-                return ResourceManager.class.getResourceAsStream( path.toString() );
-            } else {
-                try {
-                    return new FileInputStream( path.toString() );
-                } catch ( FileNotFoundException e ) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-            
-        }
         
     }
 

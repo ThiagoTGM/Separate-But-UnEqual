@@ -1,23 +1,19 @@
 package com.github.thiagotgm.separate_but_unequal.resource;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
-import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
+public class SceneReader extends ResourceReader {
 
-public class SceneReader {
-
-    public static void read( XMLEventReader reader, ResourceFactory superFactory ) throws XMLStreamException  {
+    protected void read( XMLEventReader reader, ResourceFactory factory, boolean inJar ) throws XMLStreamException  {
         
-        SceneFactory factory = (SceneFactory) superFactory;
+        SceneFactory sFactory = (SceneFactory) factory;
         while ( reader.hasNext() ) {
             
             XMLEvent event = reader.nextEvent();
@@ -33,7 +29,7 @@ public class SceneReader {
                             if ( !event.isCharacters() ) {
                                 throw new XMLStreamException( "Format error - <filename> has invalid content" );
                             }
-                            factory.withFilename( event.asCharacters().getData().trim() );
+                            sFactory.withFilename( event.asCharacters().getData().trim() );
                             break;
                             
                         case "transition":
@@ -41,7 +37,7 @@ public class SceneReader {
                             if ( !event.isCharacters() ) {
                                 throw new XMLStreamException( "Format error - <transition> has invalid content" );
                             }
-                            factory.withTransition( event.asCharacters().getData().trim() );
+                            sFactory.withTransition( event.asCharacters().getData().trim() );
                             break;
                             
                         case "graphic":
@@ -49,7 +45,7 @@ public class SceneReader {
                             if ( !event.isCharacters() ) {
                                 throw new XMLStreamException( "Format error - <graphic> has invalid content" );
                             }
-                            factory.withGraphic( event.asCharacters().getData().trim() );
+                            sFactory.withGraphic( event.asCharacters().getData().trim() );
                             break;
                             
                         case "audio":
@@ -57,7 +53,7 @@ public class SceneReader {
                             if ( !event.isCharacters() ) {
                                 throw new XMLStreamException( "Format error - <audio> has invalid content" );
                             }
-                            factory.withAudio( event.asCharacters().getData().trim() );
+                            sFactory.withAudio( event.asCharacters().getData().trim() );
                             break;
                             
                         case "options":
@@ -130,7 +126,7 @@ public class SceneReader {
                                 
                                 
                             }
-                            factory.withOptions( options );
+                            sFactory.withOptions( options );
                             break;
                             
                         default:
