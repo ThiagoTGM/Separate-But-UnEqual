@@ -3,7 +3,9 @@ package com.github.thiagotgm.separate_but_unequal.resource;
 import java.util.List;
 
 /**
- * Factory that constructs instances of the Scene resource type.
+ * Factory that constructs instances of the Scene resource type.<br>
+ * The filename and a non-empty option list are required, but other elements are
+ * optional.
  *
  * @version 1.0
  * @author Thiago Marback
@@ -30,7 +32,7 @@ public class SceneFactory extends ResourceFactory {
     
     @SuppressWarnings( "unchecked" )
     @Override
-    public void withElement( String element, Object value ) throws IllegalArgumentException {
+    public ResourceFactory withElement( String element, Object value ) throws IllegalArgumentException {
 
         try {
             switch( element ) { // Identifies the element to insert.
@@ -59,6 +61,7 @@ public class SceneFactory extends ResourceFactory {
             throw new IllegalArgumentException( "Value given for element '" + element +
                     "' is of the wrong type.", e );
         }
+        return this;
 
     }
     
@@ -67,9 +70,10 @@ public class SceneFactory extends ResourceFactory {
      *
      * @param filename Filename of the Scene text.
      */
-    public void withFilename( String filename ) {
+    public SceneFactory withFilename( String filename ) {
         
         this.filename = filename;
+        return this;
         
     }
     
@@ -79,9 +83,10 @@ public class SceneFactory extends ResourceFactory {
      *
      * @param transition Filename of the Scene transition.
      */
-    public void withTransition( String transition ) {
+    public SceneFactory withTransition( String transition ) {
         
         this.transition = transition;
+        return this;
         
     }
     
@@ -91,9 +96,10 @@ public class SceneFactory extends ResourceFactory {
      *
      * @param graphic Filename of the Scene graphic.
      */
-    public void withGraphic( String graphic ) {
+    public SceneFactory withGraphic( String graphic ) {
         
         this.graphic = graphic;
+        return this;
         
     }
     
@@ -103,9 +109,10 @@ public class SceneFactory extends ResourceFactory {
      *
      * @param audio Filename of the Scene audio.
      */
-    public void withAudio( String audio ) {
+    public SceneFactory withAudio( String audio ) {
         
         this.audio = audio;
+        return this;
         
     }
     
@@ -114,23 +121,24 @@ public class SceneFactory extends ResourceFactory {
      *
      * @param options List of choices to be in the Scene.
      */
-    public void withOptions( List<Choice> options ) {
+    public SceneFactory withOptions( List<Choice> options ) {
         
         this.options = options;
+        return this;
         
     }
 
     @Override
     public Resource build() throws IllegalStateException {
 
-        if ( id == null ) {
-            throw new IllegalStateException( "The Resource ID is required for Resource construction but wasn't specified!" );
-        }
         if ( filename == null ) {
             throw new IllegalStateException( "The filename is required for Scene construction but wasn't specified!" );
         }
         if ( options == null ) {
             throw new IllegalStateException( "The option list is required for Scene construction but wasn't specified!" );
+        }
+        if ( options.isEmpty() ) {
+            throw new IllegalStateException( "The option list must have at least one Choice!" );
         }
         return new Scene( id, filename, transition, graphic, audio, options );
         

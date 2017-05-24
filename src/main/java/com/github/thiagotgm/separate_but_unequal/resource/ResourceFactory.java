@@ -4,7 +4,8 @@ import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
 
 /**
  * Factory class that creates new Resource instances with given type and elements.<br>
- * All subclasses must call the {@link #ResourceFactory(String) super(String)} constructor to provide the Resource ID.
+ * All subclasses must call the {@link #ResourceFactory(String) super(String)} constructor
+ * to provide the Resource ID.
  *
  * @version 1.0
  * @author Thiago Marback
@@ -21,9 +22,14 @@ public abstract class ResourceFactory {
      * @param id ID of the resource to be constructed.
      * @return A factory that constructs a Resource of the given type.
      * @throws UnsupportedOperationException if no factory for the given type is available.
+     * @throws NullPointerException if the ID received was null.
      */
-    public static ResourceFactory newInstance( ResourceType type, String id ) throws UnsupportedOperationException {
+    public static ResourceFactory newInstance( ResourceType type, String id )
+            throws UnsupportedOperationException, NullPointerException {
         
+        if ( id == null ) {
+            throw new NullPointerException( "Resource ID cannot be null." );
+        }
         switch ( type ) {
             
             case SCENE:
@@ -54,7 +60,7 @@ public abstract class ResourceFactory {
      * @throws IllegalArgumentException if the type being constructed does not have an element with this identifier, or
      *                                  if the value is not valid.
      */
-    public abstract void withElement( String element, Object value ) throws IllegalArgumentException;
+    public abstract ResourceFactory withElement( String element, Object value ) throws IllegalArgumentException;
     
     /**
      * Creates the Resource instance being built, using the element values set.

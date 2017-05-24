@@ -14,6 +14,11 @@ public abstract class Resource {
     public enum ResourceType { 
         
         /**
+         * Not a resource. Used mostly for error testing.
+         */
+        NONE,
+        
+        /**
          * Single scene in the story. Includes text of the scene, identifies other resources, and specifies
          * branch options.
          */
