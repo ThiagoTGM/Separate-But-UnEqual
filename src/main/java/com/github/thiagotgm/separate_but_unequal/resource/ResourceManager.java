@@ -1,0 +1,197 @@
+package com.github.thiagotgm.separate_but_unequal.resource;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Stream;
+
+import javax.xml.stream.XMLStreamException;
+
+/**
+ * Class that manages the resource library.
+ *
+ * @version 1.0
+ * @author Thiago Marback
+ * @since 2017-05-23
+ */
+public class ResourceManager {
+    
+    private static final String RESOURCE_IDENTIFIER = "resource.xml";
+    private static final String RESOURCE_ROOT = "resources";
+    private static final int MAX_DEPTH = 5;
+
+    private static Hashtable<String, Resource> resources = new Hashtable<>();
+    
+    /**
+     * Retrieves the resource identified by the given ID.
+     * 
+     * @param id ID of the resource to be retrieved.
+     * @return The resource in the library identified by the given ID.
+     */
+    public static Resource getResource( String id ) {
+        
+        return resources.get( id );
+        
+    }
+    
+    /**
+     * Loads the resource library.
+     */
+    public static void load() {
+        
+        List<ResourcePath> files = getResourceFiles();
+        for ( ResourcePath file : files ) {
+            
+            Scene sc = null;
+            try {
+                sc = (Scene) ResourceReader.readResource( file.getInputStream() );
+            } catch ( XMLStreamException e ) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            System.out.println( sc.getID() );
+            System.out.println( sc.getFilename() );
+            System.out.println( sc.getOptions() );
+            
+        }
+        
+    }
+    
+    /**
+     * Obtains the path to each resource file present in the resource file tree.
+     * 
+     * @return The list of resource paths to each resource.xml file found in the resource file tree.
+     */
+    private static List<ResourcePath> getResourceFiles() {
+        
+        List<ResourcePath> found = new LinkedList<>();
+        
+        URI uri = null;
+        try { // Obtains the URI of the root resource folder.
+            uri = ResourceManager.class.getClassLoader().getResource( RESOURCE_ROOT ).toURI();
+        } catch ( URISyntaxException e ) {
+            e.printStackTrace();
+            return null;
+        }
+        
+        Path myPath;
+        FileSystem fileSystem = null;
+        Stream<Path> walk = null;        
+        try {
+            boolean inJar;
+            if ( uri.getScheme().equals( "jar" ) ) { // Resource file tree is in a jar
+                fileSystem = FileSystems.newFileSystem( uri, Collections.<String, Object>emptyMap() ); // Opens filesystem
+                myPath = fileSystem.getPath( RESOURCE_ROOT );                                          // based in the jar
+                inJar = true;
+            } else { // Resource file tree is in normal filesystem.
+                myPath = Paths.get( uri );
+                inJar = false;
+            }
+            
+            walk = Files.walk( myPath, MAX_DEPTH ); // Goes through all files in the filesystem.
+            for ( Iterator<Path> it = walk.iterator(); it.hasNext(); ){
+                
+                Path next = it.next();
+                if ( next.getFileName().toString().equals( RESOURCE_IDENTIFIER ) ) {
+                    found.add( new ResourcePath( next, inJar ) ); // Adds found resource.xml to the list.
+                }
+                
+            }
+        } catch ( IOException e ) {
+            System.err.println( "Error encountered while identifying resource files." );
+            e.printStackTrace();
+            found = null;
+        } finally { // Closes jar filesystem (if used) and pathwalker.
+            if ( fileSystem != null ) {
+                try {
+                    fileSystem.close();
+                } catch ( IOException e ) {
+                    System.err.println( "Failed to close FileSystem." );
+                    e.printStackTrace();
+                }
+            }
+            if ( walk != null ) {
+                walk.close();
+            }
+        }
+        
+        return found;
+        
+    }
+    
+    /**
+     * Class that encapsulates a path to a resource (resource.xml) and whether that path is in a jar or the regular
+     * filesystem.
+     *
+     * @version 1.0
+     * @author Thiago Marback
+     * @since 2017-05-23
+     */
+    private static class ResourcePath {
+        
+        private final Path path;
+        private final boolean inJar;
+        
+        /**
+         * Creates a new ResourcePath with given path.
+         * 
+         * @param path Path of the resource.
+         * @param inJar Whether the resource is in a jar (true) or in the normal filesystem (false).
+         */
+        public ResourcePath( Path path, boolean inJar ) {
+            
+            this.path = path;
+            this.inJar = inJar;
+            
+        }
+        
+        /**
+         * Retrieves the path of this resource.
+         * 
+         * @return The path to the resource file.
+         */
+        public Path getPath() {
+            
+            return path;
+            
+        }
+        
+        /**
+         * Retrieves the resource file (resource.xml) as an input string.<br>
+         * Takes into account where the file is stored (jar or filesystem).
+         * 
+         * @return The resource file as an InputStream.
+         * @throws FileNotFoundException if the file described by the path was not found.
+         */
+        public InputStream getInputStream() {
+            
+            if ( inJar ) {
+                return ResourceManager.class.getResourceAsStream( path.toString() );
+            } else {
+                try {
+                    return new FileInputStream( path.toString() );
+                } catch ( FileNotFoundException e ) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+            
+        }
+        
+    }
+
+}

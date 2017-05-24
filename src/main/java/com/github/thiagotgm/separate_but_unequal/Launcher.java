@@ -1,5 +1,7 @@
 package com.github.thiagotgm.separate_but_unequal;
 
+import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
+
 /**
  * Class that launches the game on startup.
  *
@@ -10,7 +12,8 @@ package com.github.thiagotgm.separate_but_unequal;
 public class Launcher {
 
     public static void main( String[] args ) {
-        // TODO Auto-generated method stub
+
+        ResourceManager.load();
 
     }
 
