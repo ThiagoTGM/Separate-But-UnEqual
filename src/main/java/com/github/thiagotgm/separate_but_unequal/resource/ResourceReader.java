@@ -68,9 +68,7 @@ public class ResourceReader {
         switch ( type ) {
             
             case SCENE:
-                Choice[] options = { new Choice( "Text", "testTgt" ) };
-                ( (SceneFactory) factory ).withFilename( "file.file" ).withOptions( Arrays.asList( options ) );
-                while ( reader.hasNext() ) reader.nextEvent();
+                SceneReader.read( reader, factory );
             
         }
         
