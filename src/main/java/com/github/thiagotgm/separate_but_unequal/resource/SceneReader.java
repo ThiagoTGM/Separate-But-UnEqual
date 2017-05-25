@@ -12,13 +12,16 @@ import javax.xml.stream.events.XMLEvent;
 
 public class SceneReader extends ResourceReader {
     
-    private static final String CHOICE_TAG = "choice";
+    private static final String OPTIONS_TAG = "options";
+    private static final String CHOICE_TAG = "option";
     private static final String CHOICE_TEXT_TAG = "text";
     private static final String CHOICE_TARGET_TAG = "target";
 
     protected void read( XMLEventReader reader, ResourceFactory factory, boolean inJar ) throws XMLStreamException  {
         
         SceneFactory sFactory = (SceneFactory) factory;
+        String filename;
+        boolean isFilename = false;
         while ( reader.hasNext() ) {
             
             XMLEvent event = reader.nextEvent();
@@ -62,75 +65,7 @@ public class SceneReader extends ResourceReader {
                             break;
                             
                         case "options":
-                            List<Choice> options = new LinkedList<Choice>();
-                            event = reader.nextEvent();
-                            while ( event.isCharacters() ) {
-                                event = reader.nextEvent();
-                            }
-                            while ( event.isStartElement() ) {
-                                
-                                start = event.asStartElement();
-                                if ( !start.getName().getLocalPart().equals( "option" ) ) {
-                                    throw new XMLStreamException( "Format error - Unsupported tag inside <options> block" );
-                                }
-                                String text = null;
-                                String target = null;
-                                for ( int i = 0; i < 2; i++ ) {
-                                    
-                                    event = reader.nextEvent();
-                                    while ( event.isCharacters() ) {
-                                        event = reader.nextEvent();
-                                    }
-                                    if ( !event.isStartElement() ) {
-                                        throw new XMLStreamException( "Format error - Invalid member of <option> block" );
-                                    }
-                                    String innerName = event.asStartElement().getName().getLocalPart();
-                                    switch ( innerName ) {
-                                        
-                                        case "text":
-                                            if ( text != null ) {
-                                                throw new XMLStreamException( "Format error - Duplicate <text> in <option> block" );
-                                            }
-                                            event = reader.nextEvent();
-                                            if ( !event.isCharacters() ) {
-                                                throw new XMLStreamException( "Format error - <text> has invalid content" );
-                                            }
-                                            text = event.asCharacters().getData().trim();
-                                            break;
-                                            
-                                        case "target":
-                                            if ( target != null ) {
-                                                throw new XMLStreamException( "Format error - Duplicate <target> in <option> block" );
-                                            }
-                                            event = reader.nextEvent();
-                                            if ( !event.isCharacters() ) {
-                                                throw new XMLStreamException( "Format error - <target> has invalid content" );
-                                            }
-                                            target = event.asCharacters().getData().trim();
-                                            break;
-                                            
-                                        default:
-                                            throw new XMLStreamException( "Format error - invalid tag" );
-                                            
-                                    }
-                                    event = reader.nextEvent();
-                                    if ( !event.isEndElement() || !event.asEndElement().getName().getLocalPart().equals( innerName ) ) {
-                                        throw new XMLStreamException( "Format error - missing closing tag" );
-                                    }
-                                            
-                                    
-                                }
-                                options.add( new Choice( text, target ) );
-                                event = reader.nextEvent();
-                                while ( event.isCharacters() ) {
-                                    event = reader.nextEvent();
-                                }
-                                if ( !event.isEndElement() || !event.asEndElement().getName().getLocalPart().equals( "option" ) ) {
-                                    throw new XMLStreamException( "Format error - missing closing tag" );
-                                }
-                                
-                                
-                            }
+                            List<Choice> options = readOptions( reader );
                             sFactory.withOptions( options );
                             break;
                             
@@ -159,10 +94,56 @@ public class SceneReader extends ResourceReader {
     }
     
     /**
-     * Reads a "choice" element from the given EventReader.
+     * Reads the options list described by a {@value #OPTIONS_TAG} element.
      *
      * @param reader Reader going through the XML document. Its last return should have been
-     *               the opening tag of the "choice" element.
+     *               the opening tag of the {@value #OPTIONS_TAG} element.
+     * @return The list of Choices described by that element.
+     * @throws XMLStreamException If a format error was encountered in the element.
+     */
+    private List<Choice> readOptions( XMLEventReader reader ) throws XMLStreamException {
+        
+        List<Choice> options = new LinkedList<>();
+        while ( reader.hasNext() ) {
+            
+            XMLEvent event = reader.nextEvent();
+            String name;
+            switch ( event.getEventType() ) {
+                
+                /* Opening tag */
+                case XMLStreamConstants.START_ELEMENT:
+                    StartElement start = event.asStartElement();
+                    name = start.getName().getLocalPart();
+                    if ( name.equals( CHOICE_TAG ) ) { // Found a Choice.
+                        options.add( readChoice( reader ) );
+                    } else { // Unrecognized subelement.
+                        throw new XMLStreamException( UNEXPECTED_ELEMENT );
+                    }
+                    break;
+                    
+                /* Closing tag */
+                case XMLStreamConstants.END_ELEMENT:
+                    EndElement end = event.asEndElement();
+                    name = end.getName().getLocalPart();
+                    if ( name.equals( OPTIONS_TAG ) ) { // Finished element.
+                        return options;
+                    } else { // Closing tag not recognized.
+                        throw new XMLStreamException( UNEXPECTED_CLOSING_TAG );
+                    }
+                
+            }
+            
+        }
+        // If nothing else to read, EOF was found before the element was closed.
+        throw new XMLStreamException( UNEXPECTED_EOF );
+        
+    }
+    
+    /**
+     * Reads a Choice from a {@value #CHOICE_TAG} element from the given EventReader.
+     *
+     * @param reader Reader going through the XML document. Its last return should have been
+     *               the opening tag of the {@value #CHOICE_TAG} element.
      * @return The choice object representing that element.
      * @throws XMLStreamException If a format error was encountered in the element.
      */
@@ -181,7 +162,7 @@ public class SceneReader extends ResourceReader {
                 /* Opening tag */
                 case XMLStreamConstants.START_ELEMENT:
                     if ( isText || isTarget ) { // <text> and <target> shouldn't have subelements.
-                        throw new XMLStreamException( UNEXPECTED_SUBELEMENT );
+                        throw new XMLStreamException( UNEXPECTED_ELEMENT );
                     }
                     StartElement start = event.asStartElement();
                     name = start.getName().getLocalPart();
@@ -190,7 +171,7 @@ public class SceneReader extends ResourceReader {
                     } else if ( name.equals( CHOICE_TARGET_TAG ) ) { // <target> encountered.
                         isTarget = true;
                     } else { // tag not recognized.
-                        throw new XMLStreamException( UNEXPECTED_SUBELEMENT );
+                        throw new XMLStreamException( UNEXPECTED_ELEMENT );
                     }
                     break;
                     
@@ -204,8 +185,6 @@ public class SceneReader extends ResourceReader {
                         text = value;
                     } else if ( isTarget ) { // Text in <target>.
                         target = value;
-                    } else { // Text that was not in <text> or <target>.
-                        throw new XMLStreamException( UNEXPECTED_TEXT );
                     }
                     break;
                     
@@ -230,7 +209,7 @@ public class SceneReader extends ResourceReader {
             }
             
         }
-        // If nothing else to read, EOF was found before the element ended.
+        // If nothing else to read, EOF was found before the element was closed.
         throw new XMLStreamException( UNEXPECTED_EOF );
         
     }

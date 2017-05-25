@@ -29,8 +29,7 @@ public abstract class ResourceReader {
     protected static final String MISSING_ELEMENTS = "<%s> element missing required subelements.";
     
     // Unexpected events.
-    protected static final String UNEXPECTED_TEXT = "Unexpected text encountered.";
-    protected static final String UNEXPECTED_SUBELEMENT = "Unexpected subelement encountered.";
+    protected static final String UNEXPECTED_ELEMENT = "Unexpected element encountered.";
     protected static final String UNEXPECTED_CLOSING_TAG = "Unexpected closing tag.";
     protected static final String UNEXPECTED_EOF = "Unexpected EOF encountered.";
     /***************************************/
