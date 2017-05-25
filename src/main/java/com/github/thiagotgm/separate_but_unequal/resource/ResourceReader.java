@@ -1,5 +1,6 @@
 package com.github.thiagotgm.separate_but_unequal.resource;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
@@ -37,17 +38,17 @@ public abstract class ResourceReader {
     private static final String ROOT = "resource";
     
     /**
-     * Reads resource information from the given input string.
+     * Reads resource information from the given resource file.
      *
-     * @param input The input stream to read from.
-     * @param inJar Whether the resource file is stored in a Jar (if it is not, it is in the normal filesystem).
+     * @param path The path to the resource file to be read.
      * @return The resource described in the stream.
      * @throws XMLStreamException if a parsing error occurred.
      */
-    public static Resource readResource( InputStream input, boolean inJar ) throws XMLStreamException {
+    public static Resource readResource( ResourcePath path ) throws XMLStreamException {
 
         String id = null;
         ResourceFactory factory = null;
+        InputStream input = path.getInputStream();
         XMLEventReader reader = XMLInputFactory.newFactory().createXMLEventReader( input );
         while ( reader.hasNext() ) { // Reads each event in the stream.
             
@@ -83,7 +84,7 @@ public abstract class ResourceReader {
                             throw new XMLStreamException( "Invalid Resource type <" + name + ">." );
                         }
                         factory = ResourceFactory.newInstance( type, id ); // Reads type-specific values.
-                        readType( reader, factory, inJar, type );
+                        readType( reader, path, factory, type );
                         
                     }
                     break;
@@ -93,8 +94,17 @@ public abstract class ResourceReader {
                     EndElement end = event.asEndElement();
                     name = end.getName().getLocalPart();
                     if ( name.equals( ROOT ) && ( id != null ) ) { // Found end of root element (and it was opened).
-                        if ( factory != null ) { // Type element was found.
-                            try { // Done reading resource.
+                        if ( factory != null ) { // Type element was read. Done reading.
+                            /* Close input resources */
+                            reader.close();
+                            try {
+                                input.close();
+                            } catch ( IOException e ) {
+                                System.err.println( "Could not close input resource file stream." );
+                                e.printStackTrace();
+                            }
+                            /* Attempt to build Resource */
+                            try {
                                 return factory.build();
                             } catch ( IllegalStateException e ) { // A required element was missing.
                                 throw new XMLStreamException( "Missing required element: " + e.getMessage() );
@@ -118,12 +128,12 @@ public abstract class ResourceReader {
      * Reads the type-specific information.
      *
      * @param reader Reader going through the resource file stream.
+     * @param path Path to the resource file this is reading from.
      * @param factory Factory that is constructing the Resource.
-     * @param inJar Whether the resource file is stored in a Jar.
      * @param type The type of the resource.
      * @throws XMLStreamException if a parsing error occurred.
      */
-    private static void readType( XMLEventReader reader, ResourceFactory factory, boolean inJar, ResourceType type ) throws XMLStreamException {
+    private static void readType( XMLEventReader reader, ResourcePath path, ResourceFactory factory, ResourceType type ) throws XMLStreamException {
         
         ResourceReader resReader;
         /* Gets the appropriate Reader for the given type */
@@ -136,7 +146,7 @@ public abstract class ResourceReader {
                 throw new IllegalArgumentException( "No reader available for the given Resource type." );
             
         }
-        resReader.read( reader, factory, inJar ); // Read type-specific elements.
+        resReader.read( reader, path, factory ); // Read type-specific elements.
         
     }
     
@@ -146,10 +156,10 @@ public abstract class ResourceReader {
      *
      * @param reader Reader going through the resource file stream. Its last return should have been
      *               the opening tag of the resource-type element.
+     * @param path Path to the resource file this is reading from.
      * @param factory The factory constructing the Resource.
-     * @param inJar Whether the resource file is stored in a Jar.
      * @throws XMLStreamException if a parsing error occurred.
      */
-    protected abstract void read( XMLEventReader reader, ResourceFactory factory, boolean inJar ) throws XMLStreamException, IllegalArgumentException;
+    protected abstract void read( XMLEventReader reader, ResourcePath path, ResourceFactory factory ) throws XMLStreamException, IllegalArgumentException;
 
 }

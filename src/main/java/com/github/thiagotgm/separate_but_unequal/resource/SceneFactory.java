@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * Factory that constructs instances of the Scene resource type.<br>
- * The {@link #withFilename(String) filename} and a non-empty {@link #withOptions(List) option list} are required,
+ * The {@link #withPath(ResourcePath) path} and a non-empty {@link #withOptions(List) option list} are required,
  * but other elements are optional.
  *
  * @version 1.0
@@ -12,8 +12,19 @@ import java.util.List;
  * @since 2017-05-23
  */
 public class SceneFactory extends ResourceFactory {
+    
+    /** Identifier for the "Path" element. */
+    public static final String PATH_ELEMENT = "path";
+    /** Identifier for the "Transition" element. */
+    public static final String TRANSITION_ELEMENT = "transition";
+    /** Identifier for the "Graphic" element. */
+    public static final String GRAPHIC_ELEMENT = "graphic";
+    /** Identifier for the "Audio" element. */
+    public static final String AUDIO_ELEMENT = "audio";
+    /** Identifier for the "Options" element. */
+    public static final String OPTIONS_ELEMENT = "options";
 
-    private String filename;
+    private ResourcePath path;
     private String transition;
     private String graphic;
     private String audio;
@@ -37,19 +48,19 @@ public class SceneFactory extends ResourceFactory {
         try {
             switch( element ) { // Identifies the element to insert.
                 
-                case "filename":
-                    withFilename( (String) value );
+                case PATH_ELEMENT:
+                    withPath( (ResourcePath) value );
                     break;
-                case "transition":
+                case TRANSITION_ELEMENT:
                     withTransition( (String) value );
                     break;
-                case "graphic":
+                case GRAPHIC_ELEMENT:
                     withGraphic( (String) value );
                     break;
-                case "audio":
+                case AUDIO_ELEMENT:
                     withAudio( (String) value );
                     break;
-                case "options":
+                case OPTIONS_ELEMENT:
                     withOptions( (List<Choice>) value );
                     break;
                 default:
@@ -66,13 +77,13 @@ public class SceneFactory extends ResourceFactory {
     }
     
     /**
-     * Specifies the filename to be used in the built Scene.
+     * Specifies the path of the file to be used in the built Scene.
      *
-     * @param filename Filename of the Scene text.
+     * @param path Path of the Scene text file.
      */
-    public SceneFactory withFilename( String filename ) {
+    public SceneFactory withPath( ResourcePath path ) {
         
-        this.filename = filename;
+        this.path = path;
         return this;
         
     }
@@ -131,7 +142,7 @@ public class SceneFactory extends ResourceFactory {
     @Override
     public Resource build() throws IllegalStateException {
 
-        if ( filename == null ) {
+        if ( path == null ) {
             throw new IllegalStateException( "The filename is required for Scene construction but wasn't specified!" );
         }
         if ( options == null ) {
@@ -140,7 +151,7 @@ public class SceneFactory extends ResourceFactory {
         if ( options.isEmpty() ) {
             throw new IllegalStateException( "The option list must have at least one Choice!" );
         }
-        return new Scene( id, filename, transition, graphic, audio, options );
+        return new Scene( id, path, transition, graphic, audio, options );
         
     }
 

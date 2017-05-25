@@ -2,6 +2,8 @@ package com.github.thiagotgm.separate_but_unequal;
 
 import static org.junit.Assert.*;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +15,7 @@ import com.github.thiagotgm.separate_but_unequal.resource.Choice;
 import com.github.thiagotgm.separate_but_unequal.resource.Resource;
 import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceFactory;
+import com.github.thiagotgm.separate_but_unequal.resource.ResourcePath;
 import com.github.thiagotgm.separate_but_unequal.resource.Scene;
 import com.github.thiagotgm.separate_but_unequal.resource.SceneFactory;
 
@@ -23,6 +26,12 @@ public class SceneTest {
             new Choice( "Test things!", "Test" ),
             new Choice( "Don't tell me what to do!", "Choice" ),
             new Choice( "Okay...", "Obey" ) };
+    private static final Path NONE_PATH = Paths.get( "res", "none.txt" );
+    private static final Path ALL_PATH = Paths.get( "res", "none.txt" );
+    private static final Path TRANSITION_PATH = Paths.get( "res", "none.txt" );
+    private static final Path GRAPHIC_PATH = Paths.get( "res", "none.txt" );
+    private static final Path AUDIO_PATH = Paths.get( "res", "none.txt" );
+    private static final Path ALT_PATH = Paths.get( "res", "alt.txt" );
     
     private Scene noOpts;
     private Scene allOpts;
@@ -35,23 +44,23 @@ public class SceneTest {
     public void setUp() throws Exception {
         
         SceneFactory factory = (SceneFactory) ResourceFactory.newInstance( ResourceType.SCENE, "No Opts" );
-        noOpts = (Scene) factory.withFilename( "none.txt" ).withOptions( Arrays.asList( CHOICES ) ).build();
+        noOpts = (Scene) factory.withPath( new ResourcePath( NONE_PATH, false ) ).withOptions( Arrays.asList( CHOICES ) ).build();
         factory = (SceneFactory) ResourceFactory.newInstance( ResourceType.SCENE, "All Opts" );
-        allOpts = (Scene) factory.withFilename( "all.txt" ).withTransition( "transition" )
+        allOpts = (Scene) factory.withPath( new ResourcePath( ALL_PATH, false ) ).withTransition( "transition" )
                 .withGraphic( "graphic" ).withAudio( "audio" ).withOptions( Arrays.asList( CHOICES ) ).build();
         factory = (SceneFactory) ResourceFactory.newInstance( ResourceType.SCENE, "With Transition" );
-        wTransition = (Scene) factory.withFilename( "transition.txt" ).withTransition( "transition" )
+        wTransition = (Scene) factory.withPath( new ResourcePath( TRANSITION_PATH, false ) ).withTransition( "transition" )
                 .withOptions( Arrays.asList( CHOICES ) ).build();
         factory = (SceneFactory) ResourceFactory.newInstance( ResourceType.SCENE, "With Graphic" );
-        wGraphic = (Scene) factory.withFilename( "graphic.txt" ).withGraphic( "graphic" )
+        wGraphic = (Scene) factory.withPath( new ResourcePath( GRAPHIC_PATH, false ) ).withGraphic( "graphic" )
                 .withOptions( Arrays.asList( CHOICES ) ).build();
         factory = (SceneFactory) ResourceFactory.newInstance( ResourceType.SCENE, "With Audio" );
-        wAudio = (Scene) factory.withFilename( "audio.txt" ).withAudio( "audio" )
+        wAudio = (Scene) factory.withPath( new ResourcePath( AUDIO_PATH, false ) ).withAudio( "audio" )
                 .withOptions( Arrays.asList( CHOICES ) ).build();
         
         /* Builds a scene using superclass method. */
         ResourceFactory superFactory = ResourceFactory.newInstance( ResourceType.SCENE, "Alternate" );
-        superFactory.withElement( "filename", "alt.txt" );
+        superFactory.withElement( "path", new ResourcePath( ALT_PATH, false ) );
         superFactory.withElement( "transition", "transitionID" );
         superFactory.withElement( "graphic", "graphicID" );
         superFactory.withElement( "audio", "audioID" );
@@ -73,14 +82,20 @@ public class SceneTest {
     }
     
     @Test
-    public void testFilename() {
+    public void testPath() {
         
-        assertEquals( "Incorrect filename.", "none.txt", noOpts.getFilename() );
-        assertEquals( "Incorrect filename.", "all.txt", allOpts.getFilename() );
-        assertEquals( "Incorrect filename.", "transition.txt", wTransition.getFilename() );
-        assertEquals( "Incorrect filename.", "graphic.txt", wGraphic.getFilename() );
-        assertEquals( "Incorrect filename.", "audio.txt", wAudio.getFilename() );
-        assertEquals( "Incorrect filename.", "alt.txt", alt.getFilename() );
+        assertEquals( "Incorrect path.", NONE_PATH, noOpts.getPath().getPath() );
+        assertFalse( "Incorrect path type.", noOpts.getPath().inJar() );
+        assertEquals( "Incorrect path.", ALL_PATH, allOpts.getPath().getPath() );
+        assertFalse( "Incorrect path type.", allOpts.getPath().inJar() );
+        assertEquals( "Incorrect path.", TRANSITION_PATH, wTransition.getPath().getPath() );
+        assertFalse( "Incorrect path type.", wTransition.getPath().inJar() );
+        assertEquals( "Incorrect path.", GRAPHIC_PATH, wGraphic.getPath().getPath() );
+        assertFalse( "Incorrect path type.", wGraphic.getPath().inJar() );
+        assertEquals( "Incorrect path.", AUDIO_PATH, wAudio.getPath().getPath() );
+        assertFalse( "Incorrect path type.", wAudio.getPath().inJar() );
+        assertEquals( "Incorrect path.", ALT_PATH, alt.getPath().getPath() );
+        assertFalse( "Incorrect path type.", alt.getPath().inJar() );
         
     }
     
@@ -138,7 +153,7 @@ public class SceneTest {
         original.add( new Choice( "Testing 1", "Test1" ) );
         original.add( new Choice( "Testing 1", "Test1" ) );
         Scene scene = (Scene) ( (SceneFactory) ResourceFactory.newInstance( ResourceType.SCENE, "L" ) )
-                .withFilename( "file.txt" ).withOptions( original ).build();
+                .withPath( new ResourcePath( Paths.get( "file.txt" ), false ) ).withOptions( original ).build();
         List<Choice> returned = scene.getOptions();
         assertNotSame( "Scene should have a copy of the option list, not use the same List instance.",
                 original, returned );
@@ -173,7 +188,7 @@ public class SceneTest {
         }
         
         /* Test can't build without option list. */
-        factory.withFilename( "file.txt" );
+        factory.withPath( new ResourcePath( Paths.get( "file.txt" ), false ) );
         factory.withOptions( null );
         try {
             res = factory.build();
@@ -185,7 +200,7 @@ public class SceneTest {
         }
         
         /* Test can't build without filename and option list. */
-        factory.withFilename( null );
+        factory.withPath( null );
         try {
             res = factory.build();
             fail( "Building Scene without filename and option list should throw exception." );
@@ -194,7 +209,7 @@ public class SceneTest {
         }
         
         /* Test can build after providing what was missing. */
-        factory.withFilename( "file.txt" );
+        factory.withPath( new ResourcePath( Paths.get( "file.txt" ), false ) );
         factory.withOptions( options );
         try {
             res = factory.build();
@@ -233,11 +248,11 @@ public class SceneTest {
         
         /* Test invalid values. */
         try {
-            factory.withElement( "filename", new Integer(0) );
+            factory.withElement( "path", new Integer(0) );
             fail( "Value of invalid type should throw exception." );
         } catch ( IllegalArgumentException e ) {
             assertEquals( "Unexpected exception when setting invalid element value.", 
-                    "Value given for element 'filename' is of the wrong type.",
+                    "Value given for element 'path' is of the wrong type.",
                     e.getMessage() );
         }
         

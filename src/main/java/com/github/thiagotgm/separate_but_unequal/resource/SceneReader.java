@@ -1,5 +1,6 @@
 package com.github.thiagotgm.separate_but_unequal.resource;
 
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class SceneReader extends ResourceReader {
     private static final String CHOICE_TARGET_TAG = "target";
 
     @Override
-    protected void read( XMLEventReader reader, ResourceFactory factory, boolean inJar ) throws XMLStreamException  {
+    protected void read( XMLEventReader reader, ResourcePath path, ResourceFactory factory ) throws XMLStreamException  {
         
         SceneFactory sFactory = (SceneFactory) factory;
         String currentTag = null;
@@ -89,7 +90,9 @@ public class SceneReader extends ResourceReader {
                     switch ( name ) { // Identifies what element was being read and records value appropriately.
                         
                         case FILENAME_TAG:
-                            sFactory.withFilename( value );
+                            Path filePath = path.getPath();
+                            Path textPath = filePath.resolveSibling( value );
+                            sFactory.withPath( new ResourcePath( textPath, path.inJar() ) );
                             break;
                             
                         case TRANSITION_TAG:

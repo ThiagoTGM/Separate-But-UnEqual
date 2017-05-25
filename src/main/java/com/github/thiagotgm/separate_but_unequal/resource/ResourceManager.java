@@ -52,16 +52,25 @@ public class ResourceManager {
         List<ResourcePath> files = getResourceFiles();
         for ( ResourcePath file : files ) {
             
-            Scene sc = null;
+            System.out.println( "**************[ File " + file.getPath() + " ]**************" );
             try {
-                sc = (Scene) ResourceReader.readResource( file.getInputStream(), file.inJar() );
+                Scene sc;
+                sc = (Scene) ResourceReader.readResource( file );
+                System.out.println( sc.getID() );
+                System.out.println( sc.getPath().getPath() );
+                System.out.println( sc.getPath().inJar() );
+                System.out.println( (sc.getTransition() == null) ? "No transition." : sc.getTransition() );
+                System.out.println( (sc.getGraphic() == null) ? "No graphic." : sc.getGraphic() );
+                System.out.println( (sc.getAudio() == null) ? "No audio." : sc.getAudio() );
+                for ( Choice c : sc.getOptions() ) {
+                    
+                    System.out.println( "Choice: " + c + " ===> " + c.getTarget() );
+                    
+                }
             } catch ( XMLStreamException e ) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            System.out.println( sc.getID() );
-            System.out.println( sc.getFilename() );
-            System.out.println( sc.getOptions() );
             
         }
         

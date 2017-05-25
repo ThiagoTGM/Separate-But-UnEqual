@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class Scene extends Resource {
 
-    private final String filename;
+    private final ResourcePath path;
     private final String transition;
     private final String graphic;
     private final String audio;
@@ -21,20 +21,21 @@ public class Scene extends Resource {
     
     /**
      * Creates a new Scene instance with the given Resource ID.<p>
-     * The id, filename, and options are required, but the other arguments are optional and
+     * The id, path, and options are required, but the other arguments are optional and
      * should be set as null if not used.<p>
      * The option list must have at least one Choice.
      *
      * @param id Resource ID of this Scene object.
+     * @param path Path to the text file that contains scene text.
      * @throws NullPointerException if the filename or option list received was null.
      * @throws IllegalArgumentException if the option list received was empty.
      */
-    protected Scene( String id, String filename, String transition, String graphic,
+    protected Scene( String id, ResourcePath path, String transition, String graphic,
             String audio, List<Choice> options ) {
         
         super( id );
         
-        if ( ( filename == null ) || ( options == null ) ) {
+        if ( ( path == null ) || ( options == null ) ) {
             throw new NullPointerException( "The filename and options in a Scene " +
                     "can't be null." );
         }
@@ -42,7 +43,7 @@ public class Scene extends Resource {
             throw new IllegalArgumentException( "A Scene must have at least one Choice." );
         }
         
-        this.filename = filename;
+        this.path = path;
         this.transition = transition;
         this.graphic = graphic;
         this.audio = audio;
@@ -62,9 +63,9 @@ public class Scene extends Resource {
      *
      * @return The filename of the scene text.
      */
-    public String getFilename() {
+    public ResourcePath getPath() {
         
-        return filename;
+        return path;
         
     }
 
