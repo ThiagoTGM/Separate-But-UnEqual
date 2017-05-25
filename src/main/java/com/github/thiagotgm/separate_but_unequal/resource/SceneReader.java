@@ -10,86 +10,109 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+/**
+ * Reader that extracts specific information about a Scene resource object from a resource XML stream.
+ *
+ * @version 1.0
+ * @author ThiagoTGM
+ * @since 2017-05-23
+ */
 public class SceneReader extends ResourceReader {
     
+    private static final String SCENE_TAG = "scene";
+    private static final String FILENAME_TAG = "filename";
+    private static final String TRANSITION_TAG = "transition";
+    private static final String GRAPHIC_TAG = "graphic";
+    private static final String AUDIO_TAG = "audio";
     private static final String OPTIONS_TAG = "options";
     private static final String CHOICE_TAG = "option";
     private static final String CHOICE_TEXT_TAG = "text";
     private static final String CHOICE_TARGET_TAG = "target";
 
+    @Override
     protected void read( XMLEventReader reader, ResourceFactory factory, boolean inJar ) throws XMLStreamException  {
         
         SceneFactory sFactory = (SceneFactory) factory;
-        String filename;
-        boolean isFilename = false;
+        String currentTag = null;
+        String value = null;
         while ( reader.hasNext() ) {
             
             XMLEvent event = reader.nextEvent();
             switch ( event.getEventType() ) {
                 
+                /* Opening tag */
                 case XMLStreamConstants.START_ELEMENT:
+                    if ( currentTag != null ) {
+                        throw new XMLStreamException( UNEXPECTED_ELEMENT );
+                    }
                     StartElement start = event.asStartElement();
                     String name = start.getName().getLocalPart();
                     switch ( name ) {
                         
-                        case "filename":
-                            event = reader.nextEvent();
-                            if ( !event.isCharacters() ) {
-                                throw new XMLStreamException( "Format error - <filename> has invalid content" );
-                            }
-                            sFactory.withFilename( event.asCharacters().getData().trim() );
+                        case FILENAME_TAG:                            
+                        case TRANSITION_TAG:                            
+                        case GRAPHIC_TAG:                            
+                        case AUDIO_TAG:
+                            currentTag = name;
                             break;
                             
-                        case "transition":
-                            event = reader.nextEvent();
-                            if ( !event.isCharacters() ) {
-                                throw new XMLStreamException( "Format error - <transition> has invalid content" );
-                            }
-                            sFactory.withTransition( event.asCharacters().getData().trim() );
+                        case OPTIONS_TAG:
+                            sFactory.withOptions( readOptions( reader ) );
                             break;
                             
-                        case "graphic":
-                            event = reader.nextEvent();
-                            if ( !event.isCharacters() ) {
-                                throw new XMLStreamException( "Format error - <graphic> has invalid content" );
-                            }
-                            sFactory.withGraphic( event.asCharacters().getData().trim() );
-                            break;
-                            
-                        case "audio":
-                            event = reader.nextEvent();
-                            if ( !event.isCharacters() ) {
-                                throw new XMLStreamException( "Format error - <audio> has invalid content" );
-                            }
-                            sFactory.withAudio( event.asCharacters().getData().trim() );
-                            break;
-                            
-                        case "options":
-                            List<Choice> options = readOptions( reader );
-                            sFactory.withOptions( options );
-                            break;
-                            
-                        default:
-                            //throw new XMLStreamException( "Format error - invalid tag" );
+                        default: // Element not recognized.
+                            throw new XMLStreamException( UNEXPECTED_ELEMENT );
                         
-                    }
-                    event = reader.nextEvent();
-                    while ( event.isCharacters() ) {
-                        event = reader.nextEvent();
-                    }
-                    if ( !event.isEndElement() || !event.asEndElement().getName().getLocalPart().equals( name ) ) {
-                        //throw new XMLStreamException( "Format error - missing closing tag" );
                     }
                     break;
                     
-                case XMLStreamConstants.END_ELEMENT:
-                    if ( event.asEndElement().getName().getLocalPart().equals( "scene" ) ) {
-                        return;
+                /* Text */
+                case XMLStreamConstants.CHARACTERS:
+                    if ( currentTag != null ) { // If currently reading an element, reads the text.   
+                        value = event.asCharacters().getData().trim();
+                        if ( value.isEmpty() ) {
+                            value = null; // Empty text is not valid.
+                        }
                     }
+                    break;
+                    
+                /* Closing tag */
+                case XMLStreamConstants.END_ELEMENT:
+                    EndElement end = event.asEndElement();
+                    name = end.getName().getLocalPart();
+                    if ( ( currentTag == null ) && name.equals( SCENE_TAG ) ) {
+                        return; // Finished reading Scene element.
+                    }
+                    if ( !name.equals( currentTag ) ) { // Does not match element currently being read.
+                        throw new XMLStreamException( UNEXPECTED_CLOSING_TAG );
+                    }
+                    switch ( name ) { // Identifies what element was being read and records value appropriately.
+                        
+                        case FILENAME_TAG:
+                            sFactory.withFilename( value );
+                            break;
+                            
+                        case TRANSITION_TAG:
+                            sFactory.withTransition( value );
+                            break;
+                            
+                        case GRAPHIC_TAG:   
+                            sFactory.withGraphic( value );
+                            break;
+                            
+                        case AUDIO_TAG:
+                            sFactory.withAudio( value );
+                            break;
+                        
+                    }
+                    currentTag = null; // Reset temporary storage.
+                    value = null;
                 
             }
             
         }
+        // If nothing else to read, EOF was found before the element was closed.
+        throw new XMLStreamException( UNEXPECTED_EOF );
         
     }
     

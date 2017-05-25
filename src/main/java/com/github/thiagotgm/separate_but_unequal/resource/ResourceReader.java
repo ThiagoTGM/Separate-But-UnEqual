@@ -144,7 +144,8 @@ public abstract class ResourceReader {
      * Reads type-specific information from a stream being read by an EventReader, placing the data
      * in the given ResourceFactory.
      *
-     * @param reader Reader going through the resource file stream.
+     * @param reader Reader going through the resource file stream. Its last return should have been
+     *               the opening tag of the resource-type element.
      * @param factory The factory constructing the Resource.
      * @param inJar Whether the resource file is stored in a Jar.
      * @throws XMLStreamException if a parsing error occurred.

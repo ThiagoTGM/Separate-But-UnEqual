@@ -4,8 +4,8 @@ import java.util.List;
 
 /**
  * Factory that constructs instances of the Scene resource type.<br>
- * The filename and a non-empty option list are required, but other elements are
- * optional.
+ * The {@link #withFilename(String) filename} and a non-empty {@link #withOptions(List) option list} are required,
+ * but other elements are optional.
  *
  * @version 1.0
  * @author Thiago Marback
