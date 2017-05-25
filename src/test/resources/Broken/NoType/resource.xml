@@ -1,0 +1,24 @@
+<resource id="Unrecognized type">
+
+    <thing>
+        <filename>File.foo</filename>
+        <transition>transition pooooooooooooop</transition>
+        <options>
+            <option>
+                <text>Chocolate</text>
+                <target>Heaven</target>
+            </option>
+            <option>
+                <text>Vegetable</text>
+                <target>Hell</target>
+            </option>
+            <option>
+                <text>Fruit</text>
+                <target>Here</target>
+            </option>
+        
+        </options>
+        <graphic>image</graphic>
+    </thing>
+
+</resource>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="This is okay">
+
+    <scene>
+        <audio>song</audio>
+        <filename>File.file</filename>
+        <options>
+            <option>
+                <text>Chocolate</text>
+                <target>Heaven</target>
+            </option>
+            <option>
+                <text>Vegetable</text>
+                <target>Hell</target>
+            </option>
+            <option>
+                <text>Fruit</text>
+                <target>Here</target>
+            </option>
+        
+        </options>
+    </scene>
+
+</resource>

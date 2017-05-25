@@ -28,7 +28,7 @@ public class ResourceManager {
     
     private static final String RESOURCE_IDENTIFIER = "resource.xml";
     private static final String RESOURCE_ROOT = "resources";
-    private static final int MAX_DEPTH = 5;
+    private static final int MAX_DEPTH = Integer.MAX_VALUE;
 
     private static Hashtable<String, Resource> resources = new Hashtable<>();
     
@@ -49,30 +49,23 @@ public class ResourceManager {
      */
     public static void load() {
         
+        System.out.println( "===================[ Loading Resource Database ]===================\n" );
         List<ResourcePath> files = getResourceFiles();
         for ( ResourcePath file : files ) {
             
-            System.out.println( "**************[ File " + file.getPath() + " ]**************" );
+            System.out.println( "***[ Loading resource file '" + file.getPath() + "' ]***" );
             try {
-                Scene sc;
-                sc = (Scene) ResourceReader.readResource( file );
-                System.out.println( sc.getID() );
-                System.out.println( sc.getPath().getPath() );
-                System.out.println( sc.getPath().inJar() );
-                System.out.println( (sc.getTransition() == null) ? "No transition." : sc.getTransition() );
-                System.out.println( (sc.getGraphic() == null) ? "No graphic." : sc.getGraphic() );
-                System.out.println( (sc.getAudio() == null) ? "No audio." : sc.getAudio() );
-                for ( Choice c : sc.getOptions() ) {
-                    
-                    System.out.println( "Choice: " + c + " ===> " + c.getTarget() );
-                    
-                }
+                Resource res = ResourceReader.readResource( file );
+                resources.put( res.getID(), res );
+                System.out.println( "Loaded successfully." );
             } catch ( XMLStreamException e ) {
-                // TODO Auto-generated catch block
+                System.err.println( "Failed to load file '" + file.getPath() + "'." );
                 e.printStackTrace();
             }
+            System.out.println();
             
         }
+        System.out.println( "===================[ Database Loaded ]===================\n" );
         
     }
     

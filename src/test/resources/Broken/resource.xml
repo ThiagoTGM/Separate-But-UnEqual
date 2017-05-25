@@ -1,0 +1,25 @@
+<resource id="Broken">
+
+    <scene>
+        <filename>File.foo</filename>
+        <me>hi</me>
+        <transition>transition pooooooooooooop</transition>
+        <options>
+            <option>
+                <text>Chocolate</text>
+                <target>Heaven</target>
+            </option>
+            <option>
+                <text>Vegetable</text>
+                <target>Hell</target>
+            </option>
+            <option>
+                <text>Fruit</text>
+                <target>Here</target>
+            </option>
+        
+        </options>
+        <graphic>image</graphic>
+    </scene>
+
+</resource>

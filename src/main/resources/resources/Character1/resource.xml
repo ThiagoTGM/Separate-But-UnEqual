@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="Char 1 Start">
+
+    <scene>
+    
+        <filename>Char1Intro.txt</filename>
+        <options>
+        
+            <option>
+                <text>Go to school</text>
+                <target>Char1PrimarySchool</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>
