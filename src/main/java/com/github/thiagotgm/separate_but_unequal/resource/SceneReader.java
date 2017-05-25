@@ -6,10 +6,15 @@ import java.util.List;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 public class SceneReader extends ResourceReader {
+    
+    private static final String CHOICE_TAG = "choice";
+    private static final String CHOICE_TEXT_TAG = "text";
+    private static final String CHOICE_TARGET_TAG = "target";
 
     protected void read( XMLEventReader reader, ResourceFactory factory, boolean inJar ) throws XMLStreamException  {
         
@@ -150,6 +155,83 @@ public class SceneReader extends ResourceReader {
             }
             
         }
+        
+    }
+    
+    /**
+     * Reads a "choice" element from the given EventReader.
+     *
+     * @param reader Reader going through the XML document. Its last return should have been
+     *               the opening tag of the "choice" element.
+     * @return The choice object representing that element.
+     * @throws XMLStreamException If a format error was encountered in the element.
+     */
+    private Choice readChoice( XMLEventReader reader ) throws XMLStreamException {
+        
+        String text = null;
+        boolean isText = false;
+        String target = null;
+        boolean isTarget = false;
+        while ( reader.hasNext() ) {
+            
+            XMLEvent event = reader.nextEvent();
+            String name;
+            switch ( event.getEventType() ) {
+                
+                /* Opening tag */
+                case XMLStreamConstants.START_ELEMENT:
+                    if ( isText || isTarget ) { // <text> and <target> shouldn't have subelements.
+                        throw new XMLStreamException( UNEXPECTED_SUBELEMENT );
+                    }
+                    StartElement start = event.asStartElement();
+                    name = start.getName().getLocalPart();
+                    if ( name.equals( CHOICE_TEXT_TAG ) ) { // <text> encountered.
+                        isText = true;
+                    } else if ( name.equals( CHOICE_TARGET_TAG ) ) { // <target> encountered.
+                        isTarget = true;
+                    } else { // tag not recognized.
+                        throw new XMLStreamException( UNEXPECTED_SUBELEMENT );
+                    }
+                    break;
+                    
+                /* Text */
+                case XMLStreamConstants.CHARACTERS:
+                    String value = event.asCharacters().getData().trim();
+                    if ( value.isEmpty() ) {
+                        value = null; // Empty text is not valid.
+                    }
+                    if ( isText ) { // Text in <text>.
+                        text = value;
+                    } else if ( isTarget ) { // Text in <target>.
+                        target = value;
+                    } else { // Text that was not in <text> or <target>.
+                        throw new XMLStreamException( UNEXPECTED_TEXT );
+                    }
+                    break;
+                    
+                /* Closing tag */
+                case XMLStreamConstants.END_ELEMENT:
+                    EndElement end = event.asEndElement();
+                    name = end.getName().getLocalPart();
+                    if ( isText && name.equals( CHOICE_TEXT_TAG ) ) { // Was reading <text> and found </text>.
+                        isText = false;
+                    } else if ( isTarget && name.equals( CHOICE_TARGET_TAG ) ) { // Was reading <target> and found </target>.
+                        isTarget = false;
+                    } else if ( !( isText || isTarget ) && name.equals( CHOICE_TAG ) ) { // Wasn't reading <text> or <target>
+                        if ( ( text != null ) && ( target != null ) ) {                  // and found end of choice element.
+                            return new Choice( text, target ); // All elements present, build and return.
+                        } else { // Missing text or target.
+                            throw new XMLStreamException( String.format( MISSING_ELEMENTS, "choice" ) );
+                        }
+                    } else { // Tag not recognized.
+                        throw new XMLStreamException( UNEXPECTED_CLOSING_TAG );
+                    }
+                    
+            }
+            
+        }
+        // If nothing else to read, EOF was found before the element ended.
+        throw new XMLStreamException( UNEXPECTED_EOF );
         
     }
 

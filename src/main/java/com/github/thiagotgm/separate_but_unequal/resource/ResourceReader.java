@@ -23,6 +23,17 @@ import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
  * @since 2017-05-24
  */
 public abstract class ResourceReader {
+    
+    /* Strings used for exception messages */
+    // Element errors.
+    protected static final String MISSING_ELEMENTS = "<%s> element missing required subelements.";
+    
+    // Unexpected events.
+    protected static final String UNEXPECTED_TEXT = "Unexpected text encountered.";
+    protected static final String UNEXPECTED_SUBELEMENT = "Unexpected subelement encountered.";
+    protected static final String UNEXPECTED_CLOSING_TAG = "Unexpected closing tag.";
+    protected static final String UNEXPECTED_EOF = "Unexpected EOF encountered.";
+    /***************************************/
 
     private static final String ROOT = "resource";
     
@@ -93,7 +104,7 @@ public abstract class ResourceReader {
                             throw new XMLStreamException( "Missing specific resource type element." );
                         }
                     } else { // Closing tag that is not for the root element.
-                        throw new XMLStreamException( "Unexpected closing tag." );
+                        throw new XMLStreamException( UNEXPECTED_CLOSING_TAG );
                     }
                 
             }
