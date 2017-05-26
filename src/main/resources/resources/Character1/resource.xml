@@ -9,7 +9,15 @@
         
             <option>
                 <text>Go to school</text>
-                <target>Char1PrimarySchool</target>
+                <target>Char 1 Path To School</target>
+            </option>
+            <option>
+                <text>Chill</text>
+                <target>ChillLol</target>
+            </option>
+            <option>
+                <text>Read a book</text>
+                <target>LikeANerd</target>
             </option>
         
         </options>

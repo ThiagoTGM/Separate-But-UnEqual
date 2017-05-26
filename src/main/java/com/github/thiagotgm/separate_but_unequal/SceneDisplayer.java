@@ -18,6 +18,7 @@ public class SceneDisplayer implements Runnable {
     private static final long LINE_BREAK_DELAY_MULTIPLIER = 20;
     
     public static final String THREAD_NAME = "Scene Text Updater";
+    private static final String ERROR = "Could not load Scene text";
     
     private final JTextArea sceneDisplay;
     
@@ -40,7 +41,7 @@ public class SceneDisplayer implements Runnable {
     
     public void skip() {
         
-        sceneDisplay.setText( sceneText );
+        sceneDisplay.setText( ( sceneText == null ) ? ERROR : sceneText );
         
     }
     
@@ -53,6 +54,10 @@ public class SceneDisplayer implements Runnable {
     @Override
     public void run() {
 
+        if ( sceneText == null ) {
+            skip();
+            return;
+        }
         try {
             Thread.sleep( delay );
         } catch ( InterruptedException e ) {

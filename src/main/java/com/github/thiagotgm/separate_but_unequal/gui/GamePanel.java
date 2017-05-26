@@ -153,20 +153,22 @@ public class GamePanel extends JPanel {
         JPanel gameArea = new JPanel( new GridBagLayout(), true );
         
         scene = new JTextArea(); // Create and configure area for scene text.
-        scene.setText( "Testing" );
         setFont( scene );
         scene.setEditable( false );
         scene.setMargin( new Insets( margin, margin, margin, margin ) );
-        JScrollPane scenePane = new JScrollPane( scene );
+        scene.setLineWrap( true );
+        JScrollPane scenePane = new JScrollPane( scene, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
         Border border = BorderFactory.createLineBorder( Color.BLACK );
         scenePane.setBorder( border );
         
         options = new JTextArea(); // Create and configure area for options.
-        options.setText( " > DO THIS" );
         setFont( options );
         options.setEditable( false );
         options.setMargin( new Insets( margin, margin, margin, margin ) );
-        JScrollPane optionsPane = new JScrollPane( options );
+        options.setLineWrap( true );
+        JScrollPane optionsPane = new JScrollPane( options, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
         border = BorderFactory.createLineBorder( Color.BLACK );
         optionsPane.setBorder( border );
         
@@ -242,6 +244,30 @@ public class GamePanel extends JPanel {
     public JPanel getGraphicArea() {
         
         return graphic;
+        
+    }
+    
+    /**
+     * Sets whether the buttons of the option selector are enabled.
+     * 
+     * @param enabled If true, the buttons will be enabled. If false, the buttons will be disabled.
+     */
+    public void setOptionButtonsEnabled( boolean enabled ) {
+        
+        upButton.setEnabled( enabled );
+        selectButton.setEnabled( enabled );
+        downButton.setEnabled( enabled );
+        
+    }
+    
+    /**
+     * Sets whether the skip button is enabled.
+     * 
+     * @param enabled If true, the buttons will be enabled. If false, the buttons will be disabled.
+     */
+    public void setSkipButtonEnabled( boolean enabled ) {
+        
+        skipButton.setEnabled( enabled );
         
     }
     

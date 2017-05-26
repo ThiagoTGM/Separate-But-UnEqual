@@ -29,6 +29,7 @@ public class Launcher {
         ResourceManager.load();
         
         JFrame program = new JFrame( "Separate but UnEqual" );
+        program.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         Toolkit defKit = Toolkit.getDefaultToolkit();
         Dimension screenSize = defKit.getScreenSize();
         program.setSize( (int) ( screenSize.getWidth() * WIDTH_MULTIPLIER ),

@@ -7,24 +7,46 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 import com.github.thiagotgm.separate_but_unequal.gui.GamePanel;
 import com.github.thiagotgm.separate_but_unequal.resource.Choice;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
 import com.github.thiagotgm.separate_but_unequal.resource.Scene;
 
-public class GameManager implements ActionListener {
+/**
+ * Manages the game flow during normal gameplay.
+ *
+ * @version 1.0
+ * @author Thiago
+ * @since 2017-05-25
+ */
+public class GameManager implements ActionListener, Runnable {
+    
+    public static final String THREAD_NAME = "Game Manager";
     
     private final GamePanel panel;
     private final SceneDisplayer sceneDisplayer;
+    private final ChoiceDisplayer choiceDisplayer;
+    
     private List<Choice> currentOptions;
     private Loader buffer;
     private Thread textThread;
     private Thread bufferThread;
+    
+    private LoadedScene nextScene;
+    private Thread managerThread;
 
+    /**
+     * Starts a new Manager that displays the game on the given panel.
+     * 
+     * @param panel
+     */
     public GameManager( GamePanel panel ) {
 
         this.panel = panel;
         sceneDisplayer = new SceneDisplayer( panel.getSceneArea() );
+        choiceDisplayer = new ChoiceDisplayer( panel.getOptionsArea() );
         panel.addActionListener( this );
         
     }
@@ -34,32 +56,112 @@ public class GameManager implements ActionListener {
     public void actionPerformed( ActionEvent e ) {
 
         String command = e.getActionCommand();
+        int current;
         switch ( command ) {
             
-            case GamePanel.SKIP_COMMAND:
+            case GamePanel.SKIP_COMMAND: // Skip text displaying process (just print full text).
                 textThread.interrupt();
                 sceneDisplayer.skip();
                 break;
+            case GamePanel.UP_COMMAND: // Move one choice up.
+                current = choiceDisplayer.getSelected();
+                if ( current > 0 ) {
+                    choiceDisplayer.setSelected( current - 1 );
+                }
+                break;
+            case GamePanel.DOWN_COMMAND: // Move one choice down.
+                current = choiceDisplayer.getSelected();
+                if ( current < currentOptions.size() - 1 ) {
+                    choiceDisplayer.setSelected( current + 1 );
+                }
+                break;
+            case GamePanel.SELECT_COMMAND: // Select current choice.
+                current = choiceDisplayer.getSelected();
+                try {
+                    bufferThread.join();
+                } catch ( InterruptedException e1 ) {
+                    System.err.println( "Warning: Buffer thread interrupted." );
+                }
+                LoadedScene next = buffer.getLoadedScenes().get( current );
+                if ( next != null ) {
+                    nextScene = next;
+                    runNext();
+                } else {
+                    JOptionPane.showMessageDialog( panel, "The target specified by this option is invalid.",
+                            "Target Error", JOptionPane.ERROR_MESSAGE );
+                }
             
         }
         
     }
     
-    public void start( String sceneID ) {
+    /**
+     * Starts the game on a specified Scene.
+     * 
+     * @param startSceneID The Resource ID of the first scene to be shown.
+     */
+    public void start( String startSceneID ) {
         
-        Scene target = ( Scene ) ResourceManager.getResource( sceneID );
-        LoadedScene first = new Loader().load( target );
-        next( first );
+        Scene target = ( Scene ) ResourceManager.getResource( startSceneID );
+        nextScene = new Loader().load( target );
+        runNext();
         
     }
     
-    private void next( LoadedScene scene ) {
+    /**
+     * Runs the next scene on a separate thread.<br>
+     * Cleans up any old threads beforehand.
+     */
+    public void runNext() {
         
+        if ( managerThread != null ) {
+            managerThread.interrupt();
+        }
+        if ( textThread != null ) {
+            textThread.interrupt();
+        }
+        if ( bufferThread != null ) {
+            bufferThread.interrupt();
+        }
+        managerThread = new Thread( this, THREAD_NAME );
+        managerThread.start();
+        
+    }
+    
+    /**
+     * Runs the next scene.<br>
+     * Includes displaying the text+graphic, buffering the next scenes, and starting the user choice process.<br>
+     * Don't run this manually, call {@link #runNext()} instead as it performs cleanup for old threads that might be
+     * still running.
+     * 
+     * @param scene Scene to be ran next.
+     */
+    @Override
+    public void run() {
+
+        LoadedScene scene = nextScene;
+        /* Display scene */
+        panel.setOptionButtonsEnabled( false );
+        panel.setSkipButtonEnabled( true );
+        choiceDisplayer.clear();
         sceneDisplayer.showScene( scene.getText() );
         textThread = new Thread( sceneDisplayer );
         textThread.start();
         currentOptions = scene.getScene().getOptions();
         bufferNextScenes( currentOptions );
+        try {
+            textThread.join();
+        } catch ( InterruptedException e ) {
+            // Normal
+        }
+        
+        /* Scene displayed. Get player choice. */
+        panel.setSkipButtonEnabled( false );
+        panel.setOptionButtonsEnabled( true );
+        choiceDisplayer.showOptions( currentOptions );
+        
+        /* End of thread */
+        managerThread = null;
         
     }
     
@@ -75,11 +177,15 @@ public class GameManager implements ActionListener {
         for ( Choice possible : choices ) {
             
             Scene target = ( Scene ) ResourceManager.getResource( possible.getTarget() );
+            if ( target == null ) {
+                System.err.println( "Invalid Scene target: " + possible.getTarget() );
+            }
             targets.add( target );
             
         }
         buffer = new Loader( targets );
         bufferThread = new Thread( buffer, Loader.THREAD_NAME );
+        bufferThread.start();
 
     }
     
@@ -124,7 +230,11 @@ public class GameManager implements ActionListener {
             List<LoadedScene> product = new ArrayList<>( targets.size() );
             for ( Scene target : targets ) { // Loads each target.
                 
-                product.add( load( target ) );
+                if ( target == null ) {
+                    product.add( null );
+                } else {
+                    product.add( load( target ) );
+                }
                 
             }
             this.product = product; // Stores finished result.
@@ -139,7 +249,7 @@ public class GameManager implements ActionListener {
          * @return All the Scenes with all associated resources loaded.
          * @throws IllegalStateException if used before the loading process completed.
          */
-        public List<LoadedScene> getLoadedScene() throws IllegalStateException {
+        public List<LoadedScene> getLoadedScenes() throws IllegalStateException {
             
             if ( product != null ) {
                 return product;
@@ -185,7 +295,7 @@ public class GameManager implements ActionListener {
                 
             }
             reader.close();
-            return builder.toString(); // Finished reading file.
+            return builder.toString().trim(); // Finished reading file.
             
         }
         

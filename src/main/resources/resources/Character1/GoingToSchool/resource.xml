@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="Char 1 Path To School">
+
+    <scene>
+    
+        <filename>Char1SchoolPath.txt</filename>
+        <options>
+        
+            <option>
+                <text>Keep walking</text>
+                <target>Char1PrimarySchool</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>
