@@ -57,6 +57,8 @@ public class Launcher {
         });
         program.add( panel );
         program.setVisible( true );
+        GameManager manager = new GameManager( panel );
+        manager.start( "Char 1 Start" );
 
     }
 

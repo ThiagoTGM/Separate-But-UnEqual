@@ -57,8 +57,7 @@ public class ResourcePath {
      * Retrieves the resource file (resource.xml) as an input string.<br>
      * Takes into account where the file is stored (jar or filesystem).
      * 
-     * @return The resource file as an InputStream.
-     * @throws FileNotFoundException if the file described by the path was not found.
+     * @return The resource file as an InputStream, or null if it was not found.
      */
     public InputStream getInputStream() {
         

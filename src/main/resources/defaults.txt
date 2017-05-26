@@ -1,0 +1,1 @@
+textSpeedMultiplier=1

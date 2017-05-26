@@ -13,6 +13,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Stream;
 
 import javax.xml.stream.XMLStreamException;
@@ -29,8 +30,13 @@ public class ResourceManager {
     private static final String RESOURCE_IDENTIFIER = "resource.xml";
     private static final String RESOURCE_ROOT = "resources";
     private static final int MAX_DEPTH = Integer.MAX_VALUE;
+    
+    private static final String DEFAULT_SETTINGS_FILE = "defaults.txt";
+    private static final String TEXT_SPEED_MULTIPLIER = "textSpeedMultiplier";
 
-    private static Hashtable<String, Resource> resources = new Hashtable<>();
+    private static final Hashtable<String, Resource> resources = new Hashtable<>();
+    private static final Properties defaultSettings = new Properties();
+    private static Properties settings;
     
     /**
      * Retrieves the resource identified by the given ID.
@@ -45,9 +51,17 @@ public class ResourceManager {
     }
     
     /**
-     * Loads the resource library.
+     * Loads the resource library and the default properties.
      */
     public static void load() {
+        
+        try {
+            defaultSettings.load( ResourceManager.class.getClassLoader().getResourceAsStream( DEFAULT_SETTINGS_FILE ) );
+        } catch ( IOException e ) {
+            System.err.println( "Failed to load default settings." );
+            System.exit( 1 );
+        }
+        resetSettings();
         
         System.out.println( "===================[ Loading Resource Database ]===================\n" );
         List<ResourcePath> files = getResourceFiles();
@@ -128,6 +142,37 @@ public class ResourceManager {
         }
         
         return found;
+        
+    }
+    
+    /**
+     * Resets all settings to default.
+     */
+    public static void resetSettings() {
+        
+        settings = new Properties( defaultSettings );
+        
+    }
+    
+    /**
+     * Retrieves the current value of the Text Speed Multiplier setting.
+     * 
+     * @return The current value of the setting.
+     */
+    public static int getTextSpeedMultiplier() {
+        
+        return Integer.valueOf( settings.getProperty( TEXT_SPEED_MULTIPLIER ) );
+        
+    }
+    
+    /**
+     * Sets the value of the Text Speed Multiplier setting.
+     * 
+     * @param newValue the new value of the setting.
+     */
+    public static void setTextSpeedMultiplier( int newValue ) {
+        
+        settings.setProperty( TEXT_SPEED_MULTIPLIER, String.valueOf( newValue ) );
         
     }
 

@@ -213,6 +213,39 @@ public class GamePanel extends JPanel {
     }
     
     /**
+     * Retrieves the TextArea where the scene text should be displayed.
+     * 
+     * @return The scene text area.
+     */
+    public JTextArea getSceneArea() {
+        
+        return scene;
+        
+    }
+    
+    /**
+     * Retrieves the TextArea where the scene options should be displayed.
+     * 
+     * @return The options text area.
+     */
+    public JTextArea getOptionsArea() {
+        
+        return options;
+        
+    }
+    
+    /**
+     * Retrieves the Panel where the scene graphics should be displayed.
+     * 
+     * @return The graphics panel.
+     */
+    public JPanel getGraphicArea() {
+        
+        return graphic;
+        
+    }
+    
+    /**
      * Adds a listener to be notified when one of the buttons in the panel is pressed.
      * 
      * @param l Listener to be registered.
