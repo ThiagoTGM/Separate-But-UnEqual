@@ -9,6 +9,9 @@ import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.thiagotgm.separate_but_unequal.gui.GamePanel;
 import com.github.thiagotgm.separate_but_unequal.resource.Choice;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
@@ -23,6 +26,9 @@ import com.github.thiagotgm.separate_but_unequal.resource.Scene;
  */
 public class GameManager implements ActionListener, Runnable {
     
+    private static final Logger log = LoggerFactory.getLogger( GameManager.class );
+    
+    /** Thread name to be used for objects of this type. */
     public static final String THREAD_NAME = "Game Manager";
     
     private final GamePanel panel;
@@ -40,7 +46,7 @@ public class GameManager implements ActionListener, Runnable {
     /**
      * Starts a new Manager that displays the game on the given panel.
      * 
-     * @param panel
+     * @param panel The panel where the game is to be displayed.
      */
     public GameManager( GamePanel panel ) {
 
@@ -51,11 +57,16 @@ public class GameManager implements ActionListener, Runnable {
         
     }
     
-
+    /**
+     * Executes actions corresponding to certain buttons in the game panel.
+     *
+     * @param e Triggered event.
+     */
     @Override
     public void actionPerformed( ActionEvent e ) {
 
         String command = e.getActionCommand();
+        log.trace( "Command received: " + command );
         int current;
         switch ( command ) {
             
@@ -80,7 +91,7 @@ public class GameManager implements ActionListener, Runnable {
                 try {
                     bufferThread.join();
                 } catch ( InterruptedException e1 ) {
-                    System.err.println( "Warning: Buffer thread interrupted." );
+                    log.warn( "Buffer thread was interrupted." );
                 }
                 LoadedScene next = buffer.getLoadedScenes().get( current );
                 if ( next != null ) {
@@ -145,7 +156,7 @@ public class GameManager implements ActionListener, Runnable {
         panel.setSkipButtonEnabled( true );
         choiceDisplayer.clear();
         sceneDisplayer.showScene( scene.getText() );
-        textThread = new Thread( sceneDisplayer );
+        textThread = new Thread( sceneDisplayer, SceneDisplayer.THREAD_NAME );
         textThread.start();
         currentOptions = scene.getScene().getOptions();
         bufferNextScenes( currentOptions );
@@ -178,7 +189,7 @@ public class GameManager implements ActionListener, Runnable {
             
             Scene target = ( Scene ) ResourceManager.getResource( possible.getTarget() );
             if ( target == null ) {
-                System.err.println( "Invalid Scene target: " + possible.getTarget() );
+                log.warn( "Invalid target: " + possible.getTarget() );
             }
             targets.add( target );
             
@@ -238,6 +249,7 @@ public class GameManager implements ActionListener, Runnable {
                 
             }
             this.product = product; // Stores finished result.
+            log.debug( "Done buffering files." );
             
         }
         

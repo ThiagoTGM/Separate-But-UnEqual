@@ -13,6 +13,9 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
 
 /**
@@ -25,15 +28,17 @@ import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
  */
 public abstract class ResourceReader {
     
-    /* Strings used for exception messages */
-    // Element errors.
-    protected static final String MISSING_ELEMENTS = "<%s> element missing required subelements.";
+    private static final Logger log = LoggerFactory.getLogger( ResourceReader.class );
     
-    // Unexpected events.
+    /* Strings used for exception messages */
+    /** String used to display errors about missing subelements. */
+    protected static final String MISSING_ELEMENTS = "<%s> element missing required subelements.";
+    /** String used to display errors about unexpected elements. */
     protected static final String UNEXPECTED_ELEMENT = "Unexpected element encountered.";
+    /** String used to display errors about unexpected closing tags. */
     protected static final String UNEXPECTED_CLOSING_TAG = "Unexpected closing tag.";
+    /** String used to display errors about reaching EOF while some elements were still open. */
     protected static final String UNEXPECTED_EOF = "Unexpected EOF encountered.";
-    /***************************************/
 
     private static final String ROOT = "resource";
     
@@ -100,8 +105,7 @@ public abstract class ResourceReader {
                             try {
                                 input.close();
                             } catch ( IOException e ) {
-                                System.err.println( "Could not close input resource file stream." );
-                                e.printStackTrace();
+                                log.warn( "Could not close input resource file stream.", e );
                             }
                             /* Attempt to build Resource */
                             try {

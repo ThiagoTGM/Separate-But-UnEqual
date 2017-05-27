@@ -18,6 +18,11 @@ import java.util.stream.Stream;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.thiagotgm.separate_but_unequal.Launcher;
+
 /**
  * Class that manages the resource library.
  *
@@ -26,6 +31,8 @@ import javax.xml.stream.XMLStreamException;
  * @since 2017-05-23
  */
 public class ResourceManager {
+    
+    private static final Logger log = LoggerFactory.getLogger( ResourceManager.class );
     
     private static final String RESOURCE_IDENTIFIER = "resource.xml";
     private static final String RESOURCE_ROOT = "resources";
@@ -58,28 +65,29 @@ public class ResourceManager {
         try {
             defaultSettings.load( ResourceManager.class.getClassLoader().getResourceAsStream( DEFAULT_SETTINGS_FILE ) );
         } catch ( IOException e ) {
-            System.err.println( "Failed to load default settings." );
-            System.exit( 1 );
+            log.error( "Failed to load default settings.", e );
+            System.exit( Launcher.LOADING_ERROR_CODE );
         }
         resetSettings();
         
-        System.out.println( "===================[ Loading Resource Database ]===================\n" );
+        log.info( "===================[ Loading Resource Database ]===================\n" );
         List<ResourcePath> files = getResourceFiles();
+        if ( files == null ) {
+            System.exit( Launcher.LOADING_ERROR_CODE );
+        }
         for ( ResourcePath file : files ) {
             
-            System.out.println( "***[ Loading resource file '" + file.getPath() + "' ]***" );
+            log.debug( "***[ Loading resource file '" + file.getPath() + "' ]***" );
             try {
                 Resource res = ResourceReader.readResource( file );
                 resources.put( res.getID(), res );
-                System.out.println( "Loaded successfully." );
+                log.info( "Loaded resource file '" + file.getPath() + "' successfully." );
             } catch ( XMLStreamException e ) {
-                System.err.println( "Failed to load file '" + file.getPath() + "'." );
-                e.printStackTrace();
+                log.error( "Failed to load file '" + file.getPath() + "'.", e );
             }
-            System.out.println();
             
         }
-        System.out.println( "===================[ Database Loaded ]===================\n" );
+        log.info( "===================[ Database Loaded ]===================\n" );
         
     }
     
@@ -96,7 +104,7 @@ public class ResourceManager {
         try { // Obtains the URI of the root resource folder.
             uri = ResourceManager.class.getClassLoader().getResource( RESOURCE_ROOT ).toURI();
         } catch ( URISyntaxException e ) {
-            e.printStackTrace();
+            log.error( "Failed to obtain resource folder.", e );
             return null;
         }
         
@@ -124,20 +132,18 @@ public class ResourceManager {
                 
             }
         } catch ( IOException e ) {
-            System.err.println( "Error encountered while identifying resource files." );
-            e.printStackTrace();
+            log.error( "Error encountered while identifying resource files.", e );
             found = null;
         } finally { // Closes jar filesystem (if used) and pathwalker.
+            if ( walk != null ) {
+                walk.close();
+            }
             if ( fileSystem != null ) {
                 try {
                     fileSystem.close();
                 } catch ( IOException e ) {
-                    System.err.println( "Failed to close FileSystem." );
-                    e.printStackTrace();
+                    log.warn( "Failed to close FileSystem.", e );
                 }
-            }
-            if ( walk != null ) {
-                walk.close();
             }
         }
         

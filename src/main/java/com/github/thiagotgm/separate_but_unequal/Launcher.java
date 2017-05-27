@@ -17,6 +17,11 @@ import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
  */
 public class Launcher {
     
+    /**
+     * Code used on program exit to indicate an error was encountered while loading resources.
+     */
+    public static final int LOADING_ERROR_CODE = 1;
+    
     private static final double WIDTH_MULTIPLIER = 0.5;
     private static final double HEIGHT_MULTIPLIER = 0.8;
     private static final int FONT_DIVISOR = 70;

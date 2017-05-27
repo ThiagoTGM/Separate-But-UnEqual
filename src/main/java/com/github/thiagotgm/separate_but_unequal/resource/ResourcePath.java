@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Class that encapsulates a path to a resource and whether that path is in a jar or the regular
  * filesystem.
@@ -14,6 +17,8 @@ import java.nio.file.Path;
  * @since 2017-05-23
  */
 public class ResourcePath {
+    
+    private static final Logger log = LoggerFactory.getLogger( ResourcePath.class );
     
     private final Path path;
     private final boolean inJar;
@@ -67,7 +72,7 @@ public class ResourcePath {
             try {
                 return new FileInputStream( path.toString() );
             } catch ( FileNotFoundException e ) {
-                e.printStackTrace();
+                log.warn( "Could not obtain stream for resource file.", e );
                 return null;
             }
         }
