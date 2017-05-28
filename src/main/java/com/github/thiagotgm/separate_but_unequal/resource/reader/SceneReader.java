@@ -1,4 +1,4 @@
-package com.github.thiagotgm.separate_but_unequal.resource;
+package com.github.thiagotgm.separate_but_unequal.resource.reader;
 
 import java.nio.file.Path;
 import javax.xml.stream.XMLEventReader;
@@ -7,6 +7,10 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
+
+import com.github.thiagotgm.separate_but_unequal.resource.ResourceFactory;
+import com.github.thiagotgm.separate_but_unequal.resource.ResourcePath;
+import com.github.thiagotgm.separate_but_unequal.resource.SceneFactory;
 
 /**
  * Reader that extracts specific information about a Scene resource object from a resource XML stream.

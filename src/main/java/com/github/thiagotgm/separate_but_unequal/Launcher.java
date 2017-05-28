@@ -43,24 +43,6 @@ public class Launcher {
         fontMultiplier = resolution / FONT_DIVISOR;
         
         GamePanel panel = new GamePanel();
-        panel.addActionListener( (e) -> {
-            switch ( e.getActionCommand() ) {
-                
-                case GamePanel.SKIP_COMMAND:
-                    System.out.println("Skip");
-                    break;
-                case GamePanel.UP_COMMAND:
-                    System.out.println("Up");
-                    break;
-                case GamePanel.SELECT_COMMAND:
-                    System.out.println("Select");
-                    break;
-                case GamePanel.DOWN_COMMAND:
-                    System.out.println("Down");
-                    break;
-                
-            }
-        });
         program.add( panel );
         program.setVisible( true );
         GameManager manager = new GameManager( panel );

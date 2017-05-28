@@ -1,4 +1,4 @@
-package com.github.thiagotgm.separate_but_unequal.resource;
+package com.github.thiagotgm.separate_but_unequal.resource.reader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +17,9 @@ import javax.xml.stream.events.XMLEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.thiagotgm.separate_but_unequal.resource.Resource;
+import com.github.thiagotgm.separate_but_unequal.resource.ResourceFactory;
+import com.github.thiagotgm.separate_but_unequal.resource.ResourcePath;
 import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
 
 /**

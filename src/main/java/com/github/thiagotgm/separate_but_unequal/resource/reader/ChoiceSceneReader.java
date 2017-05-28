@@ -1,4 +1,4 @@
-package com.github.thiagotgm.separate_but_unequal.resource;
+package com.github.thiagotgm.separate_but_unequal.resource.reader;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +9,10 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
+
+import com.github.thiagotgm.separate_but_unequal.resource.Choice;
+import com.github.thiagotgm.separate_but_unequal.resource.ChoiceSceneFactory;
+import com.github.thiagotgm.separate_but_unequal.resource.ResourceFactory;
 
 /**
  * Implementation of SceneReader that reads a Scene of specific typeChoiceScene.

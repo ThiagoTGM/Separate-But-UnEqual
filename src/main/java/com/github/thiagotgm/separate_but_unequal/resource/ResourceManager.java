@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.thiagotgm.separate_but_unequal.Launcher;
+import com.github.thiagotgm.separate_but_unequal.resource.reader.ResourceReader;
 
 /**
  * Class that manages the resource library.
