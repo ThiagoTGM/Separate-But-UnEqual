@@ -81,7 +81,7 @@ public class ResourceManager {
      * Retrieves the resource identified by the given ID.
      * 
      * @param id ID of the resource to be retrieved.
-     * @return The resource in the library identified by the given ID.
+     * @return The resource in the library identified by the given ID, or null if there is no Resource with this ID.
      */
     public Resource getResource( String id ) {
         

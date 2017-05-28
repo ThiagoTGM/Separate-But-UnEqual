@@ -75,6 +75,34 @@ public interface Scalable {
     }
     
     /**
+     * Scales a pair of dimension values into a Dimension.<p>
+     * Essentially assumes that the given values are in inches and obtains the Dimension in pixels.
+     * 
+     * @param width Width to be scaled.
+     * @param height Height to be scaled.
+     * @return The scaled Dimension.
+     */
+    public static Dimension scale( int width, int height ) {
+        
+        return new Dimension( scale( width ), scale( height ) );
+        
+    }
+    
+    /**
+     * Scales a pair of dimension values into a Dimension.<p>
+     * Essentially assumes that the given values are in inches and obtains the Dimension in pixels.
+     * 
+     * @param width Width to be scaled.
+     * @param height Height to be scaled.
+     * @return The scaled Dimension.
+     */
+    public static Dimension scale( double width, double height ) {
+        
+        return new Dimension( scaleToInt( width ), scaleToInt( height ) );
+        
+    }
+    
+    /**
      * Sets the text font on the given component to be more appropriate to the resoultion.
      * 
      * @param c The component to have its font resized.

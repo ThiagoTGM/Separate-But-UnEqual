@@ -25,7 +25,7 @@ public class ChoiceDisplayer {
     /**
      * Intializes a new Displayer that displays a list of options onto a given text area.
      *
-     * @param optionDisplayTextArea to display the options on.
+     * @param optionDisplay TextArea to display the options on.
      */
     public ChoiceDisplayer( JTextArea optionDisplay ) {
 

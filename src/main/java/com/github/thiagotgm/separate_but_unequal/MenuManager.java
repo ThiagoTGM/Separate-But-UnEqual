@@ -62,6 +62,14 @@ public class MenuManager implements ActionListener {
                 setWindow( game );
                 gameManager.start( "Char 1 Start" );
                 break;
+                
+            case MainMenuPanel.LOAD_COMMAND: // Load from previous save.
+                setWindow( game );
+                gameManager.load();
+                break;
+                
+            case GamePanel.SAVE_COMMAND: // The game was saved.
+                menu.setLoadButtonEnabled( true );
             
         }
         

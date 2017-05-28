@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
+
+import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
 
 /**
  * Panel that contains the UI for the game, including text boxes and buttons.
@@ -30,8 +31,8 @@ public class GamePanel extends JPanel {
     /** Serial ID that represents this class. */
     private static final long serialVersionUID = -3770146955575152229L;
     
-    private static final double WIDTH_MULTIPLIER = 0.5;
-    private static final double HEIGHT_MULTIPLIER = 0.8;
+    private static final double WIDTH = 10;
+    private static final double HEIGHT = 10;
     
     private static final double SIDE_BORDER_PADDING = 0.2;
     private static final double TOP_BORDER_PADDING = 0.3;
@@ -40,12 +41,17 @@ public class GamePanel extends JPanel {
     private static final double TEXT_PADDING = 0.2;
     private static final double TEXT_MARGIN = 0.1;
     
+    private static final double FLOW_BUTTON_PADDING = 3;
     private static final double BUTTON_PADDING = 0.2;
     
     /** Action command that identifies that the "Skip" button was pressed. */
     public static final String SKIP_COMMAND = "SKIP";
     /** Action command that identifies that the "Menu" button was pressed. */
     public static final String MENU_COMMAND = "MENU";
+    /** Action command that identifies that the "Save" button was pressed. */
+    public static final String SAVE_COMMAND = "SAVE";
+    /** Action command that identifies that the "Load" button was pressed. */
+    public static final String LOAD_COMMAND = "LOAD";
     /** Action command that identifies that the "Up" button was pressed. */
     public static final String UP_COMMAND = "UP";
     /** Action command that identifies that the "Select" button was pressed. */
@@ -54,7 +60,7 @@ public class GamePanel extends JPanel {
     public static final String DOWN_COMMAND = "DOWN";
     
     private final JButton skipButton;
-    private final JButton menuButton;
+    private final JButton loadButton;
     private final JButton upButton;
     private final JButton selectButton;
     private final JButton downButton;
@@ -87,15 +93,11 @@ public class GamePanel extends JPanel {
         
         super( new BorderLayout(), isDoubleBuffered );
         
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setPreferredSize( new Dimension( (int) ( screenSize.getWidth() * WIDTH_MULTIPLIER ),
-                         (int) ( screenSize.getHeight() * HEIGHT_MULTIPLIER ) ) );
+        setPreferredSize( Scalable.scale( WIDTH, HEIGHT ) );
         
         int sidePadding = Scalable.scaleToInt( SIDE_BORDER_PADDING ); // Calculates padding for the button panel.
         int topPadding = Scalable.scaleToInt( TOP_BORDER_PADDING );
         int bottomPadding = Scalable.scaleToInt( BOTTOM_BORDER_PADDING );
-        
-        int buttonPadding = Scalable.scaleToInt( BUTTON_PADDING );
     
         listeners = new LinkedList<>();
         ActionListener listener = new ListenerAggregator( listeners );
@@ -110,21 +112,43 @@ public class GamePanel extends JPanel {
         skipButton.setActionCommand( SKIP_COMMAND );
         skipButton.addActionListener( listener );
         
-        menuButton = new JButton( "Menu" );
+        JButton menuButton = new JButton( "Menu" );
         Scalable.scaleFont( menuButton );
         menuButton.setActionCommand( MENU_COMMAND );
         menuButton.addActionListener( listener );
         
-        c.weightx = 0; // Insert skip button in panel.
-        c.weighty = 0;
+        JButton saveButton = new JButton( "Save" );
+        Scalable.scaleFont( saveButton );
+        saveButton.setActionCommand( SAVE_COMMAND );
+        saveButton.addActionListener( listener );
+        
+        loadButton = new JButton( "Load" );
+        Scalable.scaleFont( loadButton );
+        loadButton.setActionCommand( LOAD_COMMAND );
+        loadButton.addActionListener( listener );
+        loadButton.setEnabled( ResourceManager.getInstance().hasSave() );
+        
+        /* Buttons related to game flow */
+        int buttonPadding = Scalable.scaleToInt( FLOW_BUTTON_PADDING );
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
         c.insets = new Insets( topPadding, sidePadding, buttonPadding, sidePadding );
         c.gridx = 0;
         c.gridy = 0;
-        controlPanel.add( skipButton, c );
+        controlPanel.add( skipButton, c ); // Insert skip button in panel.
         
-        c.insets = new Insets( buttonPadding, sidePadding, buttonPadding, sidePadding );
+        /* Buttons related to game state */
+        buttonPadding = Scalable.scaleToInt( BUTTON_PADDING );
+        
+        c.insets = new Insets( 0, sidePadding, buttonPadding, sidePadding );
         c.gridy = 1;
-        controlPanel.add( menuButton, c );
+        controlPanel.add( menuButton, c ); // Insert menu button in panel.
+        
+        c.gridy = 2;
+        controlPanel.add( saveButton, c ); // Insert save button in panel.
+        
+        c.gridy = 3;
+        controlPanel.add( loadButton, c ); // Insert load button in panel.
         
         /* Creates the choice selector */
         JPanel choicePanel = new JPanel( new GridBagLayout(), isDoubleBuffered );
@@ -148,6 +172,7 @@ public class GamePanel extends JPanel {
         selectButton.setPreferredSize( size );
         upButton.setPreferredSize( size );
         
+        c.fill = GridBagConstraints.NONE;
         c.insets = new Insets( 0, sidePadding, 0, sidePadding ); // Insert up button in panel.
         c.gridx = 0;
         c.gridy = 0;
@@ -267,11 +292,22 @@ public class GamePanel extends JPanel {
     /**
      * Sets whether the skip button is enabled.
      * 
-     * @param enabled If true, the buttons will be enabled. If false, the buttons will be disabled.
+     * @param enabled If true, the button will be enabled. If false, the button will be disabled.
      */
     public void setSkipButtonEnabled( boolean enabled ) {
         
         skipButton.setEnabled( enabled );
+        
+    }
+    
+    /**
+     * Sets whether the load button is enabled.
+     * 
+     * @param enabled If true, the button will be enabled. If false, the button will be disabled.
+     */
+    public void setLoadButtonEnabled( boolean enabled ) {
+        
+        loadButton.setEnabled( enabled );
         
     }
     

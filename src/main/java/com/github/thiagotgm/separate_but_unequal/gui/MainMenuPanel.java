@@ -1,6 +1,5 @@
 package com.github.thiagotgm.separate_but_unequal.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
@@ -16,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
+import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
+
 /**
  * Panel that contains the UI for the main menu, including labels and buttons.
  *
@@ -25,6 +26,9 @@ import javax.swing.border.Border;
  */
 public class MainMenuPanel extends JPanel {
     
+    /** Serial ID that represents this class. */
+    private static final long serialVersionUID = 2874269025005392973L;
+    
     private static final String TITLE = "Separate But UnEqual";
     private static final float TITLE_FONT_SIZE = 50f;
     
@@ -32,8 +36,8 @@ public class MainMenuPanel extends JPanel {
     
     /** Action command that identifies that the "Start" button was pressed. */
     public static final String START_COMMAND = "START";
-    /** Action command that identifies that the "Load" button was pressed. */
-    public static final String LOAD_COMMAND = "LOAD";
+    /** Action command that identifies that the "Load" button on the main menu was pressed. */
+    public static final String LOAD_COMMAND = "MENU_" + GamePanel.LOAD_COMMAND;
     /** Action command that identifies that the "Exit" button was pressed. */
     public static final String EXIT_COMMAND = "EXIT";
     
@@ -45,10 +49,12 @@ public class MainMenuPanel extends JPanel {
     
     private final List<ActionListener> listeners;
     
+    private final JButton loadButton;
+    
     /**
      * Initializes a double-buffered MainMenu.
      * 
-     * @see #MainMenu(boolean)
+     * @see #MainMenuPanel(boolean)
      */
     public MainMenuPanel() {
 
@@ -84,26 +90,27 @@ public class MainMenuPanel extends JPanel {
         listeners = new LinkedList<>(); // Initializes the listener list and starts aggregator.
         ActionListener listener = new ListenerAggregator( listeners );
         
-        JButton start = new JButton( "Start" ); // Creates button to start game.
-        Scalable.scaleFont( start );
-        start.setActionCommand( START_COMMAND );
-        start.addActionListener( listener );
-        start.setMaximumSize( maxSize );
-        start.setHorizontalAlignment( SwingConstants.CENTER );
+        JButton startButton = new JButton( "Start" ); // Creates button to start game.
+        Scalable.scaleFont( startButton );
+        startButton.setActionCommand( START_COMMAND );
+        startButton.addActionListener( listener );
+        startButton.setMaximumSize( maxSize );
+        startButton.setHorizontalAlignment( SwingConstants.CENTER );
         
-        JButton load = new JButton( "Load" ); // Creates button to load save.
-        Scalable.scaleFont( load );
-        load.setActionCommand( LOAD_COMMAND );
-        load.addActionListener( listener );
-        load.setMaximumSize( maxSize );
-        load.setHorizontalAlignment( SwingConstants.CENTER );
+        loadButton = new JButton( "Load" ); // Creates button to load save.
+        Scalable.scaleFont( loadButton );
+        loadButton.setActionCommand( LOAD_COMMAND );
+        loadButton.addActionListener( listener );
+        loadButton.setMaximumSize( maxSize );
+        loadButton.setHorizontalAlignment( SwingConstants.CENTER );
+        loadButton.setEnabled( ResourceManager.getInstance().hasSave() );
         
-        JButton exit = new JButton( "Exit" ); // Creates button to exit to desktop.
-        Scalable.scaleFont( exit );
-        exit.setActionCommand( EXIT_COMMAND );
-        exit.addActionListener( listener );
-        exit.setMaximumSize( maxSize );
-        exit.setHorizontalAlignment( SwingConstants.CENTER );
+        JButton exitButton = new JButton( "Exit" ); // Creates button to exit to desktop.
+        Scalable.scaleFont( exitButton );
+        exitButton.setActionCommand( EXIT_COMMAND );
+        exitButton.addActionListener( listener );
+        exitButton.setMaximumSize( maxSize );
+        exitButton.setHorizontalAlignment( SwingConstants.CENTER );
         
         /* Add buttons to panel */
         Dimension padding = new Dimension( 0, Scalable.scaleToInt( BUTTON_PADDING ) );
@@ -112,18 +119,18 @@ public class MainMenuPanel extends JPanel {
         add( Box.createVerticalGlue() ); // Border between top labels and buttons.
         add( Box.createRigidArea( panelPadding ) );
         
-        start.setAlignmentX( Component.CENTER_ALIGNMENT );
-        add( start ); // Insert start button to panel.
+        startButton.setAlignmentX( Component.CENTER_ALIGNMENT );
+        add( startButton ); // Insert start button to panel.
         
         add( Box.createRigidArea( padding ) );
         
-        load.setAlignmentX( Component.CENTER_ALIGNMENT );
-        add( load ); // Insert load button to panel.
+        loadButton.setAlignmentX( Component.CENTER_ALIGNMENT );
+        add( loadButton ); // Insert load button to panel.
         
         add( Box.createRigidArea( padding ) );
         
-        exit.setAlignmentX( Component.CENTER_ALIGNMENT );
-        add( exit ); // Insert exit button to panel.
+        exitButton.setAlignmentX( Component.CENTER_ALIGNMENT );
+        add( exitButton ); // Insert exit button to panel.
         
         add( Box.createRigidArea( panelPadding ) );
         add( Box.createVerticalGlue() ); // Border between buttons and bottom labels.
@@ -140,6 +147,17 @@ public class MainMenuPanel extends JPanel {
         Border windowPadding = BorderFactory.createEmptyBorder( paddingSize, paddingSize, paddingSize, paddingSize );
         setBorder( windowPadding );
 
+    }
+    
+    /**
+     * Sets whether the load button is enabled.
+     * 
+     * @param enabled If true, the button will be enabled. If false, the button will be disabled.
+     */
+    public void setLoadButtonEnabled( boolean enabled ) {
+        
+        loadButton.setEnabled( enabled );
+        
     }
     
     /**

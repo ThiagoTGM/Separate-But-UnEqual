@@ -18,6 +18,7 @@ import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
 import com.github.thiagotgm.separate_but_unequal.resource.Scene;
 import com.github.thiagotgm.separate_but_unequal.resource.ChoiceScene;
 import com.github.thiagotgm.separate_but_unequal.resource.EndScene;
+import com.github.thiagotgm.separate_but_unequal.resource.Resource;
 import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
 
 /**
@@ -118,6 +119,15 @@ public class GameManager implements ActionListener, Runnable {
                 stop();
                 clear();
                 menuManager.gameEnd( endCode );
+                break;
+                
+            case GamePanel.SAVE_COMMAND:
+                save();
+                panel.setLoadButtonEnabled( true );
+                break;
+                
+            case GamePanel.LOAD_COMMAND:
+                load();
             
         }
         
@@ -137,10 +147,18 @@ public class GameManager implements ActionListener, Runnable {
      * Starts the game on a specified Scene.
      * 
      * @param startSceneID The Resource ID of the first scene to be shown.
+     * @throws IllegalArgumentException if the given Resource ID is not valid or does not correspond to a Scene.
      */
-    public void start( String startSceneID ) {
+    public void start( String startSceneID ) throws IllegalArgumentException {
         
-        Scene target = ( Scene ) ResourceManager.getInstance().getResource( startSceneID );
+        Resource res = ResourceManager.getInstance().getResource( startSceneID );
+        if ( res == null ) {
+            throw new IllegalArgumentException( "Given starting ID does not correspond to an existing ResourceID." );
+        }
+        if ( !( res instanceof Scene ) ) {
+            throw new IllegalArgumentException( "Given starting ID does not correspond to a Scene Resource." );
+        }
+        Scene target = (Scene) res;
         nextScene = new Loader().load( target );
         endCode = 0;
         runNext();
@@ -170,6 +188,7 @@ public class GameManager implements ActionListener, Runnable {
     public void run() {
 
         LoadedScene scene = nextScene;
+        log.debug( "Running Scene '" + scene.getScene().getID() + "'." );
         /* Display scene */
         panel.setOptionButtonsEnabled( false );
         panel.setSkipButtonEnabled( true );
@@ -184,7 +203,7 @@ public class GameManager implements ActionListener, Runnable {
         try {
             textThread.join();
         } catch ( InterruptedException e ) {
-            // Normal
+            return; // This thread was instructed to stop.
         }
         
         /* Scene displayed. */
@@ -217,6 +236,28 @@ public class GameManager implements ActionListener, Runnable {
         if ( bufferThread != null ) {
             bufferThread.interrupt();
         }
+        
+    }
+    
+    /**
+     * Saves the Scene that the game is currently on.
+     */
+    private void save() {
+        
+        String current = nextScene.getScene().getID();
+        ResourceManager.getInstance().setSave( current );
+        log.info( "Saved game at Scene '" + current + "'." );
+        
+    }
+    
+    /**
+     * Restarts the game from a previously saved Scene.
+     */
+    public void load() {
+        
+        String save = ResourceManager.getInstance().getSave();
+        log.info( "Loading game from Scene '" + save + "'." );
+        start( save );
         
     }
     

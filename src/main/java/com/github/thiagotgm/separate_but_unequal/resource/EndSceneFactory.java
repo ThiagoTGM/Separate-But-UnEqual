@@ -2,7 +2,7 @@ package com.github.thiagotgm.separate_but_unequal.resource;
 
 /**
  * Factory that constructs instances of the EndScene resource type, a subtype of the Scene type.<br>
- * Beyond the requirements of a SceneFactory, this also requires a {@link #withCode(List) ending code} in the
+ * Beyond the requirements of a SceneFactory, this also requires a {@link #withCode(int) ending code} in the
  * appropriate range.
  *
  * @version 1.0
