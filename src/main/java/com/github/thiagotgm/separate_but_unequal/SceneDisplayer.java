@@ -46,7 +46,7 @@ public class SceneDisplayer implements Runnable {
     
         this.sceneText = text;
         sceneDisplay.setText( null );
-        delay = DEFAULT_DELAY / ResourceManager.getTextSpeedMultiplier();
+        delay = DEFAULT_DELAY / ResourceManager.getInstance().getTextSpeedMultiplier();
         
     }
     

@@ -140,7 +140,7 @@ public class GameManager implements ActionListener, Runnable {
      */
     public void start( String startSceneID ) {
         
-        Scene target = ( Scene ) ResourceManager.getResource( startSceneID );
+        Scene target = ( Scene ) ResourceManager.getInstance().getResource( startSceneID );
         nextScene = new Loader().load( target );
         endCode = 0;
         runNext();
@@ -165,8 +165,6 @@ public class GameManager implements ActionListener, Runnable {
      * Includes displaying the text+graphic, buffering the next scenes, and starting the user choice process.<br>
      * Don't run this manually, call {@link #runNext()} instead as it performs cleanup for old threads that might be
      * still running.
-     * 
-     * @param scene Scene to be ran next.
      */
     @Override
     public void run() {
@@ -231,9 +229,10 @@ public class GameManager implements ActionListener, Runnable {
         
         List<Choice> choices = currentOptions;
         List<Scene> targets = new ArrayList<>( choices.size() );
+        ResourceManager resources = ResourceManager.getInstance();
         for ( Choice possible : choices ) {
             
-            Scene target = ( Scene ) ResourceManager.getResource( possible.getTarget() );
+            Scene target = ( Scene ) resources.getResource( possible.getTarget() );
             if ( target == null ) {
                 log.warn( "Invalid target: " + possible.getTarget() );
             }

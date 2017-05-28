@@ -25,10 +25,11 @@ import com.github.thiagotgm.separate_but_unequal.Launcher;
 import com.github.thiagotgm.separate_but_unequal.resource.reader.ResourceReader;
 
 /**
- * Class that manages the resource library.
+ * Class that manages the resource library.<br>
+ * Follows the Singleton pattern.
  *
  * @version 1.0
- * @author Thiago Marback
+ * @author Thiago
  * @since 2017-05-23
  */
 public class ResourceManager {
@@ -41,10 +42,40 @@ public class ResourceManager {
     
     private static final String DEFAULT_SETTINGS_FILE = "defaults.txt";
     private static final String TEXT_SPEED_MULTIPLIER = "textSpeedMultiplier";
+    private static final String SAVE = "save";
 
-    private static final Hashtable<String, Resource> resources = new Hashtable<>();
-    private static final Properties defaultSettings = new Properties();
-    private static Properties settings;
+    private final Hashtable<String, Resource> resources;
+    private final Properties defaultSettings;
+    private Properties settings;
+    
+    private static ResourceManager instance;
+    
+    /**
+     * Initializes a ResourceManager instance.
+     */
+    protected ResourceManager() {
+        
+        resources = new Hashtable<>();
+        defaultSettings = new Properties();
+        load();
+        resetSettings();
+        
+    }
+    
+    /**
+     * Retrieves the currently existing instance of ResourceManager.<br>
+     * If there isn't one, creates it.
+     * 
+     * @return The instance of ResourceManager.
+     */
+    public static ResourceManager getInstance() {
+        
+        if ( instance == null ) {
+            instance = new ResourceManager();
+        }
+        return instance;
+        
+    }
     
     /**
      * Retrieves the resource identified by the given ID.
@@ -52,7 +83,7 @@ public class ResourceManager {
      * @param id ID of the resource to be retrieved.
      * @return The resource in the library identified by the given ID.
      */
-    public static Resource getResource( String id ) {
+    public Resource getResource( String id ) {
         
         return resources.get( id );
         
@@ -61,15 +92,16 @@ public class ResourceManager {
     /**
      * Loads the resource library and the default properties.
      */
-    public static void load() {
+    private void load() {
         
+        log.info( "Loading default settings." );
         try {
             defaultSettings.load( ResourceManager.class.getClassLoader().getResourceAsStream( DEFAULT_SETTINGS_FILE ) );
+            log.info( "Default settings loaded." );
         } catch ( IOException e ) {
             log.error( "Failed to load default settings.", e );
             System.exit( Launcher.LOADING_ERROR_CODE );
         }
-        resetSettings();
         
         log.info( "===================[ Loading Resource Database ]===================" );
         List<ResourcePath> files = getResourceFiles();
@@ -155,7 +187,7 @@ public class ResourceManager {
     /**
      * Resets all settings to default.
      */
-    public static void resetSettings() {
+    public void resetSettings() {
         
         settings = new Properties( defaultSettings );
         
@@ -166,7 +198,7 @@ public class ResourceManager {
      * 
      * @return The current value of the setting.
      */
-    public static int getTextSpeedMultiplier() {
+    public int getTextSpeedMultiplier() {
         
         return Integer.valueOf( settings.getProperty( TEXT_SPEED_MULTIPLIER ) );
         
@@ -177,9 +209,46 @@ public class ResourceManager {
      * 
      * @param newValue the new value of the setting.
      */
-    public static void setTextSpeedMultiplier( int newValue ) {
+    public void setTextSpeedMultiplier( int newValue ) {
         
         settings.setProperty( TEXT_SPEED_MULTIPLIER, String.valueOf( newValue ) );
+        
+    }
+    
+    /**
+     * Retrieves the current value of the Save.
+     * 
+     * @return The current Save value. If there is no Save, returns null.
+     */
+    public String getSave() {
+        
+        return settings.getProperty( SAVE );
+        
+    }
+    
+    /**
+     * Sets the value of the Save.
+     * 
+     * @param save The new value of the Save. If null, the Save is deleted.
+     */
+    public void setSave( String save ) {
+        
+        if ( save != null ) {
+            settings.setProperty( SAVE, save );
+        } else {
+            settings.remove( SAVE );
+        }
+        
+    }
+    
+    /**
+     * Determines if a Save currently exists.
+     * 
+     * @return true if there is a Save, false otherwise.
+     */
+    public boolean hasSave() {
+        
+        return settings.containsKey( SAVE );
         
     }
 
