@@ -7,7 +7,7 @@ import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
  * All subclasses must call the {@link #ResourceFactory(String) super(String)} constructor
  * to provide the Resource ID.
  *
- * @version 1.0
+ * @version 1.2
  * @author Thiago Marback
  * @since 2017-05-23
  */
@@ -34,6 +34,8 @@ public abstract class ResourceFactory {
             
             case SCENE:
                 return new SceneFactory( id );
+            case CHOICE_SCENE:
+                return new ChoiceSceneFactory( id );
             default:
                 throw new UnsupportedOperationException( "No factory available for the requested resource type." );
             
@@ -45,9 +47,13 @@ public abstract class ResourceFactory {
      * Creates a new factory with a given Resource ID.
      * 
      * @param id ID of the resource to be constructed.
+     * @throws NullPointerException if the ID given is null.
      */
-    protected ResourceFactory( String id ) {
+    protected ResourceFactory( String id ) throws NullPointerException {
         
+        if ( id == null ) {
+            throw new NullPointerException( "Must specify a non-null ID for the constructed Resource." );
+        }
         this.id = id;
         
     }

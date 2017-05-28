@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -41,6 +42,7 @@ public abstract class ResourceReader {
     protected static final String UNEXPECTED_EOF = "Unexpected EOF encountered.";
 
     private static final String ROOT = "resource";
+    private static final QName SPECIFIC_TYPE_ATTRIBUTE = new QName( "type" );
     
     /**
      * Reads resource information from the given resource file.
@@ -83,6 +85,10 @@ public abstract class ResourceReader {
                         throw new XMLStreamException( "Extra type element found." );
                     } else {
                         ResourceType type;
+                        Attribute typeAttribute = start.getAttributeByName( SPECIFIC_TYPE_ATTRIBUTE );
+                        if ( typeAttribute != null ) { // Type has a specific subtype.
+                            name = typeAttribute.getValue() + "_" + name;
+                        }
                         try { // Identifies resource type.
                             type = ResourceType.valueOf( name.toUpperCase() );
                         } catch ( IllegalArgumentException e ) {
@@ -129,6 +135,13 @@ public abstract class ResourceReader {
     }
     
     /**
+     * Constructs a new ResourceReader.
+     */
+    protected ResourceReader() {
+        // Nothing to initialize.
+    }
+    
+    /**
      * Reads the type-specific information.
      *
      * @param reader Reader going through the resource file stream.
@@ -143,8 +156,8 @@ public abstract class ResourceReader {
         /* Gets the appropriate Reader for the given type */
         switch ( type ) {
             
-            case SCENE:
-                resReader = new SceneReader();
+            case CHOICE_SCENE:
+                resReader = new ChoiceSceneReader();
                 break;
             default: // Type does not have a Reader.
                 throw new IllegalArgumentException( "No reader available for the given Resource type." );

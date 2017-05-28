@@ -16,6 +16,7 @@ import com.github.thiagotgm.separate_but_unequal.gui.GamePanel;
 import com.github.thiagotgm.separate_but_unequal.resource.Choice;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
 import com.github.thiagotgm.separate_but_unequal.resource.Scene;
+import com.github.thiagotgm.separate_but_unequal.resource.ChoiceScene;
 
 /**
  * Manages the game flow during normal gameplay.
@@ -158,7 +159,7 @@ public class GameManager implements ActionListener, Runnable {
         sceneDisplayer.showScene( scene.getText() );
         textThread = new Thread( sceneDisplayer, SceneDisplayer.THREAD_NAME );
         textThread.start();
-        currentOptions = scene.getScene().getOptions();
+        currentOptions = ( (ChoiceScene) scene.getScene() ).getOptions();
         bufferNextScenes( currentOptions );
         try {
             textThread.join();

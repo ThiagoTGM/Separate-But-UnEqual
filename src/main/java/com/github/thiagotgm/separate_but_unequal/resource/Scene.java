@@ -1,60 +1,40 @@
 package com.github.thiagotgm.separate_but_unequal.resource;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Class that represents a single scene in the game story.
  *
- * @version 1.0
+ * @version 2.0
  * @author ThiagoTGM
  * @since 2017-05-23
  */
 public class Scene extends Resource {
 
     private final ResourcePath path;
-    private final String transition;
     private final String graphic;
     private final String audio;
-    private final List<Choice> options;
     
     /**
      * Creates a new Scene instance with the given Resource ID.<p>
-     * The id, path, and options are required, but the other arguments are optional and
-     * should be set as null if not used.<p>
-     * The option list must have at least one Choice.
+     * The id and path are required, but the other arguments are optional and
+     * should be set as null if not used.
      *
      * @param id Resource ID of this Scene object.
      * @param path Path to the text file that contains scene text.
-     * @throws NullPointerException if the filename or option list received was null.
-     * @throws IllegalArgumentException if the option list received was empty.
+     * @param graphic Graphic to be displayed with the Scene. If null, no graphic is displayed.
+     * @param audio Audio to be displayed with the Scene. If null, no audio is displayed.
+     * @throws NullPointerException if the id or filename received was null.
      */
-    protected Scene( String id, ResourcePath path, String transition, String graphic,
-            String audio, List<Choice> options ) {
+    protected Scene( String id, ResourcePath path, String graphic, String audio ) throws NullPointerException {
         
         super( id );
         
-        if ( ( path == null ) || ( options == null ) ) {
-            throw new NullPointerException( "The filename and options in a Scene " +
-                    "can't be null." );
+        if ( path == null ) {
+            throw new NullPointerException( "The path in a Scene can't be null." );
         }
-        if ( options.isEmpty() ) {
-            throw new IllegalArgumentException( "A Scene must have at least one Choice." );
-        }
-        
+
         this.path = path;
-        this.transition = transition;
         this.graphic = graphic;
         this.audio = audio;
-        this.options = Collections.unmodifiableList( new ArrayList<Choice>( options ) );
-        
-    }
-    
-    @Override
-    public ResourceType getType() {
-
-        return ResourceType.SCENE;
         
     }
     
@@ -66,17 +46,6 @@ public class Scene extends Resource {
     public ResourcePath getPath() {
         
         return path;
-        
-    }
-
-    /**
-     * Retrieves the ID of the transition to be displayed before this scene, if any.
-     *
-     * @return The ID of the transition, or null if none.
-     */
-    public String getTransition() {
-    
-        return transition;
         
     }
 
@@ -102,15 +71,10 @@ public class Scene extends Resource {
         
     }
 
-    /**
-     * Retrieves the list of options that can be picked in this scene.<br>
-     * The list is unmodifiable.
-     *
-     * @return The list of choices in this scene.
-     */
-    public List<Choice> getOptions() {
-    
-        return options;
+    @Override
+    public ResourceType getType() {
+
+        return ResourceType.SCENE;
         
     }
 

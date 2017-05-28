@@ -47,5 +47,24 @@ public class Choice {
         return target;
         
     }
+    
+    /**
+     * Checks if this Choice is equal to a given object.<br>
+     * They will be equal if o is also an instance of Choice (or a subclass of it), and both have the same
+     * text and target.
+     * 
+     * @param o Object to compare this to.
+     * @return true if both this and o represent the same Choice, false otherwise.
+     */
+    @Override
+    public boolean equals( Object o ) {
+        
+        if ( !( o instanceof Choice ) ) {
+            return false;
+        }
+        Choice other = (Choice) o;
+        return text.equals( other.text ) && target.equals( other.target );
+        
+    }
 
 }

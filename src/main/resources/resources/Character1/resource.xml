@@ -2,7 +2,7 @@
 
 <resource id="Char 1 Start">
 
-    <scene>
+    <scene type="choice">
     
         <filename>Char1Intro.txt</filename>
         <options>

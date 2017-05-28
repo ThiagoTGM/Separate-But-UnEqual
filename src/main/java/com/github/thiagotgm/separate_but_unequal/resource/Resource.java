@@ -19,10 +19,20 @@ public abstract class Resource {
         NONE,
         
         /**
+         * Single scene in the story. Includes text of the scene and identifies other resources.
+         */
+        SCENE,
+        
+        /**
          * Single scene in the story. Includes text of the scene, identifies other resources, and specifies
          * branch options.
          */
-        SCENE
+        CHOICE_SCENE,
+        
+        /**
+         * Ending scene in the story. Includes text of the scene, identifies other resources, and specifies end code.
+         */
+        END_SCENE
         
     };
     
@@ -35,7 +45,7 @@ public abstract class Resource {
      * @param id ID of the resource.
      * @throws NullPointerException if the ID received is null.
      */
-    protected Resource( String id ) {
+    protected Resource( String id ) throws NullPointerException {
         
         if ( id == null ) {
             throw new NullPointerException( "Resource ID cannot be null." );

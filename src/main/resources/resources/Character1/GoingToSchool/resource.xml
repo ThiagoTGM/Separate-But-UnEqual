@@ -2,7 +2,7 @@
 
 <resource id="Char 1 Path To School">
 
-    <scene>
+    <scene type="choice">
     
         <filename>Char1SchoolPath.txt</filename>
         <options>

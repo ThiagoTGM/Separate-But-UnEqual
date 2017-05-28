@@ -1,13 +1,10 @@
 package com.github.thiagotgm.separate_but_unequal.resource;
 
-import java.util.List;
-
 /**
  * Factory that constructs instances of the Scene resource type.<br>
- * The {@link #withPath(ResourcePath) path} and a non-empty {@link #withOptions(List) option list} are required,
- * but other elements are optional.
+ * The {@link #withPath(ResourcePath) path} is required, but other elements are optional.
  *
- * @version 1.0
+ * @version 2.0
  * @author Thiago Marback
  * @since 2017-05-23
  */
@@ -15,33 +12,27 @@ public class SceneFactory extends ResourceFactory {
     
     /** Identifier for the "Path" element. */
     public static final String PATH_ELEMENT = "path";
-    /** Identifier for the "Transition" element. */
-    public static final String TRANSITION_ELEMENT = "transition";
     /** Identifier for the "Graphic" element. */
     public static final String GRAPHIC_ELEMENT = "graphic";
     /** Identifier for the "Audio" element. */
     public static final String AUDIO_ELEMENT = "audio";
-    /** Identifier for the "Options" element. */
-    public static final String OPTIONS_ELEMENT = "options";
 
     private ResourcePath path;
-    private String transition;
     private String graphic;
     private String audio;
-    private List<Choice> options;
     
     /**
      * Creates a new Scene factory with a given Resource ID.
      * 
      * @param id ID of the Scene resource to be constructed.
+     * @throws NullPointerException if the ID given is null.
      */
-    protected SceneFactory( String id ) {
+    protected SceneFactory( String id ) throws NullPointerException {
         
         super( id );
         
     }
     
-    @SuppressWarnings( "unchecked" )
     @Override
     public ResourceFactory withElement( String element, Object value ) throws IllegalArgumentException {
 
@@ -51,17 +42,11 @@ public class SceneFactory extends ResourceFactory {
                 case PATH_ELEMENT:
                     withPath( (ResourcePath) value );
                     break;
-                case TRANSITION_ELEMENT:
-                    withTransition( (String) value );
-                    break;
                 case GRAPHIC_ELEMENT:
                     withGraphic( (String) value );
                     break;
                 case AUDIO_ELEMENT:
                     withAudio( (String) value );
-                    break;
-                case OPTIONS_ELEMENT:
-                    withOptions( (List<Choice>) value );
                     break;
                 default:
                     throw new IllegalArgumentException( "Scene does not have element '"
@@ -84,19 +69,6 @@ public class SceneFactory extends ResourceFactory {
     public SceneFactory withPath( ResourcePath path ) {
         
         this.path = path;
-        return this;
-        
-    }
-    
-    /**
-     * Specifies the transition to be used before the built Scene.<br>
-     * Optional.
-     *
-     * @param transition Filename of the Scene transition.
-     */
-    public SceneFactory withTransition( String transition ) {
-        
-        this.transition = transition;
         return this;
         
     }
@@ -126,32 +98,14 @@ public class SceneFactory extends ResourceFactory {
         return this;
         
     }
-    
-    /**
-     * Specifies the list of player choices to be used in the built Scene.
-     *
-     * @param options List of choices to be in the Scene.
-     */
-    public SceneFactory withOptions( List<Choice> options ) {
-        
-        this.options = options;
-        return this;
-        
-    }
 
     @Override
     public Resource build() throws IllegalStateException {
 
         if ( path == null ) {
-            throw new IllegalStateException( "The filename is required for Scene construction but wasn't specified!" );
+            throw new IllegalStateException( "The path is required for Scene construction but wasn't specified!" );
         }
-        if ( options == null ) {
-            throw new IllegalStateException( "The option list is required for Scene construction but wasn't specified!" );
-        }
-        if ( options.isEmpty() ) {
-            throw new IllegalStateException( "The option list must have at least one Choice!" );
-        }
-        return new Scene( id, path, transition, graphic, audio, options );
+        return new Scene( id, path, graphic, audio );
         
     }
 
