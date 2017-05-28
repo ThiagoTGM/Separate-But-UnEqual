@@ -2,7 +2,6 @@ package com.github.thiagotgm.separate_but_unequal;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceFactory;

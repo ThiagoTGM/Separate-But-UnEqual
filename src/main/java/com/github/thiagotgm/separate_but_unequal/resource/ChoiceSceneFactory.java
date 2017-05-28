@@ -55,6 +55,7 @@ public class ChoiceSceneFactory extends SceneFactory {
      * Specifies the list of player choices to be used in the built Scene.
      *
      * @param options List of choices to be in the Scene.
+     * @return The calling instance.
      */
     public ChoiceSceneFactory withOptions( List<Choice> options ) {
         

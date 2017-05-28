@@ -36,6 +36,8 @@ public abstract class ResourceFactory {
                 return new SceneFactory( id );
             case CHOICE_SCENE:
                 return new ChoiceSceneFactory( id );
+            case END_SCENE:
+                return new EndSceneFactory( id );
             default:
                 throw new UnsupportedOperationException( "No factory available for the requested resource type." );
             
@@ -63,6 +65,7 @@ public abstract class ResourceFactory {
      * 
      * @param element Name of the element to be set.
      * @param value Value of the element.
+     * @return The calling instance.
      * @throws IllegalArgumentException if the type being constructed does not have an element with this identifier, or
      *                                  if the value is not valid.
      */

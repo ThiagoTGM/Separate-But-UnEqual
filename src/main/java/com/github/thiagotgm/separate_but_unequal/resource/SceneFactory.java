@@ -65,6 +65,7 @@ public class SceneFactory extends ResourceFactory {
      * Specifies the path of the file to be used in the built Scene.
      *
      * @param path Path of the Scene text file.
+     * @return The calling instance.
      */
     public SceneFactory withPath( ResourcePath path ) {
         
@@ -78,6 +79,7 @@ public class SceneFactory extends ResourceFactory {
      * Optional.
      *
      * @param graphic Filename of the Scene graphic.
+     * @return The calling instance.
      */
     public SceneFactory withGraphic( String graphic ) {
         
@@ -91,6 +93,7 @@ public class SceneFactory extends ResourceFactory {
      * Optional.
      *
      * @param audio Filename of the Scene audio.
+     * @return The calling instance.
      */
     public SceneFactory withAudio( String audio ) {
         

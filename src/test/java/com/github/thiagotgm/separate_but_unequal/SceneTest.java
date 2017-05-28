@@ -44,9 +44,9 @@ public class SceneTest {
         
         /* Builds a scene using superclass method. */
         ResourceFactory superFactory = ResourceFactory.newInstance( ResourceType.SCENE, "Alternate" );
-        superFactory.withElement( "path", new ResourcePath( ALT_PATH, false ) );
-        superFactory.withElement( "graphic", "graphicID" );
-        superFactory.withElement( "audio", "audioID" );
+        superFactory.withElement( SceneFactory.PATH_ELEMENT, new ResourcePath( ALT_PATH, false ) );
+        superFactory.withElement( SceneFactory.GRAPHIC_ELEMENT, "graphicID" );
+        superFactory.withElement( SceneFactory.AUDIO_ELEMENT, "audioID" );
         alt = (Scene) superFactory.build();
         
     }
@@ -145,7 +145,7 @@ public class SceneTest {
         
         /* Test invalid values. */
         try {
-            factory.withElement( "path", new Integer(0) );
+            factory.withElement( SceneFactory.PATH_ELEMENT, new Integer(0) );
             fail( "Value of invalid type should throw exception." );
         } catch ( IllegalArgumentException e ) {
             assertEquals( "Unexpected exception when setting invalid element value.", 
@@ -154,7 +154,7 @@ public class SceneTest {
         }
         
         try {
-            factory.withElement( "graphic", new Integer(0) );
+            factory.withElement( SceneFactory.GRAPHIC_ELEMENT, new Integer(0) );
             fail( "Value of invalid type should throw exception." );
         } catch ( IllegalArgumentException e ) {
             assertEquals( "Unexpected exception when setting invalid element value.", 
@@ -163,7 +163,7 @@ public class SceneTest {
         }
         
         try {
-            factory.withElement( "audio", new Integer(0) );
+            factory.withElement( SceneFactory.AUDIO_ELEMENT, new Integer(0) );
             fail( "Value of invalid type should throw exception." );
         } catch ( IllegalArgumentException e ) {
             assertEquals( "Unexpected exception when setting invalid element value.", 

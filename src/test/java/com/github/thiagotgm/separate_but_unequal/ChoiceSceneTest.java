@@ -2,7 +2,6 @@ package com.github.thiagotgm.separate_but_unequal;
 
 import static org.junit.Assert.*;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +16,7 @@ import com.github.thiagotgm.separate_but_unequal.resource.ChoiceSceneFactory;
 import com.github.thiagotgm.separate_but_unequal.resource.Resource;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceFactory;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourcePath;
+import com.github.thiagotgm.separate_but_unequal.resource.SceneFactory;
 import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
 
 
@@ -29,8 +29,7 @@ public class ChoiceSceneTest {
     private static final Choice[] CHOICES2 = { 
             new Choice( "Ayyy", "Lmao" ),
             new Choice( "*shoots*", "Bullseye!" ) };
-    
-    private static final Path PATH = Paths.get( "res", "file.txt" );
+    private static final ResourcePath PATH =  new ResourcePath( Paths.get( "res", "file.txt" ), false );
     
     private ChoiceScene scene1;
     private ChoiceScene scene2;
@@ -40,14 +39,14 @@ public class ChoiceSceneTest {
     public void setUp() throws Exception {
         
         ChoiceSceneFactory factory = (ChoiceSceneFactory) ResourceFactory.newInstance( ResourceType.CHOICE_SCENE, "Scene1" );
-        scene1 = (ChoiceScene) factory.withOptions( Arrays.asList( CHOICES1 ) ).withPath( new ResourcePath( PATH, false ) ).build();
+        scene1 = (ChoiceScene) factory.withOptions( Arrays.asList( CHOICES1 ) ).withPath( PATH ).build();
         factory = (ChoiceSceneFactory) ResourceFactory.newInstance( ResourceType.CHOICE_SCENE, "Scene2" );
-        scene2 = (ChoiceScene) factory.withOptions( Arrays.asList( CHOICES2 ) ).withPath( new ResourcePath( PATH, false ) ).build();
+        scene2 = (ChoiceScene) factory.withOptions( Arrays.asList( CHOICES2 ) ).withPath( PATH ).build();
         
         /* Builds a scene using superclass method. */
         ResourceFactory superFactory = ResourceFactory.newInstance( ResourceType.CHOICE_SCENE, "Alternate" );
-        superFactory.withElement( "path", new ResourcePath( PATH, false ) );
-        superFactory.withElement( "options", Arrays.asList( CHOICES1 ) );
+        superFactory.withElement( SceneFactory.PATH_ELEMENT, PATH );
+        superFactory.withElement( ChoiceSceneFactory.OPTIONS_ELEMENT, Arrays.asList( CHOICES1 ) );
         alt = (ChoiceScene) superFactory.build();
         
     }
@@ -65,7 +64,7 @@ public class ChoiceSceneTest {
         original.add( new Choice( "Testing 1", "Test1" ) );
         original.add( new Choice( "Testing 1", "Test1" ) );
         ChoiceScene scene = (ChoiceScene) ( (ChoiceSceneFactory) ResourceFactory.newInstance( ResourceType.CHOICE_SCENE, "L" ) )
-                .withOptions( original ).withPath( new ResourcePath( Paths.get( "file.txt" ), false ) ).build();
+                .withOptions( original ).withPath( PATH ).build();
         List<Choice> returned = scene.getOptions();
         assertNotSame( "Scene should have a copy of the option list, not use the same List instance.",
                 original, returned );
@@ -76,9 +75,6 @@ public class ChoiceSceneTest {
     @Test
     public void testExceptions() {
         
-        List<Choice> options = Arrays.asList( CHOICES1 );
-        ChoiceSceneFactory factory = (ChoiceSceneFactory) ResourceFactory.newInstance( ResourceType.CHOICE_SCENE, "Test" );
-        
         /* Tests returned option list is unmodifiable. */
         try {
             scene1.getOptions().remove( 0 );
@@ -88,9 +84,11 @@ public class ChoiceSceneTest {
         }
         
         Resource res;
+        List<Choice> options = Arrays.asList( CHOICES1 );
+        ChoiceSceneFactory factory = (ChoiceSceneFactory) ResourceFactory.newInstance( ResourceType.CHOICE_SCENE, "Test" );
         
         /* Test can't build without option list. */
-        factory.withPath( new ResourcePath( Paths.get( "file.txt" ), false ) );
+        factory.withPath( PATH );
         factory.withOptions( null );
         try {
             res = factory.build();
@@ -111,7 +109,7 @@ public class ChoiceSceneTest {
         }
         
         /* Test can build after providing what was missing. */
-        factory.withPath( new ResourcePath( Paths.get( "file.txt" ), false ) );
+        factory.withPath( PATH );
         factory.withOptions( options );
         try {
             res = factory.build();
@@ -150,7 +148,7 @@ public class ChoiceSceneTest {
         
         /* Test invalid values. */
         try {
-            factory.withElement( "options", new Integer(0) );
+            factory.withElement( ChoiceSceneFactory.OPTIONS_ELEMENT, new Integer(0) );
             fail( "Value of invalid type should throw exception." );
         } catch ( IllegalArgumentException e ) {
             assertEquals( "Unexpected exception when setting invalid element value.", 
