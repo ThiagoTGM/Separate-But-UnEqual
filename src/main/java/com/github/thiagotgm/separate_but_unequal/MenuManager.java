@@ -41,6 +41,7 @@ public class MenuManager implements ActionListener {
         
         program.add( menu );
         current = menu;
+        program.pack();
         
     }
 
@@ -76,6 +77,7 @@ public class MenuManager implements ActionListener {
         program.remove( current );
         program.add( panel );
         current = panel;
+        program.pack();
         program.revalidate();
         program.repaint();
         

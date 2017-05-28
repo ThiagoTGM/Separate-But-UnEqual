@@ -7,12 +7,14 @@ import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 
 /**
  * Panel that contains the UI for the main menu, including labels and buttons.
@@ -38,6 +40,8 @@ public class MainMenuPanel extends JPanel {
     private static final double MAX_BUTTON_HEIGHT = 1;
     private static final double MAX_BUTTON_WIDTH = 5;
     private static final double BUTTON_PADDING = 0.2;
+    private static final double BUTTON_PANEL_PADDING = 1;
+    private static final double WINDOW_PADDING = 0.3;
     
     private final List<ActionListener> listeners;
     
@@ -61,19 +65,18 @@ public class MainMenuPanel extends JPanel {
      */
     public MainMenuPanel( boolean isDoubleBuffered ) {
         
-        super( new BorderLayout(), isDoubleBuffered );
+        super( isDoubleBuffered );
+        setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
         
+        /* Create top labels */
         JLabel title = new JLabel( TITLE ); // Creates title bar.
         title.setFont( title.getFont().deriveFont( TITLE_FONT_SIZE ) );
         Scalable.scaleFont( title );
         title.setHorizontalAlignment( SwingConstants.CENTER );
-        add( title, BorderLayout.NORTH );
+        title.setAlignmentX( Component.CENTER_ALIGNMENT );
+        add( title );
         
-        JLabel bottom = new JLabel( BOTTOM_TEXT + getClass().getPackage().getImplementationVersion() );
-        Scalable.scaleFont( bottom ); // Creates bottom bar.
-        bottom.setHorizontalAlignment( SwingConstants.CENTER );
-        add( bottom, BorderLayout.SOUTH );
-        
+        /* Create buttons */
         int maxHeight = Scalable.scaleToInt( MAX_BUTTON_HEIGHT ); // Calculates max dimensions for the buttons.
         int maxWidth = Scalable.scaleToInt( MAX_BUTTON_WIDTH );
         Dimension maxSize = new Dimension( maxWidth, maxHeight );
@@ -86,41 +89,56 @@ public class MainMenuPanel extends JPanel {
         start.setActionCommand( START_COMMAND );
         start.addActionListener( listener );
         start.setMaximumSize( maxSize );
-        
+        start.setHorizontalAlignment( SwingConstants.CENTER );
         
         JButton load = new JButton( "Load" ); // Creates button to load save.
         Scalable.scaleFont( load );
         load.setActionCommand( LOAD_COMMAND );
         load.addActionListener( listener );
         load.setMaximumSize( maxSize );
+        load.setHorizontalAlignment( SwingConstants.CENTER );
         
         JButton exit = new JButton( "Exit" ); // Creates button to exit to desktop.
         Scalable.scaleFont( exit );
         exit.setActionCommand( EXIT_COMMAND );
         exit.addActionListener( listener );
         exit.setMaximumSize( maxSize );
+        exit.setHorizontalAlignment( SwingConstants.CENTER );
         
-        JPanel buttons = new JPanel(); // Create panel for buttons.
-        buttons.setLayout( new BoxLayout( buttons, BoxLayout.Y_AXIS ) );
+        /* Add buttons to panel */
         Dimension padding = new Dimension( 0, Scalable.scaleToInt( BUTTON_PADDING ) );
-        buttons.add( Box.createVerticalGlue() );
+        Dimension panelPadding = new Dimension( 0, Scalable.scaleToInt( BUTTON_PANEL_PADDING ) );
+        
+        add( Box.createVerticalGlue() ); // Border between top labels and buttons.
+        add( Box.createRigidArea( panelPadding ) );
         
         start.setAlignmentX( Component.CENTER_ALIGNMENT );
-        buttons.add( start ); // Insert start button to panel.
+        add( start ); // Insert start button to panel.
         
-        buttons.add( Box.createRigidArea( padding ) );
+        add( Box.createRigidArea( padding ) );
         
         load.setAlignmentX( Component.CENTER_ALIGNMENT );
-        buttons.add( load ); // Insert load button to panel.
+        add( load ); // Insert load button to panel.
         
-        buttons.add( Box.createRigidArea( padding ) );
+        add( Box.createRigidArea( padding ) );
         
         exit.setAlignmentX( Component.CENTER_ALIGNMENT );
-        buttons.add( exit ); // Insert exit button to panel.
+        add( exit ); // Insert exit button to panel.
         
-        buttons.add( Box.createVerticalGlue() );
+        add( Box.createRigidArea( panelPadding ) );
+        add( Box.createVerticalGlue() ); // Border between buttons and bottom labels.
         
-        add( buttons, BorderLayout.CENTER );
+        /* Create bottom labels */
+        JLabel bottom = new JLabel( BOTTOM_TEXT + getClass().getPackage().getImplementationVersion() );
+        Scalable.scaleFont( bottom ); // Creates bottom bar.
+        bottom.setHorizontalAlignment( SwingConstants.CENTER );
+        bottom.setAlignmentX( Component.CENTER_ALIGNMENT );
+        add( bottom );
+        
+        /* Create panel border */
+        int paddingSize = Scalable.scaleToInt( WINDOW_PADDING );
+        Border windowPadding = BorderFactory.createEmptyBorder( paddingSize, paddingSize, paddingSize, paddingSize );
+        setBorder( windowPadding );
 
     }
     

@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +29,9 @@ public class GamePanel extends JPanel {
     
     /** Serial ID that represents this class. */
     private static final long serialVersionUID = -3770146955575152229L;
+    
+    private static final double WIDTH_MULTIPLIER = 0.5;
+    private static final double HEIGHT_MULTIPLIER = 0.8;
     
     private static final double SIDE_BORDER_PADDING = 0.2;
     private static final double TOP_BORDER_PADDING = 0.3;
@@ -82,6 +86,10 @@ public class GamePanel extends JPanel {
     public GamePanel( boolean isDoubleBuffered ) {
         
         super( new BorderLayout(), isDoubleBuffered );
+        
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setPreferredSize( new Dimension( (int) ( screenSize.getWidth() * WIDTH_MULTIPLIER ),
+                         (int) ( screenSize.getHeight() * HEIGHT_MULTIPLIER ) ) );
         
         int sidePadding = Scalable.scaleToInt( SIDE_BORDER_PADDING ); // Calculates padding for the button panel.
         int topPadding = Scalable.scaleToInt( TOP_BORDER_PADDING );
