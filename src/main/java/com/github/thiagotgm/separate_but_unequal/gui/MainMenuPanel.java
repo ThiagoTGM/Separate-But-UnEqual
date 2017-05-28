@@ -1,20 +1,26 @@
 package com.github.thiagotgm.separate_but_unequal.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-
+/**
+ * Panel that contains the UI for the main menu, including labels and buttons.
+ *
+ * @version 1.0
+ * @author Thiago
+ * @since 2017-05-25
+ */
 public class MainMenuPanel extends JPanel {
     
     private static final String TITLE = "Separate But UnEqual";
@@ -57,60 +63,62 @@ public class MainMenuPanel extends JPanel {
         
         super( new BorderLayout(), isDoubleBuffered );
         
-        JLabel title = new JLabel( TITLE );
+        JLabel title = new JLabel( TITLE ); // Creates title bar.
         title.setFont( title.getFont().deriveFont( TITLE_FONT_SIZE ) );
         Scalable.scaleFont( title );
         title.setHorizontalAlignment( SwingConstants.CENTER );
         add( title, BorderLayout.NORTH );
         
         JLabel bottom = new JLabel( BOTTOM_TEXT + getClass().getPackage().getImplementationVersion() );
-        Scalable.scaleFont( bottom );
+        Scalable.scaleFont( bottom ); // Creates bottom bar.
         bottom.setHorizontalAlignment( SwingConstants.CENTER );
         add( bottom, BorderLayout.SOUTH );
         
-        int maxHeight = Scalable.scaleToInt( MAX_BUTTON_HEIGHT );
+        int maxHeight = Scalable.scaleToInt( MAX_BUTTON_HEIGHT ); // Calculates max dimensions for the buttons.
         int maxWidth = Scalable.scaleToInt( MAX_BUTTON_WIDTH );
         Dimension maxSize = new Dimension( maxWidth, maxHeight );
         
-        listeners = new LinkedList<>();
+        listeners = new LinkedList<>(); // Initializes the listener list and starts aggregator.
         ActionListener listener = new ListenerAggregator( listeners );
         
-        GridBagConstraints c = new GridBagConstraints();
-        
-        JPanel buttons = new JPanel( new GridBagLayout() );
-        
-        JButton start = new JButton( "Start" );
+        JButton start = new JButton( "Start" ); // Creates button to start game.
         Scalable.scaleFont( start );
         start.setActionCommand( START_COMMAND );
         start.addActionListener( listener );
         start.setMaximumSize( maxSize );
         
         
-        JButton load = new JButton( "Load" );
+        JButton load = new JButton( "Load" ); // Creates button to load save.
         Scalable.scaleFont( load );
         load.setActionCommand( LOAD_COMMAND );
         load.addActionListener( listener );
         load.setMaximumSize( maxSize );
         
-        JButton exit = new JButton( "Exit" );
+        JButton exit = new JButton( "Exit" ); // Creates button to exit to desktop.
         Scalable.scaleFont( exit );
         exit.setActionCommand( EXIT_COMMAND );
         exit.addActionListener( listener );
         exit.setMaximumSize( maxSize );
         
-        int padding = Scalable.scaleToInt( BUTTON_PADDING );
-        c.insets = new Insets( padding, 0, padding, 0 );
-        c.gridx = 0;
-        c.gridy = 0;
-        buttons.add( start, c );
+        JPanel buttons = new JPanel(); // Create panel for buttons.
+        buttons.setLayout( new BoxLayout( buttons, BoxLayout.Y_AXIS ) );
+        Dimension padding = new Dimension( 0, Scalable.scaleToInt( BUTTON_PADDING ) );
+        buttons.add( Box.createVerticalGlue() );
         
-        c.insets = new Insets( 0, 0, padding, 0 );
-        c.gridy = 1;
-        buttons.add( load, c );
+        start.setAlignmentX( Component.CENTER_ALIGNMENT );
+        buttons.add( start ); // Insert start button to panel.
         
-        c.gridx = 0;
-        c.gridy = 2;
-        buttons.add( exit, c );
+        buttons.add( Box.createRigidArea( padding ) );
+        
+        load.setAlignmentX( Component.CENTER_ALIGNMENT );
+        buttons.add( load ); // Insert load button to panel.
+        
+        buttons.add( Box.createRigidArea( padding ) );
+        
+        exit.setAlignmentX( Component.CENTER_ALIGNMENT );
+        buttons.add( exit ); // Insert exit button to panel.
+        
+        buttons.add( Box.createVerticalGlue() );
         
         add( buttons, BorderLayout.CENTER );
 

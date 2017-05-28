@@ -5,8 +5,6 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
-import com.github.thiagotgm.separate_but_unequal.gui.GamePanel;
-import com.github.thiagotgm.separate_but_unequal.gui.MainMenuPanel;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
 
 /**
@@ -35,7 +33,7 @@ public class Launcher {
         program.setSize( (int) ( screenSize.getWidth() * WIDTH_MULTIPLIER ),
                          (int) ( screenSize.getHeight() * HEIGHT_MULTIPLIER ) );
         
-        MenuManager manager = new MenuManager( program );
+        new MenuManager( program );
         program.setVisible( true );
 
     }
