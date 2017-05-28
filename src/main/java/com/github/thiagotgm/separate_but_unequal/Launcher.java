@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 
 import com.github.thiagotgm.separate_but_unequal.gui.GamePanel;
+import com.github.thiagotgm.separate_but_unequal.gui.MainMenuPanel;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
 
 /**
@@ -17,9 +18,7 @@ import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
  */
 public class Launcher {
     
-    /**
-     * Code used on program exit to indicate an error was encountered while loading resources.
-     */
+    /** Code used on program exit to indicate an error was encountered while loading resources. */
     public static final int LOADING_ERROR_CODE = 1;
     
     private static final double WIDTH_MULTIPLIER = 0.5;
@@ -36,11 +35,8 @@ public class Launcher {
         program.setSize( (int) ( screenSize.getWidth() * WIDTH_MULTIPLIER ),
                          (int) ( screenSize.getHeight() * HEIGHT_MULTIPLIER ) );
         
-        GamePanel panel = new GamePanel();
-        program.add( panel );
+        MenuManager manager = new MenuManager( program );
         program.setVisible( true );
-        GameManager manager = new GameManager( panel );
-        manager.start( "Char 1 Start" );
 
     }
 

@@ -34,6 +34,7 @@ public class GameManager implements ActionListener, Runnable {
     /** Thread name to be used for objects of this type. */
     public static final String THREAD_NAME = "Game Manager";
     
+    private final MenuManager menuManager;
     private final GamePanel panel;
     private final SceneDisplayer sceneDisplayer;
     private final ChoiceDisplayer choiceDisplayer;
@@ -51,10 +52,12 @@ public class GameManager implements ActionListener, Runnable {
     /**
      * Starts a new Manager that displays the game on the given panel.
      * 
+     * @param menuManager The manager that controls the game menus.
      * @param panel The panel where the game is to be displayed.
      */
-    public GameManager( GamePanel panel ) {
+    public GameManager( GamePanel panel, MenuManager menuManager ) {
 
+        this.menuManager = menuManager;
         this.panel = panel;
         sceneDisplayer = new SceneDisplayer( panel.getSceneArea() );
         choiceDisplayer = new ChoiceDisplayer( panel.getOptionsArea() );
@@ -112,10 +115,21 @@ public class GameManager implements ActionListener, Runnable {
                 break;
                 
             case GamePanel.MENU_COMMAND:
-                System.out.println( endCode ); // TODO
-                System.exit( 0 );
+                stop();
+                clear();
+                menuManager.gameEnd( endCode );
             
         }
+        
+    }
+    
+    /**
+     * Clears all the game display areas.
+     */
+    private void clear() {
+        
+        sceneDisplayer.clear();
+        choiceDisplayer.clear();
         
     }
     
@@ -139,15 +153,8 @@ public class GameManager implements ActionListener, Runnable {
      */
     public void runNext() {
         
-        if ( managerThread != null ) {
-            managerThread.interrupt();
-        }
-        if ( textThread != null ) {
-            textThread.interrupt();
-        }
-        if ( bufferThread != null ) {
-            bufferThread.interrupt();
-        }
+        stop();
+        clear();
         managerThread = new Thread( this, THREAD_NAME );
         managerThread.start();
         
@@ -198,6 +205,22 @@ public class GameManager implements ActionListener, Runnable {
         
     }
     
+    /**
+     * Stops all currently running threads.
+     */
+    private void stop() {
+        
+        if ( managerThread != null ) {
+            managerThread.interrupt();
+        }
+        if ( textThread != null ) {
+            textThread.interrupt();
+        }
+        if ( bufferThread != null ) {
+            bufferThread.interrupt();
+        }
+        
+    }
     
     /**
      * Starts loading the next possible scenes from disk.

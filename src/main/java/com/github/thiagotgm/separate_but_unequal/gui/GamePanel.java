@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +24,7 @@ import javax.swing.border.Border;
  * @author Thiago
  * @since 2017-05-25
  */
-public class GamePanel extends JPanel implements Scalable {
+public class GamePanel extends JPanel {
     
     /** Serial ID that represents this class. */
     private static final long serialVersionUID = -3770146955575152229L;
@@ -90,7 +89,9 @@ public class GamePanel extends JPanel implements Scalable {
         
         int buttonPadding = Scalable.scaleToInt( BUTTON_PADDING );
     
-        ActionListener listener = new ListenerAggregator();
+        listeners = new LinkedList<>();
+        ActionListener listener = new ListenerAggregator( listeners );
+        
         GridBagConstraints c = new GridBagConstraints();
         
         /* Creates the control panel */
@@ -207,8 +208,6 @@ public class GamePanel extends JPanel implements Scalable {
         add( buttonPanel, BorderLayout.EAST );
         add( gameArea, BorderLayout.CENTER );
         
-        listeners = new LinkedList<>();
-        
     }
     
     /**
@@ -289,29 +288,6 @@ public class GamePanel extends JPanel implements Scalable {
     public void removeActionListener( ActionListener l ) {
         
         listeners.remove( l );
-        
-    }
-    
-    /**
-     * Class that listens to all the buttons in the panel and passes any event fired by them to the listeners on the
-     * overall panel
-     *
-     * @version 1.0
-     * @author Thiago
-     * @since 2017-05-25
-     */
-    private class ListenerAggregator implements ActionListener {
-
-        @Override
-        public void actionPerformed( ActionEvent e ) {
-
-            for ( ActionListener listener : listeners ) {
-                
-                listener.actionPerformed( e ); // Notifies all listeners that a button event was fired.
-                
-            }
-            
-        }
         
     }
 
