@@ -35,14 +35,18 @@ public abstract class ResourceReader {
     private static final Logger log = LoggerFactory.getLogger( ResourceReader.class );
     
     /* Strings used for exception messages */
-    /** String used to display errors about missing subelements. */
+    /** String used to indicate errors about missing subelements. */
     protected static final String MISSING_ELEMENTS = "<%s> element missing required subelements.";
-    /** String used to display errors about unexpected elements. */
+    /** String used to indicate errors about unexpected elements. */
     protected static final String UNEXPECTED_ELEMENT = "Unexpected element encountered.";
-    /** String used to display errors about unexpected closing tags. */
+    /** String used to indicate errors about unexpected closing tags. */
     protected static final String UNEXPECTED_CLOSING_TAG = "Unexpected closing tag.";
-    /** String used to display errors about reaching EOF while some elements were still open. */
+    /** String used to indicate errors about reaching EOF while some elements were still open. */
     protected static final String UNEXPECTED_EOF = "Unexpected EOF encountered.";
+    /** String used to indicate errors about invalid values in elements. */
+    protected static final String INVALID_VALUE = "Invalid element value encountered.";
+    /** String used to indicate errors about elements missing (text) value. */
+    protected static final String MISSING_VALUE = "Encountered element with no value.";
 
     private static final String ROOT = "resource";
     private static final QName SPECIFIC_TYPE_ATTRIBUTE = new QName( "type" );
@@ -161,6 +165,9 @@ public abstract class ResourceReader {
             
             case CHOICE_SCENE:
                 resReader = new ChoiceSceneReader();
+                break;
+            case END_SCENE:
+                resReader = new EndSceneReader();
                 break;
             default: // Type does not have a Reader.
                 throw new IllegalArgumentException( "No reader available for the given Resource type." );

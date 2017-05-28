@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="InSchool">
+
+    <scene type="end">
+    
+        <filename>School.txt</filename>
+        <code>10</code>
+    
+    </scene>
+
+</resource>

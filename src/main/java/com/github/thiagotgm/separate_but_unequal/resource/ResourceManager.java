@@ -71,7 +71,7 @@ public class ResourceManager {
         }
         resetSettings();
         
-        log.info( "===================[ Loading Resource Database ]===================\n" );
+        log.info( "===================[ Loading Resource Database ]===================" );
         List<ResourcePath> files = getResourceFiles();
         if ( files == null ) {
             System.exit( Launcher.LOADING_ERROR_CODE );
@@ -88,7 +88,7 @@ public class ResourceManager {
             }
             
         }
-        log.info( "===================[ Database Loaded ]===================\n" );
+        log.info( "===================[ Database Loaded ]===================" );
         
     }
     

@@ -15,7 +15,7 @@ import com.github.thiagotgm.separate_but_unequal.resource.ChoiceSceneFactory;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceFactory;
 
 /**
- * Implementation of SceneReader that reads a Scene of specific typeChoiceScene.
+ * Implementation of SceneReader that reads a Scene of specific type ChoiceScene.
  *
  * @version 1.0
  * @author Thiago
