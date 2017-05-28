@@ -12,6 +12,9 @@ import java.util.List;
  * @since 2017-05-27
  */
 public class ChoiceScene extends Scene {
+    
+    private static final String NULL_OPT_ERROR = "The options in a ChoiceScene can't be null.";
+    private static final String EMPTY_OPT_ERROR = "A ChoiceScene must have at least one Choice.";
 
     private final List<Choice> options;
     
@@ -35,10 +38,10 @@ public class ChoiceScene extends Scene {
         super( id, path, graphic, audio );
         
         if ( options == null ) {
-            throw new NullPointerException( "The options in a ChoiceScene can't be null." );
+            throw new NullPointerException( NULL_OPT_ERROR );
         }
         if ( options.isEmpty() ) {
-            throw new IllegalArgumentException( "A ChoiceScene must have at least one Choice." );
+            throw new IllegalArgumentException( EMPTY_OPT_ERROR );
         }
         
         this.options = Collections.unmodifiableList( new ArrayList<Choice>( options ) );
@@ -57,10 +60,10 @@ public class ChoiceScene extends Scene {
         
         super( scene.getID(), scene.getPath(), scene.getGraphic(), scene.getAudio() );
         if ( options == null ) {
-            throw new NullPointerException( "The options in a ChoiceScene can't be null." );
+            throw new NullPointerException( NULL_OPT_ERROR );
         }
         if ( options.isEmpty() ) {
-            throw new IllegalArgumentException( "A ChoiceScene must have at least one Choice." );
+            throw new IllegalArgumentException( EMPTY_OPT_ERROR );
         }
         
         this.options = Collections.unmodifiableList( new ArrayList<Choice>( options ) );

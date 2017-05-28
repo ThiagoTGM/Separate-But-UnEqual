@@ -35,7 +35,12 @@ public class EndSceneReader extends SceneReader {
         switch ( element ) {
             
             case END_CODE_TAG:
-                esFactory.withCode( readCode( reader ) );
+                int code = readCode( reader );
+                try {
+                    esFactory.withCode( code );
+                } catch ( IllegalArgumentException e ) {
+                    throw new XMLStreamException( INVALID_VALUE, e );
+                }
                 break;
                 
             default: // Element not recognized.
@@ -72,7 +77,7 @@ public class EndSceneReader extends SceneReader {
                     String data = event.asCharacters().getData();
                     try {
                         code = Integer.valueOf( data );
-                    } catch ( NumberFormatException e ) {
+                    } catch ( NumberFormatException e ) { // Also catches format exceptions.
                         throw new XMLStreamException( INVALID_VALUE, e );
                     }
                     found = true;

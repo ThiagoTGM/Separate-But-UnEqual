@@ -54,11 +54,16 @@ public class ChoiceSceneFactory extends SceneFactory {
     /**
      * Specifies the list of player choices to be used in the built Scene.
      *
-     * @param options List of choices to be in the Scene.
+     * @param options List of choices to be in the Scene. May be null (resets the option list), but must be set to
+     *                a non-null value before building.
      * @return The calling instance.
+     * @throws IllegalArgumentException if the option list given is empty.
      */
-    public ChoiceSceneFactory withOptions( List<Choice> options ) {
+    public ChoiceSceneFactory withOptions( List<Choice> options ) throws IllegalArgumentException {
         
+        if ( ( options != null ) && ( options.isEmpty() ) ) {
+            throw new IllegalArgumentException( "The option list must have at least one Choice!" );
+        }
         this.options = options;
         return this;
         
@@ -70,9 +75,6 @@ public class ChoiceSceneFactory extends SceneFactory {
         Scene scene = (Scene) super.build();
         if ( options == null ) {
             throw new IllegalStateException( "The option list is required for ChoiceScene construction but wasn't specified!" );
-        }
-        if ( options.isEmpty() ) {
-            throw new IllegalStateException( "The option list must have at least one Choice!" );
         }
         return new ChoiceScene( scene, options );
         

@@ -118,13 +118,12 @@ public class ChoiceSceneTest {
             fail( "Scene should be built once path and options are provided." );
         }
         
-        /* Test can't build with empty option list. */
-        factory.withOptions( new ArrayList<Choice>() );
+        /* Test empty option list. */
         try {
-            res = factory.build();
-            fail( "Building Scene with empty option list should throw exception." );
-        } catch ( IllegalStateException e ) {
-            assertEquals( "Unexpected exception when building Scene with empty option list.", 
+            factory.withOptions( new ArrayList<Choice>() );
+            fail( "Giving empty option list to ChoiceSceneFactory should give an exception." );
+        } catch ( IllegalArgumentException e ) {
+            assertEquals( "Unexpected exception when giving empty option list to ChoiceSceneFactory.", 
                     "The option list must have at least one Choice!",
                     e.getMessage() );
         }
