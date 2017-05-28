@@ -17,6 +17,8 @@ import com.github.thiagotgm.separate_but_unequal.resource.Choice;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
 import com.github.thiagotgm.separate_but_unequal.resource.Scene;
 import com.github.thiagotgm.separate_but_unequal.resource.ChoiceScene;
+import com.github.thiagotgm.separate_but_unequal.resource.EndScene;
+import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
 
 /**
  * Manages the game flow during normal gameplay.
@@ -40,6 +42,8 @@ public class GameManager implements ActionListener, Runnable {
     private Loader buffer;
     private Thread textThread;
     private Thread bufferThread;
+    
+    private int endCode;
     
     private LoadedScene nextScene;
     private Thread managerThread;
@@ -75,18 +79,21 @@ public class GameManager implements ActionListener, Runnable {
                 textThread.interrupt();
                 sceneDisplayer.skip();
                 break;
+                
             case GamePanel.UP_COMMAND: // Move one choice up.
                 current = choiceDisplayer.getSelected();
                 if ( current > 0 ) {
                     choiceDisplayer.setSelected( current - 1 );
                 }
                 break;
+                
             case GamePanel.DOWN_COMMAND: // Move one choice down.
                 current = choiceDisplayer.getSelected();
                 if ( current < currentOptions.size() - 1 ) {
                     choiceDisplayer.setSelected( current + 1 );
                 }
                 break;
+                
             case GamePanel.SELECT_COMMAND: // Select current choice.
                 current = choiceDisplayer.getSelected();
                 try {
@@ -102,6 +109,11 @@ public class GameManager implements ActionListener, Runnable {
                     JOptionPane.showMessageDialog( panel, "The target specified by this option is invalid.",
                             "Target Error", JOptionPane.ERROR_MESSAGE );
                 }
+                break;
+                
+            case GamePanel.MENU_COMMAND:
+                System.out.println( endCode ); // TODO
+                System.exit( 0 );
             
         }
         
@@ -116,6 +128,7 @@ public class GameManager implements ActionListener, Runnable {
         
         Scene target = ( Scene ) ResourceManager.getResource( startSceneID );
         nextScene = new Loader().load( target );
+        endCode = 0;
         runNext();
         
     }
@@ -159,18 +172,26 @@ public class GameManager implements ActionListener, Runnable {
         sceneDisplayer.showScene( scene.getText() );
         textThread = new Thread( sceneDisplayer, SceneDisplayer.THREAD_NAME );
         textThread.start();
-        currentOptions = ( (ChoiceScene) scene.getScene() ).getOptions();
-        bufferNextScenes( currentOptions );
+        if ( scene.getScene().getType() == ResourceType.CHOICE_SCENE ) {
+            currentOptions = ( (ChoiceScene) scene.getScene() ).getOptions();
+            bufferNextScenes();
+        }
         try {
             textThread.join();
         } catch ( InterruptedException e ) {
             // Normal
         }
         
-        /* Scene displayed. Get player choice. */
+        /* Scene displayed. */
         panel.setSkipButtonEnabled( false );
-        panel.setOptionButtonsEnabled( true );
-        choiceDisplayer.showOptions( currentOptions );
+        if ( scene.getScene().getType() == ResourceType.CHOICE_SCENE ) {
+            panel.setOptionButtonsEnabled( true );
+            choiceDisplayer.showOptions( currentOptions ); // Get next player choice.
+        } else {
+            endCode = ( (EndScene) scene.getScene() ).getCode();
+            panel.getOptionsArea().setText( "You reached ending " + endCode + "!\nPress the 'Menu' button to go back "
+                    + "to the menu." );
+        }
         
         /* End of thread */
         managerThread = null;
@@ -183,8 +204,9 @@ public class GameManager implements ActionListener, Runnable {
      * 
      * @param choices The list of choices that marks the next possible scenes.
      */
-    private void bufferNextScenes( List<Choice> choices ) {
+    private void bufferNextScenes() {
         
+        List<Choice> choices = currentOptions;
         List<Scene> targets = new ArrayList<>( choices.size() );
         for ( Choice possible : choices ) {
             

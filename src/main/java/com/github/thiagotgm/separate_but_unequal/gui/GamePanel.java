@@ -41,8 +41,12 @@ public class GamePanel extends JPanel {
     private static final double TEXT_PADDING = 0.2;
     private static final double TEXT_MARGIN = 0.1;
     
+    private static final double BUTTON_PADDING = 0.2;
+    
     /** Action command that identifies that the "Skip" button was pressed. */
     public static final String SKIP_COMMAND = "SKIP";
+    /** Action command that identifies that the "Menu" button was pressed. */
+    public static final String MENU_COMMAND = "MENU";
     /** Action command that identifies that the "Up" button was pressed. */
     public static final String UP_COMMAND = "UP";
     /** Action command that identifies that the "Select" button was pressed. */
@@ -51,6 +55,7 @@ public class GamePanel extends JPanel {
     public static final String DOWN_COMMAND = "DOWN";
     
     private final JButton skipButton;
+    private final JButton menuButton;
     private final JButton upButton;
     private final JButton selectButton;
     private final JButton downButton;
@@ -86,6 +91,8 @@ public class GamePanel extends JPanel {
         int sidePadding = (int) ( SIDE_BORDER_PADDING * Launcher.resolution ); // Calculates padding for the button panel.
         int topPadding = (int) ( TOP_BORDER_PADDING * Launcher.resolution );
         int bottomPadding = (int) ( BOTTOM_BORDER_PADDING * Launcher.resolution );
+        
+        int buttonPadding = (int) ( BUTTON_PADDING * Launcher.resolution );
     
         ActionListener listener = new ListenerAggregator();
         GridBagConstraints c = new GridBagConstraints();
@@ -98,12 +105,21 @@ public class GamePanel extends JPanel {
         skipButton.setActionCommand( SKIP_COMMAND );
         skipButton.addActionListener( listener );
         
+        menuButton = new JButton( "Menu" );
+        setFont( menuButton );
+        menuButton.setActionCommand( MENU_COMMAND );
+        menuButton.addActionListener( listener );
+        
         c.weightx = 0; // Insert skip button in panel.
         c.weighty = 0;
-        c.insets = new Insets( topPadding, sidePadding, 0, sidePadding );
+        c.insets = new Insets( topPadding, sidePadding, buttonPadding, sidePadding );
         c.gridx = 0;
         c.gridy = 0;
         controlPanel.add( skipButton, c );
+        
+        c.insets = new Insets( buttonPadding, sidePadding, buttonPadding, sidePadding );
+        c.gridy = 1;
+        controlPanel.add( menuButton, c );
         
         /* Creates the choice selector */
         JPanel choicePanel = new JPanel( new GridBagLayout(), isDoubleBuffered );
@@ -132,12 +148,10 @@ public class GamePanel extends JPanel {
         c.gridy = 0;
         choicePanel.add( upButton, c );
         
-        c.gridx = 0; // Insert select button in panel.
-        c.gridy = 1;
+        c.gridy = 1; // Insert select button in panel.
         choicePanel.add( selectButton, c );
         
         c.insets = new Insets( 0, sidePadding, bottomPadding, sidePadding ); // Insert down button in panel.
-        c.gridx = 0;
         c.gridy = 2;
         choicePanel.add( downButton, c );
         

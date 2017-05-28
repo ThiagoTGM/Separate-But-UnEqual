@@ -9,7 +9,7 @@
         
             <option>
                 <text>Keep walking</text>
-                <target>Char1PrimarySchool</target>
+                <target>InSchool</target>
             </option>
         
         </options>
