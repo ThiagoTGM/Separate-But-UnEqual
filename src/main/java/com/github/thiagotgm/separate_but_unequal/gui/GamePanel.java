@@ -3,7 +3,6 @@ package com.github.thiagotgm.separate_but_unequal.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -14,13 +13,10 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
-
-import com.github.thiagotgm.separate_but_unequal.Launcher;
 
 /**
  * Panel that contains the UI for the game, including text boxes and buttons.
@@ -29,7 +25,7 @@ import com.github.thiagotgm.separate_but_unequal.Launcher;
  * @author Thiago
  * @since 2017-05-25
  */
-public class GamePanel extends JPanel {
+public class GamePanel extends JPanel implements Scalable {
     
     /** Serial ID that represents this class. */
     private static final long serialVersionUID = -3770146955575152229L;
@@ -88,11 +84,11 @@ public class GamePanel extends JPanel {
         
         super( new BorderLayout(), isDoubleBuffered );
         
-        int sidePadding = (int) ( SIDE_BORDER_PADDING * Launcher.resolution ); // Calculates padding for the button panel.
-        int topPadding = (int) ( TOP_BORDER_PADDING * Launcher.resolution );
-        int bottomPadding = (int) ( BOTTOM_BORDER_PADDING * Launcher.resolution );
+        int sidePadding = Scalable.scaleToInt( SIDE_BORDER_PADDING ); // Calculates padding for the button panel.
+        int topPadding = Scalable.scaleToInt( TOP_BORDER_PADDING );
+        int bottomPadding = Scalable.scaleToInt( BOTTOM_BORDER_PADDING );
         
-        int buttonPadding = (int) ( BUTTON_PADDING * Launcher.resolution );
+        int buttonPadding = Scalable.scaleToInt( BUTTON_PADDING );
     
         ActionListener listener = new ListenerAggregator();
         GridBagConstraints c = new GridBagConstraints();
@@ -101,12 +97,12 @@ public class GamePanel extends JPanel {
         JPanel controlPanel = new JPanel( new GridBagLayout(), isDoubleBuffered );
         
         skipButton = new JButton( "Skip" ); // Create skip button.
-        setFont( skipButton );
+        Scalable.scaleFont( skipButton );
         skipButton.setActionCommand( SKIP_COMMAND );
         skipButton.addActionListener( listener );
         
         menuButton = new JButton( "Menu" );
-        setFont( menuButton );
+        Scalable.scaleFont( menuButton );
         menuButton.setActionCommand( MENU_COMMAND );
         menuButton.addActionListener( listener );
         
@@ -125,15 +121,15 @@ public class GamePanel extends JPanel {
         JPanel choicePanel = new JPanel( new GridBagLayout(), isDoubleBuffered );
         
         upButton = new JButton( "/\\" ); // Create arrows and select buttons.
-        setFont( upButton );
+        Scalable.scaleFont( upButton );
         upButton.setActionCommand( UP_COMMAND );
         upButton.addActionListener( listener );
         selectButton = new JButton( "O" );
-        setFont( selectButton );
+        Scalable.scaleFont( selectButton );
         selectButton.setActionCommand( SELECT_COMMAND );
         selectButton.addActionListener( listener );
         downButton = new JButton( "\\/" );
-        setFont( downButton );
+        Scalable.scaleFont( downButton );
         downButton.setActionCommand( DOWN_COMMAND );
         downButton.addActionListener( listener );
         
@@ -160,14 +156,14 @@ public class GamePanel extends JPanel {
         buttonPanel.add( controlPanel, BorderLayout.NORTH );
         buttonPanel.add( choicePanel, BorderLayout.SOUTH );
         
-        int padding = (int) ( TEXT_PADDING * Launcher.resolution ); // Calculates padding and margins for text boxes.
-        int margin = (int) ( TEXT_MARGIN * Launcher.resolution );
+        int padding = Scalable.scaleToInt( TEXT_PADDING ); // Calculates padding and margins for text boxes.
+        int margin = Scalable.scaleToInt( TEXT_MARGIN );
         
         /* Creates the text and image boxes */
         JPanel gameArea = new JPanel( new GridBagLayout(), true );
         
         scene = new JTextArea(); // Create and configure area for scene text.
-        setFont( scene );
+        Scalable.scaleFont( scene );
         scene.setEditable( false );
         scene.setMargin( new Insets( margin, margin, margin, margin ) );
         scene.setLineWrap( true );
@@ -177,7 +173,7 @@ public class GamePanel extends JPanel {
         scenePane.setBorder( border );
         
         options = new JTextArea(); // Create and configure area for options.
-        setFont( options );
+        Scalable.scaleFont( options );
         options.setEditable( false );
         options.setMargin( new Insets( margin, margin, margin, margin ) );
         options.setLineWrap( true );
@@ -212,19 +208,6 @@ public class GamePanel extends JPanel {
         add( gameArea, BorderLayout.CENTER );
         
         listeners = new LinkedList<>();
-        
-    }
-    
-    /**
-     * Sets the text font on the given component to be more appropriate to the resoultion.
-     * 
-     * @param c The component to have its font resized.
-     */
-    private void setFont( JComponent c ) {
-        
-        Font font = c.getFont();
-        font = font.deriveFont( font.getSize2D() * Launcher.fontMultiplier );
-        c.setFont( font );
         
     }
     

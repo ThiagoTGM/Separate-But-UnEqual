@@ -24,10 +24,6 @@ public class Launcher {
     
     private static final double WIDTH_MULTIPLIER = 0.5;
     private static final double HEIGHT_MULTIPLIER = 0.8;
-    private static final int FONT_DIVISOR = 70;
-    
-    public static int resolution;
-    public static float fontMultiplier;
 
     public static void main( String[] args ) {
 
@@ -39,8 +35,6 @@ public class Launcher {
         Dimension screenSize = defKit.getScreenSize();
         program.setSize( (int) ( screenSize.getWidth() * WIDTH_MULTIPLIER ),
                          (int) ( screenSize.getHeight() * HEIGHT_MULTIPLIER ) );
-        resolution = defKit.getScreenResolution();
-        fontMultiplier = resolution / FONT_DIVISOR;
         
         GamePanel panel = new GamePanel();
         program.add( panel );
