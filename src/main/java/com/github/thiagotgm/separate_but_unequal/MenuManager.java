@@ -6,8 +6,6 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,6 +118,11 @@ public class MenuManager implements ActionListener {
                 
             case GamePanel.SAVE_COMMAND: // The game was saved.
                 menu.setLoadButtonEnabled( true );
+                break;
+                
+            case SettingsPanel.CLEAR_SAVE_COMMAND:
+                menu.setLoadButtonEnabled( false );
+                game.setLoadButtonEnabled( false );
                 break;
                 
             case MenuManager.BACK_COMMAND: // Back to main menu.

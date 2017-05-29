@@ -129,6 +129,7 @@ public class GameManager implements ActionListener, Runnable {
                 
             case GamePanel.LOAD_COMMAND: // Load game.
                 load();
+                break;
             
         }
         
