@@ -36,6 +36,8 @@ public class MainMenuPanel extends ButtonPanel {
     public static final String START_COMMAND = "START";
     /** Action command that identifies that the "Load" button on the main menu was pressed. */
     public static final String LOAD_COMMAND = "MENU_" + GamePanel.LOAD_COMMAND;
+    /** Action command that identifies that the "Achievments" button was pressed. */
+    public static final String ACHIEVMENTS_COMMAND = "ACHIEVMENTS";
     /** Action command that identifies that the "Settings" button was pressed. */
     public static final String SETTINGS_COMMAND = "SETTINGS";
     /** Action command that identifies that the "Help" button was pressed. */
@@ -106,6 +108,13 @@ public class MainMenuPanel extends ButtonPanel {
         loadButton.setHorizontalAlignment( SwingConstants.CENTER );
         loadButton.setEnabled( ResourceManager.getInstance().hasSave() );
         
+        JButton achievmentsButton = new JButton( "Achievments" ); // Creates button to open achievents menu.
+        Scalable.scaleFont( achievmentsButton );
+        achievmentsButton.setActionCommand( ACHIEVMENTS_COMMAND );
+        achievmentsButton.addActionListener( listener );
+        achievmentsButton.setMaximumSize( maxSize );
+        achievmentsButton.setHorizontalAlignment( SwingConstants.CENTER );
+        
         JButton settingsButton = new JButton( "Settings" ); // Creates button to open settings menu.
         Scalable.scaleFont( settingsButton );
         settingsButton.setActionCommand( SETTINGS_COMMAND );
@@ -148,6 +157,11 @@ public class MainMenuPanel extends ButtonPanel {
         
         loadButton.setAlignmentX( Component.CENTER_ALIGNMENT );
         add( loadButton ); // Insert load button to panel.
+        
+        add( Box.createRigidArea( padding ) );
+        
+        achievmentsButton.setAlignmentX( Component.CENTER_ALIGNMENT );
+        add( achievmentsButton ); // Insert settings button to panel.
         
         add( Box.createRigidArea( padding ) );
         

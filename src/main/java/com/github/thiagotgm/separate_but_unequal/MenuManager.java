@@ -74,6 +74,11 @@ public class MenuManager implements ActionListener {
                 program.dispatchEvent( new WindowEvent( program, WindowEvent.WINDOW_CLOSING ) );
                 break;
                 
+            case MainMenuPanel.ACHIEVMENTS_COMMAND: // Open Help.
+                log.debug( "Opening Achievments panel." );
+                // TODO
+                break;
+                
             case MainMenuPanel.SETTINGS_COMMAND: // Open settings.
                 log.debug( "Opening Settings panel." );
                 setWindow( new SettingsPanel() );
