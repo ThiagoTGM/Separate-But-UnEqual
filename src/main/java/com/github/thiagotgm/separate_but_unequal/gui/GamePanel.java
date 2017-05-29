@@ -194,7 +194,7 @@ public class GamePanel extends JPanel {
         int margin = Scalable.scaleToInt( TEXT_MARGIN );
         
         /* Creates the text and image boxes */
-        JPanel gameArea = new JPanel( new GridBagLayout(), true );
+        JPanel gameArea = new JPanel( new GridBagLayout(), isDoubleBuffered );
         
         scene = new JTextArea(); // Create and configure area for scene text.
         Scalable.scaleFont( scene );

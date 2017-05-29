@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="Char 3">
+
+    <story>
+    
+        <code>C</code>
+        <name>Character 3</name>
+        <description>African American in the 21st Century</description>
+        <start>Char 3 Start</start>
+    
+    </story>
+
+</resource>

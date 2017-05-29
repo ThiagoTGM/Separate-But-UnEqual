@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 import com.github.thiagotgm.separate_but_unequal.gui.GamePanel;
 import com.github.thiagotgm.separate_but_unequal.gui.MainMenuPanel;
+import com.github.thiagotgm.separate_but_unequal.gui.StorySelector;
 
 /**
  * Manages the game menus, and controls what is displayed on the game window at any point.
@@ -61,8 +62,9 @@ public class MenuManager implements ActionListener {
                 break;
                 
             case MainMenuPanel.START_COMMAND: // Start the game.
-                setWindow( game );
-                gameManager.start( "Char 1 Start" );
+                setWindow( new StorySelector() );
+                //setWindow( game );
+                //gameManager.start( "Char 1 Start" );
                 break;
                 
             case MainMenuPanel.LOAD_COMMAND: // Load from previous save.

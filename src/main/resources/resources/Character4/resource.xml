@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="Char 4">
+
+    <story>
+    
+        <code>D</code>
+        <name>Character 4</name>
+        <description>White man in the 21st Century...................................................................................................</description>
+        <start>Char 4 Start</start>
+    
+    </story>
+
+</resource>

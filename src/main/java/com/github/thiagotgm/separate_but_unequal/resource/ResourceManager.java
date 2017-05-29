@@ -12,6 +12,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -26,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.thiagotgm.separate_but_unequal.Launcher;
+import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
 import com.github.thiagotgm.separate_but_unequal.resource.reader.ResourceReader;
 
 /**
@@ -216,6 +218,25 @@ public class ResourceManager {
         }
         
         return found;
+        
+    }
+    
+    /**
+     * Retrieves a list of all the Story objects in the resource library.
+     * 
+     * @return The Story objects in the resource library.
+     */
+    public List<Story> getStories() {
+        
+        List<Story> stories = new ArrayList<>();
+        for ( Resource res : resources.values() ) {
+            
+            if ( res.getType() == ResourceType.STORY ) {
+                stories.add( (Story) res );
+            }
+            
+        }
+        return stories;
         
     }
     
