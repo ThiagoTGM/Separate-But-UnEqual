@@ -11,8 +11,10 @@ import javax.swing.JPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.thiagotgm.separate_but_unequal.gui.ButtonPanel;
 import com.github.thiagotgm.separate_but_unequal.gui.GamePanel;
 import com.github.thiagotgm.separate_but_unequal.gui.MainMenuPanel;
+import com.github.thiagotgm.separate_but_unequal.gui.SettingsPanel;
 import com.github.thiagotgm.separate_but_unequal.gui.StorySelector;
 import com.github.thiagotgm.separate_but_unequal.resource.Story;
 
@@ -38,7 +40,7 @@ public class MenuManager implements ActionListener {
     private final GameManager gameManager;
     private final MainMenuPanel menu;
     
-    private JPanel current;
+    private ButtonPanel current;
 
     /**
      * Creates a new manager that displays on the given window.
@@ -49,10 +51,9 @@ public class MenuManager implements ActionListener {
 
         this.program = program;
         game = new GamePanel();
-        game.addActionListener( this );
         gameManager = new GameManager( game, this );
         menu = new MainMenuPanel();
-        menu.addActionListener( this );
+        menu.addActionListener( this ); // Starts listening to main menu.
         
         program.add( menu );
         current = menu;
@@ -61,7 +62,8 @@ public class MenuManager implements ActionListener {
     }
 
     /**
-     * Identifies which menu button was pressed and performs the corresponding action.
+     * Identifies which menu button was pressed and performs the corresponding action.<br>
+     * Will return to the main menu when the command {@value #BACK_COMMAND} is received.
      * 
      * @param e Event triggered by the button press.
      */
@@ -74,10 +76,23 @@ public class MenuManager implements ActionListener {
                 program.dispatchEvent( new WindowEvent( program, WindowEvent.WINDOW_CLOSING ) );
                 break;
                 
+            case MainMenuPanel.SETTINGS_COMMAND: // Open settings.
+                log.debug( "Opening Settings panel." );
+                setWindow( new SettingsPanel() );
+                break;
+                
+            case MainMenuPanel.HELP_COMMAND: // Open Help.
+                log.debug( "Opening Help page." );
+                // TODO
+                break;
+                
+            case MainMenuPanel.ABOUT_COMMAND: // Open About.
+                log.debug( "Opening About page." );
+                // TODO
+                break;
+                
             case MainMenuPanel.START_COMMAND: // Start the game.
-                StorySelector selector = new StorySelector();
-                selector.addActionListener( this );
-                setWindow( selector );
+                setWindow( new StorySelector() );
                 break;
                 
             case MainMenuPanel.LOAD_COMMAND: // Load from previous save.
@@ -86,7 +101,7 @@ public class MenuManager implements ActionListener {
                 break;
                 
             case StorySelector.SELECT_STORY_COMMAND: // A story was selected.
-                selector = (StorySelector) current;
+                StorySelector selector = (StorySelector) current;
                 Story selected = selector.getChoice();
                 String startID = selected.getStart();
                 char code = selected.getCode();
@@ -95,7 +110,6 @@ public class MenuManager implements ActionListener {
                     log.info( "Starting game with Scene ID '" + startID + "', code '" + code + "'." );
                     gameManager.start( startID, code );
                     setWindow( game ); // Start the game.
-                    selector.removeActionListener( this ); // Successfully started.
                 } catch ( IllegalArgumentException ex ) {
                     log.warn( "Invalid starting Scene '" + startID + "'", ex );
                     JOptionPane.showMessageDialog( current, "The story selected "
@@ -120,14 +134,16 @@ public class MenuManager implements ActionListener {
      * 
      * @param panel Panel to be displayed.
      */
-    private void setWindow( JPanel panel ) {
+    private void setWindow( ButtonPanel panel ) {
         
+        current.removeActionListener( this ); // Stop listening to old panel.
         program.remove( current );
         program.add( panel );
         current = panel;
         program.pack();
-        program.revalidate();
+        program.revalidate(); // Display new panel.
         program.repaint();
+        panel.addActionListener( this ); // Starts listening to new panel.
         
     }
     

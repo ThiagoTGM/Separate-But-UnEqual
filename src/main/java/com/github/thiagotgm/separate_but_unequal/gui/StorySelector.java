@@ -33,7 +33,7 @@ import com.github.thiagotgm.separate_but_unequal.resource.Story;
  * @author ThiagoTGM
  * @since 2017-05-29
  */
-public class StorySelector extends JPanel {
+public class StorySelector extends ButtonPanel {
     
     /** Serial ID that represents this class. */
     private static final long serialVersionUID = 8230505761611363794L;
@@ -51,8 +51,6 @@ public class StorySelector extends JPanel {
     private static final double OPTION_HEIGHT = 2;
     private static final int MAX_LINES = 3;
     private static final int MAX_COLUMNS = 2;
-    
-    private final List<ActionListener> listeners;
     
     private Story choice;
 
@@ -79,8 +77,7 @@ public class StorySelector extends JPanel {
         super( isDoubleBuffered );
         setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
         
-        listeners = new LinkedList<>(); // Initialize listener aggregator.
-        ActionListener listener = new ListenerAggregator( listeners ) {
+        ActionListener listener = new ListenerAggregator( listeners ) { // Initialize listener aggregator.
             
             /**
              * If the button pressed was a choice, identifies the choice from the command string, then removes the
@@ -227,30 +224,6 @@ public class StorySelector extends JPanel {
     public Story getChoice() {
         
         return choice;
-        
-    }
-    
-    /**
-     * Adds a listener to be notified when one of the buttons in the panel is pressed.
-     * 
-     * @param l Listener to be registered.
-     * @see ActionListener
-     */
-    public void addActionListener( ActionListener l ) {
-        
-        listeners.add( l );
-        
-    }
-    
-    /**
-     * Removes a listener so that it is no longer notified when one of the buttons in the panel is pressed.
-     * 
-     * @param l Listener to be unregistered.
-     * @see ActionListener
-     */
-    public void removeActionListener( ActionListener l ) {
-        
-        listeners.remove( l );
         
     }
 

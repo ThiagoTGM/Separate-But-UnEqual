@@ -3,8 +3,6 @@ package com.github.thiagotgm.separate_but_unequal.gui;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -24,7 +22,7 @@ import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
  * @author Thiago
  * @since 2017-05-25
  */
-public class MainMenuPanel extends JPanel {
+public class MainMenuPanel extends ButtonPanel {
     
     /** Serial ID that represents this class. */
     private static final long serialVersionUID = 2874269025005392973L;
@@ -38,6 +36,12 @@ public class MainMenuPanel extends JPanel {
     public static final String START_COMMAND = "START";
     /** Action command that identifies that the "Load" button on the main menu was pressed. */
     public static final String LOAD_COMMAND = "MENU_" + GamePanel.LOAD_COMMAND;
+    /** Action command that identifies that the "Settings" button was pressed. */
+    public static final String SETTINGS_COMMAND = "SETTINGS";
+    /** Action command that identifies that the "Help" button was pressed. */
+    public static final String HELP_COMMAND = "HELP";
+    /** Action command that identifies that the "About" button was pressed. */
+    public static final String ABOUT_COMMAND = "About";
     /** Action command that identifies that the "Exit" button was pressed. */
     public static final String EXIT_COMMAND = "EXIT";
     
@@ -46,8 +50,6 @@ public class MainMenuPanel extends JPanel {
     private static final double BUTTON_PADDING = 0.2;
     private static final double BUTTON_PANEL_PADDING = 1;
     private static final double WINDOW_PADDING = 0.3;
-    
-    private final List<ActionListener> listeners;
     
     private final JButton loadButton;
     
@@ -87,8 +89,7 @@ public class MainMenuPanel extends JPanel {
         int maxWidth = Scalable.scaleToInt( MAX_BUTTON_WIDTH );
         Dimension maxSize = new Dimension( maxWidth, maxHeight );
         
-        listeners = new LinkedList<>(); // Initializes the listener list and starts aggregator.
-        ActionListener listener = new ListenerAggregator( listeners );
+        ActionListener listener = new ListenerAggregator( listeners ); // Starts aggregator.
         
         JButton startButton = new JButton( "Start" ); // Creates button to start game.
         Scalable.scaleFont( startButton );
@@ -104,6 +105,27 @@ public class MainMenuPanel extends JPanel {
         loadButton.setMaximumSize( maxSize );
         loadButton.setHorizontalAlignment( SwingConstants.CENTER );
         loadButton.setEnabled( ResourceManager.getInstance().hasSave() );
+        
+        JButton settingsButton = new JButton( "Settings" ); // Creates button to open settings menu.
+        Scalable.scaleFont( settingsButton );
+        settingsButton.setActionCommand( SETTINGS_COMMAND );
+        settingsButton.addActionListener( listener );
+        settingsButton.setMaximumSize( maxSize );
+        settingsButton.setHorizontalAlignment( SwingConstants.CENTER );
+        
+        JButton helpButton = new JButton( "Help" ); // Creates button to open help page.
+        Scalable.scaleFont( helpButton );
+        helpButton.setActionCommand( HELP_COMMAND );
+        helpButton.addActionListener( listener );
+        helpButton.setMaximumSize( maxSize );
+        helpButton.setHorizontalAlignment( SwingConstants.CENTER );
+        
+        JButton aboutButton = new JButton( "About" ); // Creates button to open about page.
+        Scalable.scaleFont( aboutButton );
+        aboutButton.setActionCommand( ABOUT_COMMAND );
+        aboutButton.addActionListener( listener );
+        aboutButton.setMaximumSize( maxSize );
+        aboutButton.setHorizontalAlignment( SwingConstants.CENTER );
         
         JButton exitButton = new JButton( "Exit" ); // Creates button to exit to desktop.
         Scalable.scaleFont( exitButton );
@@ -126,6 +148,21 @@ public class MainMenuPanel extends JPanel {
         
         loadButton.setAlignmentX( Component.CENTER_ALIGNMENT );
         add( loadButton ); // Insert load button to panel.
+        
+        add( Box.createRigidArea( padding ) );
+        
+        settingsButton.setAlignmentX( Component.CENTER_ALIGNMENT );
+        add( settingsButton ); // Insert settings button to panel.
+        
+        add( Box.createRigidArea( padding ) );
+        
+        helpButton.setAlignmentX( Component.CENTER_ALIGNMENT );
+        add( helpButton ); // Insert help button to panel.
+        
+        add( Box.createRigidArea( padding ) );
+        
+        aboutButton.setAlignmentX( Component.CENTER_ALIGNMENT );
+        add( aboutButton ); // Insert about button to panel.
         
         add( Box.createRigidArea( padding ) );
         
@@ -157,30 +194,6 @@ public class MainMenuPanel extends JPanel {
     public void setLoadButtonEnabled( boolean enabled ) {
         
         loadButton.setEnabled( enabled );
-        
-    }
-    
-    /**
-     * Adds a listener to be notified when one of the buttons in the panel is pressed.
-     * 
-     * @param l Listener to be registered.
-     * @see ActionListener
-     */
-    public void addActionListener( ActionListener l ) {
-        
-        listeners.add( l );
-        
-    }
-    
-    /**
-     * Removes a listener so that it is no longer notified when one of the buttons in the panel is pressed.
-     * 
-     * @param l Listener to be unregistered.
-     * @see ActionListener
-     */
-    public void removeActionListener( ActionListener l ) {
-        
-        listeners.remove( l );
         
     }
 

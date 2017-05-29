@@ -7,9 +7,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
-import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -26,7 +23,7 @@ import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
  * @author Thiago
  * @since 2017-05-25
  */
-public class GamePanel extends JPanel {
+public class GamePanel extends ButtonPanel {
     
     /** Serial ID that represents this class. */
     private static final long serialVersionUID = -3770146955575152229L;
@@ -68,8 +65,6 @@ public class GamePanel extends JPanel {
     private final JTextArea scene;
     private final JTextArea options;
     private final JPanel graphic;
-    
-    private final List<ActionListener> listeners;
 
     /**
      * Initializes a double-buffered GamePanel.
@@ -99,7 +94,6 @@ public class GamePanel extends JPanel {
         int topPadding = Scalable.scaleToInt( TOP_BORDER_PADDING );
         int bottomPadding = Scalable.scaleToInt( BOTTOM_BORDER_PADDING );
     
-        listeners = new LinkedList<>();
         ActionListener listener = new ListenerAggregator( listeners );
         
         GridBagConstraints c = new GridBagConstraints();
@@ -308,30 +302,6 @@ public class GamePanel extends JPanel {
     public void setLoadButtonEnabled( boolean enabled ) {
         
         loadButton.setEnabled( enabled );
-        
-    }
-    
-    /**
-     * Adds a listener to be notified when one of the buttons in the panel is pressed.
-     * 
-     * @param l Listener to be registered.
-     * @see ActionListener
-     */
-    public void addActionListener( ActionListener l ) {
-        
-        listeners.add( l );
-        
-    }
-    
-    /**
-     * Removes a listener so that it is no longer notified when one of the buttons in the panel is pressed.
-     * 
-     * @param l Listener to be unregistered.
-     * @see ActionListener
-     */
-    public void removeActionListener( ActionListener l ) {
-        
-        listeners.remove( l );
         
     }
 
