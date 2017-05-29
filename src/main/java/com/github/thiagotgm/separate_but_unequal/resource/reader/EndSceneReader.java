@@ -18,7 +18,7 @@ import com.github.thiagotgm.separate_but_unequal.resource.ResourceFactory;
  */
 public class EndSceneReader extends SceneReader {
     
-    private static final String END_CODE_TAG = "code";
+    private static final String END_CODE_TAG = EndSceneFactory.CODE_ELEMENT;
 
     /**
      * Constructs a new EndSceneReader.
@@ -51,7 +51,7 @@ public class EndSceneReader extends SceneReader {
     }
     
     /**
-     * Reads the options list described by a {@value #END_CODE_TAG} element.
+     * Reads the code value described by a {@value #END_CODE_TAG} element.
      * 
      * @param reader Reader going through the XML document. Its last return should have been
      *               the opening tag of the {@value #END_CODE_TAG} element.

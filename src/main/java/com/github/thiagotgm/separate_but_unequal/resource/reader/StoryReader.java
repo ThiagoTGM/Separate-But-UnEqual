@@ -1,6 +1,5 @@
 package com.github.thiagotgm.separate_but_unequal.resource.reader;
 
-import java.nio.file.Path;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -10,33 +9,36 @@ import javax.xml.stream.events.XMLEvent;
 
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceFactory;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourcePath;
-import com.github.thiagotgm.separate_but_unequal.resource.SceneFactory;
+import com.github.thiagotgm.separate_but_unequal.resource.StoryFactory;
 
 /**
- * Reader that extracts specific information about a Scene resource object from a resource XML stream.
+ * Reader that extracts specific information about a Story resource object from a resource XML stream.
  *
  * @version 1.0
  * @author ThiagoTGM
  * @since 2017-05-23
  */
-public abstract class SceneReader extends ResourceReader {
+public class StoryReader extends ResourceReader {
     
-    private static final String SCENE_TAG = "scene";
-    private static final String FILENAME_TAG = "filename";
-    private static final String GRAPHIC_TAG = SceneFactory.GRAPHIC_ELEMENT;
-    private static final String AUDIO_TAG = SceneFactory.AUDIO_ELEMENT;
-    
+    private static final String STORY_TAG = "story";
+    private static final String CODE_TAG = StoryFactory.CODE_ELEMENT;
+    private static final String NAME_TAG = StoryFactory.NAME_ELEMENT;
+    private static final String DESCRIPTION_TAG = StoryFactory.DESCRIPTION_ELEMENT;
+    private static final String START_TAG = StoryFactory.START_ELEMENT;
+    private static final String GRAPHIC_TAG = StoryFactory.GRAPHIC_ELEMENT;
+
     /**
-     * Constructs a new SceneReader.
+     * Constructs a new StoryReader.
      */
-    protected SceneReader() {
+    protected StoryReader() {
         // Nothing to initialize.
     }
 
     @Override
-    protected void read( XMLEventReader reader, ResourcePath path, ResourceFactory factory ) throws XMLStreamException  {
-        
-        SceneFactory sFactory = (SceneFactory) factory;
+    protected void read( XMLEventReader reader, ResourcePath path, ResourceFactory factory )
+            throws XMLStreamException, IllegalArgumentException {
+
+        StoryFactory sFactory = (StoryFactory) factory;
         String currentTag = null;
         String value = null;
         while ( reader.hasNext() ) {
@@ -52,15 +54,17 @@ public abstract class SceneReader extends ResourceReader {
                     StartElement start = event.asStartElement();
                     String name = start.getName().getLocalPart();
                     switch ( name ) {
-                        
-                        case FILENAME_TAG:                                                      
-                        case GRAPHIC_TAG:                            
-                        case AUDIO_TAG:
+
+                        case CODE_TAG:
+                        case NAME_TAG:
+                        case DESCRIPTION_TAG:
+                        case START_TAG:
+                        case GRAPHIC_TAG:
                             currentTag = name;
                             break;
-                              
+                            
                         default: // Element not recognized.
-                            readSpecificElement( reader, sFactory, name ); // Try subclass-specific elements.
+                            throw new XMLStreamException( UNEXPECTED_ELEMENT );
                         
                     }
                     break;
@@ -79,7 +83,7 @@ public abstract class SceneReader extends ResourceReader {
                 case XMLStreamConstants.END_ELEMENT:
                     EndElement end = event.asEndElement();
                     name = end.getName().getLocalPart();
-                    if ( ( currentTag == null ) && name.equals( SCENE_TAG ) ) {
+                    if ( ( currentTag == null ) && name.equals( STORY_TAG ) ) {
                         return; // Finished reading Scene element.
                     }
                     if ( !name.equals( currentTag ) ) { // Does not match element currently being read.
@@ -87,19 +91,28 @@ public abstract class SceneReader extends ResourceReader {
                     }
                     switch ( name ) { // Identifies what element was being read and records value appropriately.
                         
-                        case FILENAME_TAG:
-                            Path filePath = path.getPath();
-                            Path textPath = filePath.resolveSibling( value );
-                            sFactory.withPath( new ResourcePath( textPath, path.inJar() ) );
+                        case CODE_TAG:
+                            if ( value == null ) {
+                                throw new XMLStreamException( MISSING_VALUE );
+                            }
+                            if ( value.length() > 1 ) { // Code not a single char.
+                                throw new XMLStreamException( INVALID_VALUE );
+                            }
+                            char code = value.charAt( 0 );
+                            try {
+                                sFactory.withCode( code );
+                            } catch ( IllegalArgumentException e ) {
+                                throw new XMLStreamException( INVALID_VALUE, e );
+                            }
                             break;
                             
                         default:
-                            sFactory.withElement( name, value ); // Elements that don't need extra parsing.
+                            sFactory.withElement( currentTag, value ); // Elements that don't need extra parsing.
                         
                     }
                     currentTag = null; // Reset temporary storage.
                     value = null;
-                
+                    
             }
             
         }
@@ -107,18 +120,5 @@ public abstract class SceneReader extends ResourceReader {
         throw new XMLStreamException( UNEXPECTED_EOF );
         
     }
-    
-    /**
-     * Reads an element specific to the subtype of Scene that the Reader extending this is reading.
-     * 
-     * @param reader Reader going through the XML document. Its last return should have been
-     *               the opening tag of the subtype-specific element.
-     * @param factory The factory constructing the Resource.
-     * @param element The type of element to be read.
-     * @throws XMLStreamException if a format error was encountered in the element, or if that element does not
-     *                            exist in the subtype.
-     */
-    public abstract void readSpecificElement( XMLEventReader reader, ResourceFactory factory, String element )
-            throws XMLStreamException;
 
 }

@@ -8,6 +8,7 @@
         <name>Character 1</name>
         <description>African American in the 60s</description>
         <start>Char 1 Start</start>
+        <graphic>test</graphic>
     
     </story>
 

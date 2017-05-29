@@ -177,6 +177,9 @@ public abstract class ResourceReader {
             case END_SCENE:
                 resReader = new EndSceneReader();
                 break;
+            case STORY:
+                resReader = new StoryReader();
+                break;
             default: // Type does not have a Reader.
                 throw new IllegalArgumentException( "No reader available for the given Resource type." );
             
@@ -195,6 +198,6 @@ public abstract class ResourceReader {
      * @param factory The factory constructing the Resource.
      * @throws XMLStreamException if a parsing error occurred.
      */
-    protected abstract void read( XMLEventReader reader, ResourcePath path, ResourceFactory factory ) throws XMLStreamException, IllegalArgumentException;
+    protected abstract void read( XMLEventReader reader, ResourcePath path, ResourceFactory factory ) throws XMLStreamException;
 
 }

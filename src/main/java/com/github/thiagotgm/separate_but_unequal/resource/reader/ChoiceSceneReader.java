@@ -23,7 +23,7 @@ import com.github.thiagotgm.separate_but_unequal.resource.ResourceFactory;
  */
 public class ChoiceSceneReader extends SceneReader {
     
-    private static final String OPTIONS_TAG = "options";
+    private static final String OPTIONS_TAG = ChoiceSceneFactory.OPTIONS_ELEMENT;
     private static final String CHOICE_TAG = "option";
     private static final String CHOICE_TEXT_TAG = "text";
     private static final String CHOICE_TARGET_TAG = "target";
