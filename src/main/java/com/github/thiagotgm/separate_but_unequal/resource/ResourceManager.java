@@ -222,7 +222,8 @@ public class ResourceManager {
     }
     
     /**
-     * Retrieves a list of all the Story objects in the resource library.
+     * Retrieves a list of all the Story objects in the resource library.<br>
+     * Elements are in sorted order.
      * 
      * @return The Story objects in the resource library.
      */
@@ -236,6 +237,7 @@ public class ResourceManager {
             }
             
         }
+        Collections.sort( stories );
         return stories;
         
     }

@@ -7,7 +7,7 @@ package com.github.thiagotgm.separate_but_unequal.resource;
  * @author Thiago
  * @since 2017-05-28
  */
-public class Story extends Resource {
+public class Story extends Resource implements Comparable<Story> {
     
     public static final char MIN_CODE = 'A';
     public static final char MAX_CODE = 'Z';
@@ -125,6 +125,13 @@ public class Story extends Resource {
     public ResourceType getType() {
 
         return ResourceType.STORY;
+        
+    }
+
+    @Override
+    public int compareTo( Story o ) {
+
+        return this.code - o.code;
         
     }
 
