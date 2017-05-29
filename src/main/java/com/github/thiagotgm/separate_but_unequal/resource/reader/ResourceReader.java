@@ -101,8 +101,16 @@ public abstract class ResourceReader {
                         } catch ( IllegalArgumentException e ) {
                             throw new XMLStreamException( "Invalid Resource type <" + name + ">." );
                         }
-                        factory = ResourceFactory.newInstance( type, id ); // Reads type-specific values.
-                        readType( reader, path, factory, type );
+                        try {
+                            factory = ResourceFactory.newInstance( type, id ); // Reads type-specific values.
+                        } catch ( UnsupportedOperationException e ) {
+                            throw new XMLStreamException( "Resource type <" + name + "> does not have a Factory.", e );
+                        }
+                        try {
+                            readType( reader, path, factory, type );
+                        } catch ( IllegalArgumentException e ) {
+                            throw new XMLStreamException( "Resource type <" + name + "> does not have a Reader.", e );
+                        }
                         
                     }
                     break;

@@ -12,6 +12,8 @@ import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
  * @since 2017-05-23
  */
 public abstract class ResourceFactory {
+    
+    protected static final String INVALID_VALUE_TYPE = "Value given for element '%s' is of the wrong type.";
 
     protected final String id;
     
@@ -38,6 +40,8 @@ public abstract class ResourceFactory {
                 return new ChoiceSceneFactory( id );
             case END_SCENE:
                 return new EndSceneFactory( id );
+            case STORY:
+                return new StoryFactory( id );
             default:
                 throw new UnsupportedOperationException( "No factory available for the requested resource type." );
             

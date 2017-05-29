@@ -32,7 +32,13 @@ public abstract class Resource {
         /**
          * Ending scene in the story. Includes text of the scene, identifies other resources, and specifies end code.
          */
-        END_SCENE
+        END_SCENE,
+        
+        /**
+         * A single storyline in the game. Has the name of the stoy, gives a description, and identifies the starting
+         * scene of the story and other resources.
+         */
+        STORY
         
     };
     

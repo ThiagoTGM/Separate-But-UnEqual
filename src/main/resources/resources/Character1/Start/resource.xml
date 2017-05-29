@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="Char 1 Start">
+
+    <scene type="choice">
+    
+        <filename>Char1Intro.txt</filename>
+        <options>
+        
+            <option>
+                <text>Go to school</text>
+                <target>Char 1 Path To School</target>
+            </option>
+            <option>
+                <text>Chill</text>
+                <target>ChillLol</target>
+            </option>
+            <option>
+                <text>Read a book</text>
+                <target>LikeANerd</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

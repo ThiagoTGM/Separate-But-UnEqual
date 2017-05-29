@@ -4,7 +4,7 @@ package com.github.thiagotgm.separate_but_unequal.resource;
  * Factory that constructs instances of the Scene resource type.<br>
  * The {@link #withPath(ResourcePath) path} is required, but other elements are optional.
  *
- * @version 2.0
+ * @version 1.0
  * @author Thiago Marback
  * @since 2017-05-23
  */
@@ -54,8 +54,7 @@ public class SceneFactory extends ResourceFactory {
                 
             }
         } catch ( ClassCastException e ) {
-            throw new IllegalArgumentException( "Value given for element '" + element +
-                    "' is of the wrong type.", e );
+            throw new IllegalArgumentException( String.format( ResourceFactory.INVALID_VALUE_TYPE, element ), e );
         }
         return this;
 
@@ -78,7 +77,7 @@ public class SceneFactory extends ResourceFactory {
      * Specifies the graphic to be used in the built Scene.<br>
      * Optional.
      *
-     * @param graphic Filename of the Scene graphic.
+     * @param graphic Resource ID of the Scene graphic.
      * @return The calling instance.
      */
     public SceneFactory withGraphic( String graphic ) {
@@ -92,7 +91,7 @@ public class SceneFactory extends ResourceFactory {
      * Specifies the audio to be used in the built Scene.<br>
      * Optional.
      *
-     * @param audio Filename of the Scene audio.
+     * @param audio Resource ID of the Scene audio.
      * @return The calling instance.
      */
     public SceneFactory withAudio( String audio ) {

@@ -57,7 +57,7 @@ public class MenuManager implements ActionListener {
         switch ( e.getActionCommand() ) {
             
             case MainMenuPanel.EXIT_COMMAND: // Exit the program.
-                program.dispatchEvent( new WindowEvent( program, WindowEvent.WINDOW_CLOSING  ) );
+                program.dispatchEvent( new WindowEvent( program, WindowEvent.WINDOW_CLOSING ) );
                 break;
                 
             case MainMenuPanel.START_COMMAND: // Start the game.
