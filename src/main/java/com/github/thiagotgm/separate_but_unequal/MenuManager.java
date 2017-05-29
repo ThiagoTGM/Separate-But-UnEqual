@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import com.github.thiagotgm.separate_but_unequal.gui.GamePanel;
 import com.github.thiagotgm.separate_but_unequal.gui.MainMenuPanel;
 import com.github.thiagotgm.separate_but_unequal.gui.StorySelector;
-import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
 import com.github.thiagotgm.separate_but_unequal.resource.Story;
 
 /**
@@ -90,17 +89,18 @@ public class MenuManager implements ActionListener {
                 selector = (StorySelector) current;
                 Story selected = selector.getChoice();
                 String startID = selected.getStart();
-                log.info( "Selected story with start '" + startID + "'" );
-                if ( !ResourceManager.getInstance().isResource( startID ) ) {
-                    log.warn( "Invalid start ID '" + startID + "'" );
-                    JOptionPane.showMessageDialog( current, "The story selected "
-                            + "does not have a valid start.", // Invalid start.
-                            "Start Error", JOptionPane.ERROR_MESSAGE );
-                } else { // Valid start.
-                    log.debug( "Starting game with Scene ID '" + startID + "'" );
-                    selector.removeActionListener( this );
+                char code = selected.getCode();
+                log.info( "Selected story with code '" + code + "'" );
+                try {
+                    log.info( "Starting game with Scene ID '" + startID + "', code '" + code + "'." );
+                    gameManager.start( startID, code );
                     setWindow( game ); // Start the game.
-                    gameManager.start( "Char 1 Start" );
+                    selector.removeActionListener( this ); // Successfully started.
+                } catch ( IllegalArgumentException ex ) {
+                    log.warn( "Invalid starting Scene '" + startID + "'", ex );
+                    JOptionPane.showMessageDialog( current, "The story selected "
+                            + "does not have a valid starting Scene.", // Invalid start.
+                            "Start Error", JOptionPane.ERROR_MESSAGE );
                 }
                 break;
                 
@@ -139,7 +139,12 @@ public class MenuManager implements ActionListener {
      */
     protected void gameEnd( int endCode ) {
         
-        System.out.println( endCode );
+        if ( endCode != 0 ) {
+            char storyCode = gameManager.getStoryCode();
+            log.info( "Game reached ending '" + storyCode + "-" + endCode + "'." );
+        } else {
+            log.debug( "Game halted." );
+        }
         setWindow( menu );
         
     }

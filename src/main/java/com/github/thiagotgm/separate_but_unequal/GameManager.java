@@ -46,6 +46,7 @@ public class GameManager implements ActionListener, Runnable {
     private Thread bufferThread;
     
     private int endCode;
+    private char storyCode;
     
     private LoadedScene nextScene;
     private Thread managerThread;
@@ -115,18 +116,18 @@ public class GameManager implements ActionListener, Runnable {
                 }
                 break;
                 
-            case GamePanel.MENU_COMMAND:
+            case GamePanel.MENU_COMMAND: // Back to main menu.
                 stop();
                 clear();
                 menuManager.gameEnd( endCode );
                 break;
                 
-            case GamePanel.SAVE_COMMAND:
+            case GamePanel.SAVE_COMMAND: // Save game.
                 save();
                 panel.setLoadButtonEnabled( true );
                 break;
                 
-            case GamePanel.LOAD_COMMAND:
+            case GamePanel.LOAD_COMMAND: // Load game.
                 load();
             
         }
@@ -147,9 +148,10 @@ public class GameManager implements ActionListener, Runnable {
      * Starts the game on a specified Scene.
      * 
      * @param startSceneID The Resource ID of the first scene to be shown.
+     * @param storyCode Code of the story being started.
      * @throws IllegalArgumentException if the given Resource ID is not valid or does not correspond to a Scene.
      */
-    public void start( String startSceneID ) throws IllegalArgumentException {
+    public void start( String startSceneID, char storyCode ) throws IllegalArgumentException {
         
         Resource res = ResourceManager.getInstance().getResource( startSceneID );
         if ( res == null ) {
@@ -161,7 +163,9 @@ public class GameManager implements ActionListener, Runnable {
         Scene target = (Scene) res;
         nextScene = new Loader().load( target );
         endCode = 0;
+        this.storyCode = storyCode;
         runNext();
+        log.debug( "Started game with Scene ID '" + startSceneID + "', code '" + storyCode + "'." );
         
     }
     
@@ -213,8 +217,8 @@ public class GameManager implements ActionListener, Runnable {
             choiceDisplayer.showOptions( currentOptions ); // Get next player choice.
         } else {
             endCode = ( (EndScene) scene.getScene() ).getCode();
-            panel.getOptionsArea().setText( "You reached ending " + endCode + "!\nPress the 'Menu' button to go back "
-                    + "to the menu." );
+            panel.getOptionsArea().setText( "You reached ending " + storyCode + "-" + endCode + "!\nPress the 'Menu' "
+                    + "button to go back to the menu." );
         }
         
         /* End of thread */
@@ -245,8 +249,8 @@ public class GameManager implements ActionListener, Runnable {
     private void save() {
         
         String current = nextScene.getScene().getID();
-        ResourceManager.getInstance().setSave( current );
-        log.info( "Saved game at Scene '" + current + "'." );
+        ResourceManager.getInstance().setSave( storyCode + current );
+        log.info( "Saved game at Scene '" + current + "', story code '" + storyCode + "'." );
         
     }
     
@@ -256,8 +260,21 @@ public class GameManager implements ActionListener, Runnable {
     public void load() {
         
         String save = ResourceManager.getInstance().getSave();
-        log.info( "Loading game from Scene '" + save + "'." );
-        start( save );
+        char code = save.charAt( 0 );
+        save = save.substring( 1 );
+        log.info( "Loading game from Scene '" + save + "', story code '" + code + "'." );
+        start( save, code );
+        
+    }
+    
+    /**
+     * Retrieves the code of the Story that is currently executing.
+     * 
+     * @return The code of the Story.
+     */
+    public char getStoryCode() {
+        
+        return storyCode;
         
     }
     
