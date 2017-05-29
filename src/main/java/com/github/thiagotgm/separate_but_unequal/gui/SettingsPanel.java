@@ -50,6 +50,7 @@ public class SettingsPanel extends ButtonPanel implements ActionListener {
     private static final int TEXT_SPEED_CHANGE = 1;
     
     private final JLabel textSpeedValue;
+    private final JButton clearSaveButton;
     private final ActionListener listener;
 
     /**
@@ -117,11 +118,12 @@ public class SettingsPanel extends ButtonPanel implements ActionListener {
         /* Add Clear Save button */
         add( Box.createRigidArea( Scalable.scale( 0, LABEL_PADDING ) ) );
         
-        JButton clearSaveButton = new JButton( "Clear Save" );
+        clearSaveButton = new JButton( "Clear Save" );
         clearSaveButton.setActionCommand( CLEAR_SAVE_COMMAND );
         Scalable.scaleFont( clearSaveButton );
         clearSaveButton.addActionListener( this );
         clearSaveButton.setAlignmentX( Component.CENTER_ALIGNMENT );
+        clearSaveButton.setEnabled( ResourceManager.getInstance().hasSave() );
         add( clearSaveButton );
         
         /* Add button to go back to menu */
@@ -182,6 +184,7 @@ public class SettingsPanel extends ButtonPanel implements ActionListener {
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE );
                 if ( choice == JOptionPane.YES_OPTION ) {
                     ResourceManager.getInstance().setSave( null );
+                    clearSaveButton.setEnabled( false );
                     log.info( "Save cleared." );
                     listener.actionPerformed( e );
                 } else {

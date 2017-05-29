@@ -3,6 +3,7 @@ package com.github.thiagotgm.separate_but_unequal;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.InputStream;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -14,6 +15,7 @@ import com.github.thiagotgm.separate_but_unequal.gui.GamePanel;
 import com.github.thiagotgm.separate_but_unequal.gui.MainMenuPanel;
 import com.github.thiagotgm.separate_but_unequal.gui.SettingsPanel;
 import com.github.thiagotgm.separate_but_unequal.gui.StorySelector;
+import com.github.thiagotgm.separate_but_unequal.gui.TextPanel;
 import com.github.thiagotgm.separate_but_unequal.resource.Story;
 
 /**
@@ -26,6 +28,9 @@ import com.github.thiagotgm.separate_but_unequal.resource.Story;
 public class MenuManager implements ActionListener {
     
     private static final Logger log = LoggerFactory.getLogger( MenuManager.class );
+    
+    private static final String HELP_FILE = "help.txt";
+    private static final String ABOUT_FILE = "about.txt";
     
     /**
      * Action command that identifies that a button to return to the main menu
@@ -86,12 +91,26 @@ public class MenuManager implements ActionListener {
                 
             case MainMenuPanel.HELP_COMMAND: // Open Help.
                 log.debug( "Opening Help page." );
-                // TODO
+                InputStream file = getClass().getClassLoader().getResourceAsStream( HELP_FILE );
+                if ( file != null ) {
+                    setWindow( new TextPanel( file ) );
+                } else { // Could not load file.
+                    log.error( "Help file '" + HELP_FILE + "' not found." );
+                    JOptionPane.showMessageDialog( current, "The Help menu could not be loaded.",
+                            "Menu Error", JOptionPane.ERROR_MESSAGE );
+                }
                 break;
                 
             case MainMenuPanel.ABOUT_COMMAND: // Open About.
                 log.debug( "Opening About page." );
-                // TODO
+                file = getClass().getClassLoader().getResourceAsStream( ABOUT_FILE );
+                if ( file != null ) {
+                    setWindow( new TextPanel( file ) );
+                } else { // Could not load file.
+                    log.error( "About file '" + ABOUT_FILE + "' not found." );
+                    JOptionPane.showMessageDialog( current, "The About menu could not be loaded.",
+                            "Menu Error", JOptionPane.ERROR_MESSAGE );
+                }
                 break;
                 
             case MainMenuPanel.START_COMMAND: // Start the game.
