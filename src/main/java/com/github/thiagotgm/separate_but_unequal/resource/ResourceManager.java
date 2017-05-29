@@ -1,6 +1,11 @@
 package com.github.thiagotgm.separate_but_unequal.resource;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
@@ -43,10 +48,12 @@ public class ResourceManager {
     private static final String DEFAULT_SETTINGS_FILE = "defaults.txt";
     private static final String TEXT_SPEED_MULTIPLIER = "textSpeedMultiplier";
     private static final String SAVE = "save";
+    private static final String SAVE_FILE = "save.txt";
+    private static final String SAVE_FILE_COMMENT = "Settings modified by the user, and information about the user's"
+            + " progress in the game.";
 
     private final Hashtable<String, Resource> resources;
-    private final Properties defaultSettings;
-    private Properties settings;
+    private final Properties settings;
     
     private static ResourceManager instance;
     
@@ -56,9 +63,19 @@ public class ResourceManager {
     protected ResourceManager() {
         
         resources = new Hashtable<>();
-        defaultSettings = new Properties();
+        
+        Properties defaultSettings = new Properties();
+        log.info( "Loading default settings." );
+        try {
+            defaultSettings.load( ResourceManager.class.getClassLoader().getResourceAsStream( DEFAULT_SETTINGS_FILE ) );
+            log.info( "Default settings loaded." );
+        } catch ( IOException e ) {
+            log.error( "Failed to load default settings.", e );
+            System.exit( Launcher.LOADING_ERROR_CODE );
+        }
+        settings = new Properties( defaultSettings );
+        
         load();
-        resetSettings();
         
     }
     
@@ -90,17 +107,20 @@ public class ResourceManager {
     }
     
     /**
-     * Loads the resource library and the default properties.
+     * Loads the resource library and the save file.
      */
     private void load() {
         
-        log.info( "Loading default settings." );
-        try {
-            defaultSettings.load( ResourceManager.class.getClassLoader().getResourceAsStream( DEFAULT_SETTINGS_FILE ) );
-            log.info( "Default settings loaded." );
-        } catch ( IOException e ) {
-            log.error( "Failed to load default settings.", e );
-            System.exit( Launcher.LOADING_ERROR_CODE );
+        if ( new File( SAVE_FILE ).exists() ) { // Load save file.
+            log.info( "Loading save file." );
+            try {
+                settings.load( new FileInputStream( SAVE_FILE ) );
+                log.info( "Save file loaded successfully." );
+            } catch ( IOException e ) {
+                log.error( "Could not load save file.", e );
+            }
+        } else {
+            log.info( "No save file found." );
         }
         
         log.info( "===================[ Loading Resource Database ]===================" );
@@ -108,7 +128,7 @@ public class ResourceManager {
         if ( files == null ) {
             System.exit( Launcher.LOADING_ERROR_CODE );
         }
-        for ( ResourcePath file : files ) {
+        for ( ResourcePath file : files ) { // Load each Resource.
             
             log.debug( "***[ Loading resource file '" + file.getPath() + "' ]***" );
             try {
@@ -121,6 +141,22 @@ public class ResourceManager {
             
         }
         log.info( "===================[ Database Loaded ]===================" );
+        
+    }
+    
+    /**
+     * Records the custom settings and save information to the save file.
+     */
+    public void save() {
+        
+        log.info( "Writing to save file." );
+        try {
+            OutputStream out = new FileOutputStream( SAVE_FILE );
+            settings.store( out, SAVE_FILE_COMMENT );
+            log.info( "Save file written successfully." );
+        } catch ( IOException e ) {
+            log.error( "Could not write save file.", e );
+        }
         
     }
     
@@ -181,15 +217,6 @@ public class ResourceManager {
         }
         
         return found;
-        
-    }
-    
-    /**
-     * Resets all settings to default.
-     */
-    public void resetSettings() {
-        
-        settings = new Properties( defaultSettings );
         
     }
     

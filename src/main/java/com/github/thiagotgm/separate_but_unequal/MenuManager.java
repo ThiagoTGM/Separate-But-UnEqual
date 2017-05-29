@@ -2,6 +2,7 @@ package com.github.thiagotgm.separate_but_unequal;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -56,7 +57,8 @@ public class MenuManager implements ActionListener {
         switch ( e.getActionCommand() ) {
             
             case MainMenuPanel.EXIT_COMMAND: // Exit the program.
-                System.exit( 0 );
+                program.dispatchEvent( new WindowEvent( program, WindowEvent.WINDOW_CLOSING  ) );
+                break;
                 
             case MainMenuPanel.START_COMMAND: // Start the game.
                 setWindow( game );
