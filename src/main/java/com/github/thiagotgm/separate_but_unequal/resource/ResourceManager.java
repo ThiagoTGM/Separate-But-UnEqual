@@ -108,6 +108,19 @@ public class ResourceManager {
     }
     
     /**
+     * Identifies whether a given ID corresponds to an existing Resource.
+     *
+     * @param id ID to be identified.
+     * @return true if the given ID corresponds to an existing Resource, false
+     *         otherwise.
+     */
+    public boolean isResource( String id ) {
+        
+        return resources.containsKey( id );
+        
+    }
+    
+    /**
      * Loads the resource library and the save file.
      */
     private void load() {

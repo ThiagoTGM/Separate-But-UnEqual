@@ -5,11 +5,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.thiagotgm.separate_but_unequal.gui.GamePanel;
 import com.github.thiagotgm.separate_but_unequal.gui.MainMenuPanel;
 import com.github.thiagotgm.separate_but_unequal.gui.StorySelector;
+import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
+import com.github.thiagotgm.separate_but_unequal.resource.Story;
 
 /**
  * Manages the game menus, and controls what is displayed on the game window at any point.
@@ -19,6 +25,14 @@ import com.github.thiagotgm.separate_but_unequal.gui.StorySelector;
  * @since 2017-05-28
  */
 public class MenuManager implements ActionListener {
+    
+    private static final Logger log = LoggerFactory.getLogger( MenuManager.class );
+    
+    /**
+     * Action command that identifies that a button to return to the main menu
+     * was pressed.
+     * */
+    public static final String BACK_COMMAND = "BACK";
     
     private final JFrame program;
     private final GamePanel game;
@@ -62,9 +76,9 @@ public class MenuManager implements ActionListener {
                 break;
                 
             case MainMenuPanel.START_COMMAND: // Start the game.
-                setWindow( new StorySelector() );
-                //setWindow( game );
-                //gameManager.start( "Char 1 Start" );
+                StorySelector selector = new StorySelector();
+                selector.addActionListener( this );
+                setWindow( selector );
                 break;
                 
             case MainMenuPanel.LOAD_COMMAND: // Load from previous save.
@@ -72,8 +86,30 @@ public class MenuManager implements ActionListener {
                 gameManager.load();
                 break;
                 
+            case StorySelector.SELECT_STORY_COMMAND: // A story was selected.
+                selector = (StorySelector) current;
+                Story selected = selector.getChoice();
+                String startID = selected.getStart();
+                log.info( "Selected story with start '" + startID + "'" );
+                if ( !ResourceManager.getInstance().isResource( startID ) ) {
+                    log.warn( "Invalid start ID '" + startID + "'" );
+                    JOptionPane.showMessageDialog( current, "The story selected "
+                            + "does not have a valid start.", // Invalid start.
+                            "Start Error", JOptionPane.ERROR_MESSAGE );
+                } else { // Valid start.
+                    log.debug( "Starting game with Scene ID '" + startID + "'" );
+                    selector.removeActionListener( this );
+                    setWindow( game ); // Start the game.
+                    gameManager.start( "Char 1 Start" );
+                }
+                break;
+                
             case GamePanel.SAVE_COMMAND: // The game was saved.
                 menu.setLoadButtonEnabled( true );
+                break;
+                
+            case MenuManager.BACK_COMMAND: // Back to main menu.
+                setWindow( menu );
             
         }
         

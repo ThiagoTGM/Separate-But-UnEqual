@@ -60,7 +60,7 @@ public class Story extends Resource implements Comparable<Story> {
         if ( start == null ) {
             throw new NullPointerException( NULL_START );
         }
-        this.start = description;
+        this.start = start;
         
         this.graphic = graphic;
         
