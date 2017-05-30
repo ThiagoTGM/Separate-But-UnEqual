@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.thiagotgm.separate_but_unequal.gui.AchievementPanel;
 import com.github.thiagotgm.separate_but_unequal.gui.ButtonPanel;
 import com.github.thiagotgm.separate_but_unequal.gui.GamePanel;
 import com.github.thiagotgm.separate_but_unequal.gui.MainMenuPanel;
@@ -81,7 +82,7 @@ public class MenuManager implements ActionListener {
                 
             case MainMenuPanel.ACHIEVEMENTS_COMMAND: // Open Help.
                 log.debug( "Opening Achievements panel." );
-                // TODO
+                setWindow( new AchievementPanel() );
                 break;
                 
             case MainMenuPanel.SETTINGS_COMMAND: // Open settings.
