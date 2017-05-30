@@ -38,7 +38,12 @@ public abstract class Resource {
          * A single storyline in the game. Has the name of the stoy, gives a description, and identifies the starting
          * scene of the story and other resources.
          */
-        STORY
+        STORY,
+        
+        /**
+         * An achievement that represents that the user encountered one of the endings in the game.
+         */
+        ACHIEVEMENT
         
     };
     

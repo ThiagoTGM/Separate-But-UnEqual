@@ -2,11 +2,11 @@ package com.github.thiagotgm.separate_but_unequal.resource;
 
 /**
  * Factory that constructs instances of the Story resource type.<br>
- * The  is required, but other elements are optional.
+ * All elements other than the graphic are required.
  *
- * @version 2.0
+ * @version 1.0
  * @author Thiago Marback
- * @since 2017-05-23
+ * @since 2017-05-26
  */
 public class StoryFactory extends ResourceFactory {
     
@@ -83,7 +83,7 @@ public class StoryFactory extends ResourceFactory {
      * @return The calling instance.
      * @throws IllegalArgumentException if the code is out of the acceptable range.
      */
-    public StoryFactory withCode( char code ) {
+    public StoryFactory withCode( char code ) throws IllegalArgumentException {
         
         if ( ( code < Story.MIN_CODE ) || ( code > Story.MAX_CODE ) ) {
             throw new IllegalArgumentException( Story.CODE_OOB );

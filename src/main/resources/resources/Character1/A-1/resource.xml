@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="A-1">
+
+    <achievement>
+    
+        <storyCode>A</storyCode>
+        <endCode>1</endCode>
+        <title>First one</title>
+        <text>You got an Achievement!</text>
+    
+    </achievement>
+
+</resource>

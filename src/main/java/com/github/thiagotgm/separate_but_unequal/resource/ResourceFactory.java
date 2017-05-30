@@ -42,6 +42,8 @@ public abstract class ResourceFactory {
                 return new EndSceneFactory( id );
             case STORY:
                 return new StoryFactory( id );
+            case ACHIEVEMENT:
+                return new AchievementFactory( id );
             default:
                 throw new UnsupportedOperationException( "No factory available for the requested resource type." );
             
