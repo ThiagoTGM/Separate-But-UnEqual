@@ -37,7 +37,7 @@ public class MainMenuPanel extends ButtonPanel {
     /** Action command that identifies that the "Load" button on the main menu was pressed. */
     public static final String LOAD_COMMAND = "MENU_" + GamePanel.LOAD_COMMAND;
     /** Action command that identifies that the "Achievments" button was pressed. */
-    public static final String ACHIEVMENTS_COMMAND = "ACHIEVMENTS";
+    public static final String ACHIEVEMENTS_COMMAND = "ACHIEVEMENTS";
     /** Action command that identifies that the "Settings" button was pressed. */
     public static final String SETTINGS_COMMAND = "SETTINGS";
     /** Action command that identifies that the "Help" button was pressed. */
@@ -108,12 +108,12 @@ public class MainMenuPanel extends ButtonPanel {
         loadButton.setHorizontalAlignment( SwingConstants.CENTER );
         loadButton.setEnabled( ResourceManager.getInstance().hasSave() );
         
-        JButton achievmentsButton = new JButton( "Achievments" ); // Creates button to open achievents menu.
-        Scalable.scaleFont( achievmentsButton );
-        achievmentsButton.setActionCommand( ACHIEVMENTS_COMMAND );
-        achievmentsButton.addActionListener( listener );
-        achievmentsButton.setMaximumSize( maxSize );
-        achievmentsButton.setHorizontalAlignment( SwingConstants.CENTER );
+        JButton achievementsButton = new JButton( "Achievements" ); // Creates button to open achievents menu.
+        Scalable.scaleFont( achievementsButton );
+        achievementsButton.setActionCommand( ACHIEVEMENTS_COMMAND );
+        achievementsButton.addActionListener( listener );
+        achievementsButton.setMaximumSize( maxSize );
+        achievementsButton.setHorizontalAlignment( SwingConstants.CENTER );
         
         JButton settingsButton = new JButton( "Settings" ); // Creates button to open settings menu.
         Scalable.scaleFont( settingsButton );
@@ -160,8 +160,8 @@ public class MainMenuPanel extends ButtonPanel {
         
         add( Box.createRigidArea( padding ) );
         
-        achievmentsButton.setAlignmentX( Component.CENTER_ALIGNMENT );
-        add( achievmentsButton ); // Insert settings button to panel.
+        achievementsButton.setAlignmentX( Component.CENTER_ALIGNMENT );
+        add( achievementsButton ); // Insert settings button to panel.
         
         add( Box.createRigidArea( padding ) );
         
