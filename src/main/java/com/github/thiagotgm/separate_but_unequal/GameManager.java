@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.thiagotgm.separate_but_unequal.gui.GamePanel;
+import com.github.thiagotgm.separate_but_unequal.resource.Achievement;
 import com.github.thiagotgm.separate_but_unequal.resource.Choice;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
 import com.github.thiagotgm.separate_but_unequal.resource.Scene;
@@ -217,9 +218,21 @@ public class GameManager implements ActionListener, Runnable {
             panel.setOptionButtonsEnabled( true );
             choiceDisplayer.showOptions( currentOptions ); // Get next player choice.
         } else {
-            endCode = ( (EndScene) scene.getScene() ).getCode();
-            panel.getOptionsArea().setText( "You reached ending " + storyCode + "-" + endCode + "!\nPress the 'Menu' "
-                    + "button to go back to the menu." );
+            endCode = ( (EndScene) scene.getScene() ).getCode(); // Ending reached.
+            String endText = "You reached ending " + storyCode + "-" + endCode + "!\n";
+            if ( !CompletionManager.getInstance().isReached( storyCode, endCode ) ) { // Reached ending for the first
+                log.debug( "Previously unreached ending " + storyCode + "-" + endCode + " reached." ); // time.
+                Achievement achievement = ResourceManager.getInstance().getAchievement( storyCode, endCode );
+                if ( achievement != null ) { // Reaching this ending has an achievement.
+                    log.debug( "Found achievement ResID '" + achievement.getID() + "'." );
+                    endText += "You unlocked the achievement '" + achievement.getTitle() + "'!\n";
+                } else { // Reaching this ending has no achievement.
+                    log.debug( "No achievement found." );
+                }
+                CompletionManager.getInstance().setReached( storyCode, endCode ); // Records ending reached.
+            }
+            endText += "Press the 'Menu' button to go back to the menu.";
+            panel.getOptionsArea().setText( endText );
         }
         
         /* End of thread */

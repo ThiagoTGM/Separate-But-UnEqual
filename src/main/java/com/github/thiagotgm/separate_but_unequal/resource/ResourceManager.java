@@ -18,6 +18,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Stream;
 
@@ -31,7 +32,7 @@ import com.github.thiagotgm.separate_but_unequal.resource.Resource.ResourceType;
 import com.github.thiagotgm.separate_but_unequal.resource.reader.ResourceReader;
 
 /**
- * Class that manages the resource library.<br>
+ * Class that manages the resource library and the savegame.<br>
  * Follows the Singleton pattern.
  *
  * @version 1.0
@@ -48,6 +49,7 @@ public class ResourceManager {
     
     private static final String DEFAULT_SETTINGS_FILE = "defaults.txt";
     private static final String TEXT_SPEED_MULTIPLIER = "textSpeedMultiplier";
+    private static final String ENDING_TRACKER = "reachedEndings";
     private static final String SAVE = "save";
     private static final String SAVE_FILE = "save.txt";
     private static final String SAVE_FILE_COMMENT = "Settings modified by the user, and information about the user's"
@@ -265,7 +267,7 @@ public class ResourceManager {
      */
     public List<Achievement> getAchievements() {
         
-        List<Achievement> achievements = new LinkedList<>();
+        List<Achievement> achievements = new ArrayList<>();
         for ( Resource res : resources.values() ) {
             
             if ( res.getType() == ResourceType.ACHIEVEMENT ) {
@@ -275,6 +277,28 @@ public class ResourceManager {
         }
         Collections.sort( achievements );
         return achievements;
+        
+    }
+    
+    /**
+     * Retrieves the Achievement that corresponds to the given story and end codes.<br>
+     * The story code must be in the range {@value Story#MIN_CODE} to {@value Story#MAX_CODE} (inclusive), and the end 
+     * code must be in the range {@value EndScene#MIN_CODE} to {@value EndScene#MAX_CODE} (inclusive).
+     * 
+     * @param storyCode Story code of the Achievement to be found.
+     * @param endCode End code of the Achievement to be found.
+     * @return The Achievement that corresponds to that story and end codes, or null if there is no such Achievement.
+     * @throws IllegalArgumentException if the story code given is not within the acceptable range.
+     */
+    public Achievement getAchievement( char storyCode, int endCode ) throws IllegalArgumentException {
+        
+        AchievementFactory keyFactory = (AchievementFactory) ResourceFactory.newInstance( ResourceType.ACHIEVEMENT,
+                "key" );
+        Achievement key = (Achievement) keyFactory.withStoryCode( storyCode ).withEndCode( endCode ).withTitle( "key" )
+                .withText( "key" ).build();
+        List<Achievement> achievements = getAchievements();
+        int target = Collections.binarySearch( achievements, key );
+        return ( target >= 0 ) ? achievements.get( target ) : null;
         
     }
     
@@ -334,6 +358,57 @@ public class ResourceManager {
     public boolean hasSave() {
         
         return settings.containsKey( SAVE );
+        
+    }
+    
+    /**
+     * Retrieves the ending trackers for each Story. Any trackers that are not saved or could not be parsed will be
+     * set to 0.
+     * 
+     * @return The ending trackers for the game, one for each existing Story. The keys on the map are the codes for
+     *         each Story, and the value is the corresponding tracker.
+     */
+    public Map<Character, Long> getEndingTrackers() {
+        
+        List<Story> stories = getStories();
+        Map<Character, Long> trackers = new Hashtable<>();
+        for ( Story story : stories ) {
+            
+            char code = story.getCode();
+            long tracker;
+            String codedTracker = settings.getProperty( ENDING_TRACKER + code );
+            if ( codedTracker != null ) {
+                try {
+                    tracker = Long.valueOf( codedTracker );
+                } catch ( NumberFormatException e ) {
+                    log.error( "Cannot parse ending tracker '" + code + "' from String '" + codedTracker + "'." );
+                    tracker = 0x0;
+                }
+            } else {
+                tracker = 0x0;
+            }
+            trackers.put( code, tracker );
+            
+        }
+        return trackers;
+        
+    }
+    
+    /**
+     * Saves the value of the ending tracker for a given storyline.<br>
+     * The story code must be in the range {@value Story#MIN_CODE} to {@value Story#MAX_CODE} (inclusive).
+     * 
+     * @param storyCode The code of the Story that the tracker represents.
+     * @param tracker The value of the tracker to be saved.
+     * @throws IllegalArgumentException if the story code given is not within the acceptable range.
+     */
+    public void saveEndingTracker( char storyCode, long tracker ) throws IllegalArgumentException {
+        
+        if ( ( storyCode < Story.MIN_CODE ) || ( storyCode > Story.MAX_CODE ) ) {
+            throw new IllegalArgumentException( Story.CODE_OOB );
+        }
+        
+        settings.setProperty( ENDING_TRACKER + storyCode, String.valueOf( tracker ) );
         
     }
 
