@@ -128,6 +128,16 @@ public class Story extends Resource implements Comparable<Story> {
         
     }
 
+    /**
+     * Compares this with another story.<br>
+     * A story is smaller than another when its code is smaller than the code of the other.<br>
+     * If both have the same code, they are equal for ordering purposes.<p>
+     * OBS: being equal for ordering purposes does not guarantee that the rest of their contents are equal.
+     * 
+     * @param o Story to compare this to.
+     * @return A negative number if this is smaller than o; a positive number if this is greater than o; zero if this
+     *         and o are equal (for ordering purposes).
+     */
     @Override
     public int compareTo( Story o ) {
 

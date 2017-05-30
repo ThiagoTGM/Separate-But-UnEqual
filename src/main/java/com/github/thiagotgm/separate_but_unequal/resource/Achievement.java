@@ -9,7 +9,7 @@ package com.github.thiagotgm.separate_but_unequal.resource;
  * @author Thiago
  * @since 2017-05-29
  */
-public class Achievement extends Resource {
+public class Achievement extends Resource implements Comparable<Achievement> {
     
     private static final String NULL_TITLE = "Achievement title cannot be null.";
     private static final String NULL_TEXT = "Achievement text cannot be null.";
@@ -125,6 +125,27 @@ public class Achievement extends Resource {
 
         return ResourceType.ACHIEVEMENT;
         
+    }
+
+    /**
+     * Compares this with another achievement.<br>
+     * An achievement is smaller than another when its storyCode is smaller than the storyCode of the other.<br>
+     * If both have the same storyCode, the one with the smaller endCode is smaller.<br>
+     * If both storyCode and endCode are equal, they are equal for ordering purposes.<p>
+     * OBS: being equal for ordering purposes does not guarantee that the rest of their contents are equal.
+     * 
+     * @param o Achievement to compare this to.
+     * @return A negative number if this is smaller than o; a positive number if this is greater than o; zero if this
+     *         and o are equal (for ordering purposes).
+     */
+    @Override
+    public int compareTo( Achievement o ) {
+
+        if ( this.storyCode != o.storyCode ) {
+            return this.storyCode - o.storyCode;
+        } else {
+            return this.endCode - o.endCode;
+        }
     }
 
 }

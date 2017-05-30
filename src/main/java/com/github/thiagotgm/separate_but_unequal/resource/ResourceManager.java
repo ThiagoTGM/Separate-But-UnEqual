@@ -239,6 +239,7 @@ public class ResourceManager {
      * Elements are in sorted order.
      * 
      * @return The Story objects in the resource library.
+     * @see Story#compareTo(Story)
      */
     public List<Story> getStories() {
         
@@ -252,6 +253,28 @@ public class ResourceManager {
         }
         Collections.sort( stories );
         return stories;
+        
+    }
+    
+    /**
+     * Retrieves a list of all the Achievement objects in the resource library.<br>
+     * Elements are in sorted order.
+     * 
+     * @return The Achievement objects in the resource library.
+     * @see Achievement#compareTo(Achievement)
+     */
+    public List<Achievement> getAchievements() {
+        
+        List<Achievement> achievements = new LinkedList<>();
+        for ( Resource res : resources.values() ) {
+            
+            if ( res.getType() == ResourceType.ACHIEVEMENT ) {
+                achievements.add( (Achievement) res );
+            }
+            
+        }
+        Collections.sort( achievements );
+        return achievements;
         
     }
     
