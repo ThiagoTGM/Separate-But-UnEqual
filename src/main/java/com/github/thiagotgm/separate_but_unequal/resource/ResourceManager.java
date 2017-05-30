@@ -411,5 +411,22 @@ public class ResourceManager {
         settings.setProperty( ENDING_TRACKER + storyCode, String.valueOf( tracker ) );
         
     }
+    
+    /**
+     * Deletes the tracker that corresponds to the storyline identified by the given code.<br>
+     * The story code must be in the range {@value Story#MIN_CODE} to {@value Story#MAX_CODE} (inclusive).
+     * 
+     * @param storyCode The code of the Story that the tracker to be deleted represents.
+     * @throws IllegalArgumentException if the story code given is not within the acceptable range.
+     */
+    public void removeEndingTracker( char storyCode ) throws IllegalArgumentException {
+        
+        if ( ( storyCode < Story.MIN_CODE ) || ( storyCode > Story.MAX_CODE ) ) {
+            throw new IllegalArgumentException( Story.CODE_OOB );
+        }
+        
+        settings.remove( ENDING_TRACKER + storyCode );
+        
+    }
 
 }

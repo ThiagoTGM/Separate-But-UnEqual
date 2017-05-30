@@ -22,6 +22,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
+import com.github.thiagotgm.separate_but_unequal.CompletionManager;
 import com.github.thiagotgm.separate_but_unequal.MenuManager;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
 import com.github.thiagotgm.separate_but_unequal.resource.Story;
@@ -47,7 +48,7 @@ public class StorySelector extends ButtonPanel {
     private static final double SMALL_PADDING = 0.1;
     private static final double BIG_PADDING = 0.3;
     private static final double TEXT_MARGIN = 0.1;
-    private static final double OPTION_WIDTH = 2;
+    private static final double OPTION_WIDTH = 3;
     private static final double OPTION_HEIGHT = 2;
     private static final int MAX_LINES = 3;
     private static final int MAX_COLUMNS = 2;
@@ -110,18 +111,22 @@ public class StorySelector extends ButtonPanel {
         Dimension smallPadding = Scalable.scale( SMALL_PADDING, SMALL_PADDING ); 
         int margin = Scalable.scaleToInt( TEXT_MARGIN );
         List<JPanel> stories = new LinkedList<>();
+        boolean unlocked = true;
+        Story key = null;
+        CompletionManager completion = CompletionManager.getInstance();
         for ( Story story : ResourceManager.getInstance().getStories() ) {
             
             /* Create a panel for each option */
             JPanel panel = new JPanel( isDoubleBuffered );
             panel.setLayout( new BoxLayout( panel, BoxLayout.Y_AXIS ) );
             
-            JLabel name = new JLabel( story.getName() ); // Add story name.
+            JLabel name = new JLabel( ( unlocked ) ? story.getName() : "LOCKED" ); // Add story name.
             Scalable.scaleFont( name );
             name.setHorizontalAlignment( SwingConstants.CENTER );
             name.setAlignmentX( Component.CENTER_ALIGNMENT );
             
-            JTextArea description = new JTextArea( story.getDescription() );
+            JTextArea description = new JTextArea( ( unlocked ) ? story.getDescription() : "Reach any ending "
+                    + "of '" + key.getName() + "' to unlock the next story!" );
             description.setEditable( false ); // Add story description.
             description.setMargin( new Insets( margin, margin, margin, margin ) );
             Scalable.scaleFont( description );
@@ -133,6 +138,7 @@ public class StorySelector extends ButtonPanel {
             button.setAlignmentX( Component.CENTER_ALIGNMENT );
             button.setActionCommand( story.getCode() + SELECT_STORY_COMMAND );
             button.addActionListener( listener );
+            button.setEnabled( unlocked );
             
             // Add all to panel.
             panel.add( Box.createRigidArea( smallPadding ) );
@@ -147,6 +153,12 @@ public class StorySelector extends ButtonPanel {
             panel.setBorder( border ); // Make a border for this option.
             
             stories.add( panel );
+            
+            boolean isPlayed = completion.isPlayed( story.getCode() );
+            if ( unlocked && !isPlayed ) {
+                key = story;
+            }
+            unlocked = isPlayed;
             
         }
         

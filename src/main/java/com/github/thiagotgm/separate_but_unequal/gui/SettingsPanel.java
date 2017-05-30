@@ -17,6 +17,7 @@ import javax.swing.border.Border;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.thiagotgm.separate_but_unequal.CompletionManager;
 import com.github.thiagotgm.separate_but_unequal.MenuManager;
 import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
 
@@ -40,6 +41,8 @@ public class SettingsPanel extends ButtonPanel implements ActionListener {
     public static final String INCREASE_SPEED_COMMAND = "INCREASE SPEED";
     /** Action command that identifies that the "Clear Save" was pressed. */
     public static final String CLEAR_SAVE_COMMAND = "CLEAR SAVE";
+    /** Action command that identifies that the "Clear Progress" was pressed. */
+    public static final String CLEAR_PROGRESS_COMMAND = "CLEAR PROGRESS";
     
     private static final double PANEL_PADDING = 1;
     private static final double LABEL_PADDING = 0.2;
@@ -52,6 +55,8 @@ public class SettingsPanel extends ButtonPanel implements ActionListener {
     private final JLabel textSpeedValue;
     private final JButton clearSaveButton;
     private final ActionListener listener;
+    
+    private boolean bypassConfirm;
 
     /**
      * Initializes a double-buffered SettingsPanel.
@@ -126,6 +131,16 @@ public class SettingsPanel extends ButtonPanel implements ActionListener {
         clearSaveButton.setEnabled( ResourceManager.getInstance().hasSave() );
         add( clearSaveButton );
         
+        /* Add Clear Progress button */
+        add( Box.createRigidArea( Scalable.scale( 0, LABEL_PADDING ) ) );
+        
+        JButton clearProgressButton = new JButton( "Clear Progress" );
+        clearProgressButton.setActionCommand( CLEAR_PROGRESS_COMMAND );
+        Scalable.scaleFont( clearProgressButton );
+        clearProgressButton.addActionListener( this );
+        clearProgressButton.setAlignmentX( Component.CENTER_ALIGNMENT );
+        add( clearProgressButton );
+        
         /* Add button to go back to menu */
         add( Box.createVerticalGlue() );
         add( Box.createRigidArea( Scalable.scale( 0, PANEL_PADDING ) ) );
@@ -141,6 +156,8 @@ public class SettingsPanel extends ButtonPanel implements ActionListener {
         Border panelBorder = BorderFactory.createEmptyBorder( panelBorderSize, panelBorderSize, panelBorderSize,
                 panelBorderSize );
         this.setBorder( panelBorder );
+        
+        this.bypassConfirm = false;
 
     }
     
@@ -179,16 +196,33 @@ public class SettingsPanel extends ButtonPanel implements ActionListener {
                 
             case CLEAR_SAVE_COMMAND: // Clear game save.
                 log.debug( "Clear save selected." );
-                int choice = JOptionPane.showConfirmDialog( this,
+                int choice = ( bypassConfirm ) ? JOptionPane.YES_OPTION : JOptionPane.showConfirmDialog( this,
                         "This will delete your currently saved game. Are you sure?", "Clear Save",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE );
-                if ( choice == JOptionPane.YES_OPTION ) {
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE ); // Ask to confirm unless clear
+                if ( choice == JOptionPane.YES_OPTION ) {                         // progress was the command.
                     ResourceManager.getInstance().setSave( null );
                     clearSaveButton.setEnabled( false );
                     log.info( "Save cleared." );
                     listener.actionPerformed( e );
                 } else {
                     log.debug( "Clear Save cancelled." );
+                }
+                this.bypassConfirm = false;
+                break;
+                
+            case CLEAR_PROGRESS_COMMAND:
+                log.debug( "Clear save selected." );
+                choice = JOptionPane.showConfirmDialog( this,
+                        "This will delete your currently saved game and reset your achievements and progress. Are you"
+                        + " sure?", "Clear Progress",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE );
+                if ( choice == JOptionPane.YES_OPTION ) {
+                    CompletionManager.getInstance().clearProgress();
+                    log.info( "Progress cleared." );
+                    this.bypassConfirm = true; // Delete save without asking for confirmation.
+                    clearSaveButton.doClick();
+                } else {
+                    log.debug( "Clear Progress cancelled." );
                 }
                 break;
                 

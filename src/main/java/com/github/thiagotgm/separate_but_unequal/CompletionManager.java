@@ -93,5 +93,32 @@ public class CompletionManager {
         ResourceManager.getInstance().saveEndingTracker( storyCode, tracker );
         
     }
+    
+    /**
+     * Resets all trackers to be empty, reseting all progress.
+     */
+    public void clearProgress() {
+        
+        ResourceManager manager = ResourceManager.getInstance();
+        for ( char key : endings.keySet() ) { // Reset each tracker.
+            
+            endings.put( key, 0x0L );
+            manager.removeEndingTracker( key ); // Delete save of the tracker.
+            
+        }
+        
+    }
+    
+    /**
+     * Retrieves whether the player has reached any of the endings of a given storyline.
+     * 
+     * @param storyCode Code of the storyline to be checked.
+     * @return true if any of the endings of that storyline were reached, false otherwise.
+     */
+    public boolean isPlayed( char storyCode ) {
+        
+        return endings.get( storyCode ) != 0;
+        
+    }
 
 }
