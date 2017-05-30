@@ -1,6 +1,5 @@
 package com.github.thiagotgm.separate_but_unequal.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -20,7 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
 import com.github.thiagotgm.separate_but_unequal.CompletionManager;
@@ -31,13 +29,17 @@ import com.github.thiagotgm.separate_but_unequal.resource.ResourceManager;
 
 public class AchievementPanel extends ButtonPanel {
     
-    private static final String CODE_STRING = "Unlocked for reaching ending %c-%d";
+    /** Serial ID that represents this class. */
+    private static final long serialVersionUID = -4472609596249118824L;
     
-    private static final String LOCKED_ITEM = "Locked";
+    private static final String CODE_STRING = "Unlocked for reaching ending %c-%d";
+    private static final String LOCKED_ITEM = "-Locked-";
+    private static final String LOCKED_STRING = "This achievement was not unlocked yet";
+    
     private static final double PANEL_BORDER = 0.25;
     private static final double DISPLAY_PADDING = 0.1;
     private static final double TEXT_MARGIN = 0.1;
-    private static final double WIDTH = 7;
+    private static final double WIDTH = 9;
     private static final double HEIGHT = 5;
     
     private final JLabel title;
@@ -88,11 +90,16 @@ public class AchievementPanel extends ButtonPanel {
         achievementList.setVisibleRowCount( -1 );
         Scalable.scaleFont( achievementList );
         
-        achievementList.addListSelectionListener( ( e ) -> {
+        achievementList.addListSelectionListener( ( e ) -> { // Listener to display selected Achievement.
             
             int index = achievementList.getSelectedIndex();
             if ( index != -1 ) { // Display selected achievement.
-                Achievement selected = achievements.get( index );
+                Achievement selected;
+                if ( items[index].equals( LOCKED_ITEM ) ) { // Achievement not unlocked yet.
+                    selected = null;
+                } else { // Achivement already unlocked.
+                    selected = achievements.get( index );
+                }
                 AchievementPanel.this.setDisplay( selected );
             }
             
@@ -110,7 +117,7 @@ public class AchievementPanel extends ButtonPanel {
         
         title = new JLabel(); // Achievement title.
         Scalable.scaleFont( title );
-        title.setText( "-----------------------------" );
+        title.setText( "-" );
         title.setAlignmentX( Component.CENTER_ALIGNMENT );
         display.add( title );
         
@@ -182,9 +189,15 @@ public class AchievementPanel extends ButtonPanel {
      */
     private void setDisplay( Achievement achievement ) {
         
-        title.setText( achievement.getTitle() );
-        code.setText( String.format( CODE_STRING, achievement.getStoryCode(), achievement.getEndCode() ) );
-        text.setText( achievement.getText() );
+        if ( achievement != null ) {
+            title.setText( achievement.getTitle() );
+            code.setText( String.format( CODE_STRING, achievement.getStoryCode(), achievement.getEndCode() ) );
+            text.setText( achievement.getText() );
+        } else {
+            title.setText( LOCKED_ITEM );
+            code.setText( LOCKED_STRING );
+            text.setText( LOCKED_ITEM );
+        }
         
     }
 

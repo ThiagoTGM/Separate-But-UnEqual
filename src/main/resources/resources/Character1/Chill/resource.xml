@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<resource id="InSchool">
+<resource id="ChillLol">
 
     <scene type="end">
     
-        <filename>School.txt</filename>
-        <code>1</code>
+        <filename>Chill.txt</filename>
+        <code>2</code>
     
     </scene>
 

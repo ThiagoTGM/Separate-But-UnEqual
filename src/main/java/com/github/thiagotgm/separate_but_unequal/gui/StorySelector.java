@@ -211,9 +211,9 @@ public class StorySelector extends ButtonPanel {
         lineCount = Math.min( MAX_LINES, lineCount );
         int columnCount = columns.size();
         double panelWidth = columnCount * OPTION_WIDTH + 
-                ( columnCount + 1 ) * BIG_PADDING + SMALL_PADDING;
+                ( columnCount + 1 ) * BIG_PADDING + BIG_PADDING;
         double panelHeight = lineCount * OPTION_HEIGHT +
-                ( lineCount + 1 ) * BIG_PADDING + SMALL_PADDING;
+                ( lineCount + 1 ) * BIG_PADDING + BIG_PADDING;
         size = Scalable.scale( panelWidth, panelHeight );
         scroll.setPreferredSize( size ); // Set option panel to display at most the
         scroll.setMaximumSize( size );   // max # of choices.

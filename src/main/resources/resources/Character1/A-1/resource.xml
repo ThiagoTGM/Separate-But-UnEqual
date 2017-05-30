@@ -5,7 +5,7 @@
     <achievement>
     
         <storyCode>A</storyCode>
-        <endCode>10</endCode>
+        <endCode>1</endCode>
         <title>First one</title>
         <text>You got an Achievement!</text>
         <graphic>fireworks</graphic>
