@@ -77,7 +77,7 @@ public class EndSceneReader extends SceneReader {
                     String data = event.asCharacters().getData();
                     try {
                         code = Integer.valueOf( data );
-                    } catch ( NumberFormatException e ) { // Also catches format exceptions.
+                    } catch ( NumberFormatException e ) {
                         throw new XMLStreamException( INVALID_VALUE, e );
                     }
                     found = true;

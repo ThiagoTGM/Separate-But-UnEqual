@@ -180,6 +180,9 @@ public abstract class ResourceReader {
             case STORY:
                 resReader = new StoryReader();
                 break;
+            case ACHIEVEMENT:
+                resReader = new AchievementReader();
+                break;
             default: // Type does not have a Reader.
                 throw new IllegalArgumentException( "No reader available for the given Resource type." );
             

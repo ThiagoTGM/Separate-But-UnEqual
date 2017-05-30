@@ -2,7 +2,7 @@ package com.github.thiagotgm.separate_but_unequal.resource;
 
 /**
  * Factory that constructs instances of the Achievement resource type.<br>
- * All elements are required.
+ * All elements except the graphic are required.
  *
  * @version 1.0
  * @author Thiago Marback
@@ -18,6 +18,8 @@ public class AchievementFactory extends ResourceFactory {
     public static final String TITLE_ELEMENT = "title";
     /** Identifier for the "Text" element. */
     public static final String TEXT_ELEMENT = "text";
+    /** Identifier for the "Graphic" element. */
+    public static final String GRAPHIC_ELEMENT = "graphic";
     
     private static final char DEFAULT_STORY_CODE = '\0';
     private static final int DEFAULT_END_CODE = 0;
@@ -26,6 +28,7 @@ public class AchievementFactory extends ResourceFactory {
     private int endCode;
     private String title;
     private String text;
+    private String graphic;
 
     /**
      * Creates a new Achievement factory with a given Resource ID.
@@ -58,6 +61,9 @@ public class AchievementFactory extends ResourceFactory {
                     break;
                 case TEXT_ELEMENT:
                     withText( (String) value );
+                    break;
+                case GRAPHIC_ELEMENT:
+                    withGraphic( (String) value );
                     break;
                 default:
                     throw new IllegalArgumentException( "Achievement does not have element '"
@@ -132,6 +138,19 @@ public class AchievementFactory extends ResourceFactory {
         return this;
         
     }
+    
+    /**
+     * Specifies the Resource ID of the Graphic to be associated with the constructed Achievement object.
+     * 
+     * @param graphic The ID of the graphic.
+     * @return The calling instance.
+     */
+    public AchievementFactory withGraphic( String graphic ) {
+        
+        this.graphic = graphic;
+        return this;
+        
+    }
 
     @Override
     public Resource build() throws IllegalStateException {
@@ -149,7 +168,7 @@ public class AchievementFactory extends ResourceFactory {
             throw new IllegalStateException( "Text is required for Achivement construction but wasn't specified!" );
         }
         
-        return new Achievement( id, storyCode, endCode, title, text );
+        return new Achievement( id, storyCode, endCode, title, text, graphic );
         
     }
 
