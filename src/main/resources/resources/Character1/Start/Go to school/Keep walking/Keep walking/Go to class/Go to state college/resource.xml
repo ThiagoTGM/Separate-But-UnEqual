@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C1 State college confirm">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Go anyway</text>
+                <target>C1 State college start</target>
+            </option>
+            <option>
+                <text>Go to black college instead</text>
+                <target>C1 Black college start</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

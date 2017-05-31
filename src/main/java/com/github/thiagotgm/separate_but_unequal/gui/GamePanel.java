@@ -29,7 +29,7 @@ public class GamePanel extends ButtonPanel {
     private static final long serialVersionUID = -3770146955575152229L;
     
     private static final double WIDTH = 10;
-    private static final double HEIGHT = 10;
+    private static final double HEIGHT = 8;
     
     private static final double SIDE_BORDER_PADDING = 0.2;
     private static final double TOP_BORDER_PADDING = 0.3;
@@ -229,7 +229,7 @@ public class GamePanel extends ButtonPanel {
         c.gridy = 1; // Insert graphic panel.
         c.weighty = 2;
         c.insets = new Insets( 0, padding, 0, 0 );
-        gameArea.add( graphic, c );
+        //gameArea.add( graphic, c );
         
         /* Adds all areas to the panel */
         add( buttonPanel, BorderLayout.EAST );

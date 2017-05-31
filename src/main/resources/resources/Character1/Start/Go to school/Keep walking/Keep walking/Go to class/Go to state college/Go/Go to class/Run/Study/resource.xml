@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<resource id="C1 Start">
+<resource id="C1 State college 2">
 
     <scene type="choice">
     
@@ -8,8 +8,8 @@
         <options>
         
             <option>
-                <text>Go to school</text>
-                <target>C1 Path to school</target>
+                <text>Turn around</text>
+                <target>C1 State college shot</target>
             </option>
         
         </options>

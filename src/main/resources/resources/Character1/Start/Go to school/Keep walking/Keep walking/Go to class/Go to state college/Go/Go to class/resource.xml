@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C1 State college 1">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Run away</text>
+                <target>C1 State college run</target>
+            </option>
+            <option>
+                <text>Fight him</text>
+                <target>C1 State college fight</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

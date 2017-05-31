@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C1 Offer">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Join group</text>
+                <target>C1 Civil rights</target>
+            </option>
+            <option>
+                <text>Keep studying and go to work</text>
+                <target>C1 Find work</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

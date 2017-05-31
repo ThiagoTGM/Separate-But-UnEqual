@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C1 Election time 6">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>10 miles square</text>
+                <target>C1 Election time 7</target>
+            </option>
+            <option>
+                <text>40 miles square</text>
+                <target>C1 Election wrong</target>
+            </option>
+            <option>
+                <text>100 miles square</text>
+                <target>C1 Election wrong</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

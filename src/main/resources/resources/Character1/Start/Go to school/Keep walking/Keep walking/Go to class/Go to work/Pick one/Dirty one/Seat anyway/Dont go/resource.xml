@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<resource id="C1 Start">
+<resource id="C1 Election result">
 
     <scene type="choice">
     
@@ -8,8 +8,8 @@
         <options>
         
             <option>
-                <text>Go to school</text>
-                <target>C1 Path to school</target>
+                <text>Read them</text>
+                <target>C1 Election end</target>
             </option>
         
         </options>
