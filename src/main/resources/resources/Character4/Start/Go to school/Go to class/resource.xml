@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C4 Class">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Watch class</text>
+                <target>C4 After class</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

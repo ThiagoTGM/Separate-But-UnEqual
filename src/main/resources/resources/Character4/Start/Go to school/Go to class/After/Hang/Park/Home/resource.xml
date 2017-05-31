@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C4 No study">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Apply for good university</text>
+                <target>C4 University</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

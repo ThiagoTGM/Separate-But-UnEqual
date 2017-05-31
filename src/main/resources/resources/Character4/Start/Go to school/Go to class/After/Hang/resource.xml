@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C4 Hang">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Go to mall</text>
+                <target>C4 Mall</target>
+            </option>
+            <option>
+                <text>Go to park</text>
+                <target>C4 Park</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>
