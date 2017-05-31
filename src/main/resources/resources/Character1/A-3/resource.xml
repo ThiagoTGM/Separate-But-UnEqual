@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="A-3">
+
+    <achievement>
+    
+        <storyCode>A</storyCode>
+        <endCode>3</endCode>
+        <title>Black Power</title>
+        <text>Give them a taste of their own medicine.</text>
+    
+    </achievement>
+
+</resource>
