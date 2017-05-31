@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C2 Path to school">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Wait</text>
+                <target>C2 Path to school 2</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

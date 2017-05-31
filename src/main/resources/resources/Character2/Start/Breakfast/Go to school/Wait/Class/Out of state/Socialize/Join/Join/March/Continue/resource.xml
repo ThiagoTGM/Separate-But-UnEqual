@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C2 March 2">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Ask what happened</text>
+                <target>C2 March end</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

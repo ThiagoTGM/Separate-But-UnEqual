@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C2 Civil rights">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Join</text>
+                <target>C2 March</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

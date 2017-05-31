@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C2 Register">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Get in line</text>
+                <target>C2 Register line</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

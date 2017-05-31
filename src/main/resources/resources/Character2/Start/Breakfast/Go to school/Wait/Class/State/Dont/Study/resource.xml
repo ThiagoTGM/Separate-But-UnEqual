@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C2 comfy job">
+
+    <scene type="end">
+    
+        <filename>Scene.txt</filename>
+        <code>2</code>
+    
+    </scene>
+
+</resource>

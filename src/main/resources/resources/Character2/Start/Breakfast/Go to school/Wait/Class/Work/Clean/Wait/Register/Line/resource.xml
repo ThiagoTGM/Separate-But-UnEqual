@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C2 Register line">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Wait for election day</text>
+                <target>C2 Election day</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

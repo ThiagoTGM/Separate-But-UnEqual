@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C2 harass">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Keep doing it</text>
+                <target>C2 wave</target>
+            </option>
+            <option>
+                <text>Stop doing it</text>
+                <target>C2 ignore</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

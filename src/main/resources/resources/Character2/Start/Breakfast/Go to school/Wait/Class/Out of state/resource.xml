@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C2 out of state college">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Socialize</text>
+                <target>C2 oos college social</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C2 mob">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Go to class</text>
+                <target>C2 harass</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

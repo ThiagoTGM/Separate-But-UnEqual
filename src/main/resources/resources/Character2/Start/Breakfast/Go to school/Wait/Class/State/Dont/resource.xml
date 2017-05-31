@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C2 ignore">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Keep studying</text>
+                <target>C2 comfy job</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

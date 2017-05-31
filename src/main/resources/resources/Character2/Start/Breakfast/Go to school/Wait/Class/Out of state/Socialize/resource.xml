@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C2 oos college social">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>join</text>
+                <target>C2 Civil rights</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>
