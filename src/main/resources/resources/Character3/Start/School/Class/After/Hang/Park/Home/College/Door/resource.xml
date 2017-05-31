@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C3 Door">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Go to police station</text>
+                <target>C3 Police</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C3 Interrogation">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Insist on innocence</text>
+                <target>C3 Interrogation</target>
+            </option>
+            <option>
+                <text>Take plea bargain</text>
+                <target>C3 Criminal</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

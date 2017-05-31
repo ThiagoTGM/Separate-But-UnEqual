@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C3 Car">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Struggle</text>
+                <target>C3 Struggle</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C3 University">
+
+    <scene type="choice">
+    
+        <filename>Scene.txt</filename>
+        <options>
+        
+            <option>
+                <text>Join protest</text>
+                <target>C3 Protest</target>
+            </option>
+            <option>
+                <text>Don't go</text>
+                <target>C3 Election</target>
+            </option>
+        
+        </options>
+    
+    </scene>
+
+</resource>
