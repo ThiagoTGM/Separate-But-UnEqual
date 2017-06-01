@@ -1,1 +1,5 @@
-TODO
+Press the "Start" button on the menu to start the game.
+To play each story, the previous stories must be finished at least once (any ending).
+During the game, press the up and down arrow buttons to select an option, and the circle button to confirm.
+The game can be saved at any point using the "Save" button. Then the "Load" button can be used to return to that save point. Only once scene can be saved at a time.
+Achievemnts are unlocked upon reaching each ending for the first time. They can be seen in the "Achievements" panel.
