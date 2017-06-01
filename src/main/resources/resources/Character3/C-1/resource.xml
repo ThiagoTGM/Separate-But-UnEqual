@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C-1">
+
+    <achievement>
+    
+        <storyCode>C</storyCode>
+        <endCode>1</endCode>
+        <title>Neo-suppression</title>
+        <text>You can't be accused of preventing someone from voting if they don't try to vote in the first place, right?</text>
+    
+    </achievement>
+
+</resource>

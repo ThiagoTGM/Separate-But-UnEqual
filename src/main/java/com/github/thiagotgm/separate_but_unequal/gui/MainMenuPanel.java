@@ -27,7 +27,7 @@ public class MainMenuPanel extends ButtonPanel {
     /** Serial ID that represents this class. */
     private static final long serialVersionUID = 2874269025005392973L;
     
-    public static final String TITLE = "Separate But UnEqual";
+    public static final String TITLE = "Separate But (Un)Equal";
     private static final float TITLE_FONT_SIZE = 50f;
     
     private static final String BOTTOM_TEXT = "Author: Thiago Marback             Version: ";

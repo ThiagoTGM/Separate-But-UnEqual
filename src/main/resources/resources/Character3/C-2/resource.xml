@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="C-2">
+
+    <achievement>
+    
+        <storyCode>C</storyCode>
+        <endCode>2</endCode>
+        <title>Stand Your Ground</title>
+        <text>Being black is a great Halloween costume I guess.</text>
+    
+    </achievement>
+
+</resource>

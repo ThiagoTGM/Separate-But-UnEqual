@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="D-1">
+
+    <achievement>
+    
+        <storyCode>D</storyCode>
+        <endCode>1</endCode>
+        <title>Inertia</title>
+        <text>Everything is fine. Carry on.</text>
+    
+    </achievement>
+
+</resource>
