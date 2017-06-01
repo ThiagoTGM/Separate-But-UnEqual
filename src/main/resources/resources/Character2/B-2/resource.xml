@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="B-2">
+
+    <achievement>
+    
+        <storyCode>B</storyCode>
+        <endCode>2</endCode>
+        <title>See no evil, Hear no evil, Speak no evil</title>
+        <text>It can't bother you if you pretend it doesn't exist.</text>
+    
+    </achievement>
+
+</resource>

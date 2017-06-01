@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="B-1">
+
+    <achievement>
+    
+        <storyCode>B</storyCode>
+        <endCode>1</endCode>
+        <title>Couch Critic</title>
+        <text>Everything looks easy when you're not the one doing it.</text>
+    
+    </achievement>
+
+</resource>

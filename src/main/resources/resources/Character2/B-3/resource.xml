@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="B-3">
+
+    <achievement>
+    
+        <storyCode>B</storyCode>
+        <endCode>3</endCode>
+        <title>Path of Least Resistance</title>
+        <text>If everyone is doing it...</text>
+    
+    </achievement>
+
+</resource>

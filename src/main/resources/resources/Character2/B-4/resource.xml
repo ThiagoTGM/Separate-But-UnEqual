@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource id="B-4">
+
+    <achievement>
+    
+        <storyCode>B</storyCode>
+        <endCode>4</endCode>
+        <title>Defector</title>
+        <text>You might look like them, but you don't think like them.</text>
+    
+    </achievement>
+
+</resource>
